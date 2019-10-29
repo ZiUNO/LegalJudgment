@@ -102,3 +102,12 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# txt
+*.txt
+
+# .idea
+.idea
+
+# LegalJudgment.iml
+LegalJudgment.iml

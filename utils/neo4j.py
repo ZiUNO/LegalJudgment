@@ -7,8 +7,8 @@ from py2neo import Graph, Node, Relationship
 class Neo4j(object):
     def __init__(self, config_path):
         with open(config_path, 'r') as f:
-            config = json.load(config_path)
-        dir_name = config_path['SAVE_PATH']
+            config = json.load(f)
+        dir_name = config['SAVE_PATH']
         self.__graph = Graph('http://localhost:7474', username='ziuno', password='1234')
         self.__graph.delete_all()
         root = Node('文件夹', name=dir_name)

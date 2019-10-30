@@ -67,7 +67,7 @@ class DuXiaoFaCrawler(Crawler):
 
         json_law = json.loads(txt, strict=False)
         save_file_name = os.path.join(save_path, '%s.json' % law)
-        with open(save_file_name, 'w') as f:
+        with open(save_file_name, 'w', encoding='utf-8') as f:
             json.dump(json_law, f, ensure_ascii=False)
         print('SAVING TO %s...' % save_file_name)
 
@@ -78,7 +78,7 @@ class DuXiaoFaCrawler(Crawler):
         :param config_path: 下载配置文件所在的路径
         """
         starttime = time.time()
-        with open(config_path, 'r') as f:
+        with open(config_path, 'r', encoding='utf-8') as f:
             config = json.load(f)
         save_path = config['DOWNLOAD_SAVE_PATH']
         laws = config['LAW_NAME']
@@ -100,7 +100,7 @@ class DuXiaoFaCrawler(Crawler):
         timestamp = int(time.time())
         print('timestamp %d->%d' % (config['TIMESTAMP'], timestamp))
         config['TIMESTAMP'] = timestamp
-        with open(config_path, 'w') as f:
+        with open(config_path, 'w', encoding='utf-8') as f:
             json.dump(config, f, ensure_ascii=False)
         print("total: %d, success: %d, failed: %d, success rate=%.02f" % (total, count, total - count, count / total))
         print('CANNOT FIND:')

@@ -8,7 +8,8 @@ class Neo4j(object):
     def __init__(self, config_path):
         with open(config_path, 'r') as f:
             config = json.load(f)
-        dir_name = config['SAVE_PATH']
+        dir_name = config['LAW_PATH']
+        self.__config = config
         self.__graph = Graph('http://localhost:7474', username='ziuno', password='1234')
         self.__graph.delete_all()
         root = Node('文件夹', name=dir_name)
@@ -25,3 +26,6 @@ class Neo4j(object):
                 grandson = Node('文件', name=text)
                 belong = Relationship(son, '包含', grandson)
                 self.__graph.create(belong)
+
+    def analyse(self, ):
+        pass

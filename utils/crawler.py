@@ -80,7 +80,7 @@ class DuXiaoFaCrawler(Crawler):
         starttime = time.time()
         with open(config_path, 'r') as f:
             config = json.load(f)
-        save_path = config['SAVE_PATH']
+        save_path = config['DOWNLOAD_SAVE_PATH']
         laws = config['LAW_NAME']
         total_law = []
         executor = ThreadPoolExecutor(max_workers=4)

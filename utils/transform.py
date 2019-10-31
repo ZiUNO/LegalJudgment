@@ -18,7 +18,7 @@ def __trans_main_body(raw_main_body):
 
     def handle_title(title):
         try:
-            title = re.findall(u'(第[零一二三四五六七八九十百千万亿]+[编章条节]\s|（[零一二三四五六七八九十百千万亿]+）|附则)(.*)$', title)[0]
+            title = re.findall(u'(第[零一二三四五六七八九十百千万亿]+[编章条节]之*[零一二三四五六七八九十百千万亿]*\s|附则)(.*)$', title)[0]
         except:
             return [title]
         title = list(title)

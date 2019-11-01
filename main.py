@@ -6,11 +6,6 @@
 # from utils.neo4j import Neo4j
 
 
-def save_to_txt(txt, path):
-    with open(path, 'w') as f:
-        f.write('\n'.join(txt))
-
-
 if __name__ == '__main__':
     # config_path = sys.argv[1]
     # DuXiaoFaCrawler.download(config_path)  # 法律条文爬取
@@ -21,7 +16,5 @@ if __name__ == '__main__':
     # transform.to_law(dxf_path, law_path)  # 格式化下载的法律条文
     # graph = Neo4j(law_path)
     # graph.expand('中华人民共和国刑法')
-    # leaves = graph.leaves()
-    # save_to_txt(leaves, '刑法.txt')
-    # TODO 分析刑法.txt
+    # TODO 直接根据json文件分析
     pass

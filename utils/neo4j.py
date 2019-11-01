@@ -80,15 +80,4 @@ class Neo4j(object):
         for law in laws:
             self.__expand_law(law)
 
-    def leaves(self):
-        """
-        获取所有叶节点的信息
-        :return:
-        """
-        leaves = self.__graph.run("MATCH(n) WHERE not (n)-->() RETURN n").data()
-        for i, leaf in enumerate(leaves):
-            leaf_value = re.sub(u"^.*: '|'\}\)", "", str(list(leaf.values())[0]))
-            leaves[i] = str(leaf_value.encode().decode('unicode_escape'))
-        leaves = [leaf for leaf in leaves if not (leaf.startswith('中华人民共和国') and leaf[-1] in ['法', '则'])]
-        return leaves
 

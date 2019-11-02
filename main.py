@@ -1,15 +1,7 @@
-# import json
-# import sys
-#
-# from utils import transform
-# from utils.crawler import DuXiaoFaCrawler
-# from utils.neo4j import Neo4j
 import json
-import os
 import sys
 
-from utils.crawler import DuXiaoFaCrawler
-from utils.neo4j import Neo4jLaw, Neo4j
+from utils.neo4j import Neo4j
 
 if __name__ == '__main__':
     config_path = sys.argv[1]
@@ -22,7 +14,11 @@ if __name__ == '__main__':
     graph = Neo4j(law_path)
     graph.expand('中华人民共和国刑法')
     # TODO 直接根据法条回答简易问题
-    graph.answer('抢劫罪是什么？')
+    say = None
+    while say != 'q':
+        say = input('>>>')
+        ans = graph.answer(say)  # 抢劫罪是什么？
+        for a in ans:
+            print(a)
     # TODO 直接根据json文件分析
-    # n_law = Neo4jLaw(os.path.join('中国法律大全JSON', '刑法', '中华人民共和国刑法.json'))
-
+    # n_law = Neo4jLaw(os.path.join('中国法律大全JSON', '刑法', '中华人民共和国刑法.json')) # 功能待实现

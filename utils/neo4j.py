@@ -112,13 +112,29 @@ class Neo4j(object):
 
     def answer(self, question):
         print('SEARCHING...')
-        question = ' '.join(jieba.cut(question))
+        question = ' '.join(jieba.cut(question, cut_all=True))
         tf_idf_title = TfidfVectorizer(vocabulary=self.__titles_vocabulary, stop_words=Neo4j.stopwords)
         tf_idf_content = TfidfVectorizer(vocabulary=self.__content_vocabulary, stop_words=Neo4j.stopwords)
         que_vec_title = tf_idf_title.fit_transform([question]).toarray()[0]
         que_vec_content = tf_idf_content.fit_transform([question]).toarray()[0]
-        # TODO 根据que_vec_title和que_vec_content与self内的title_vector content_vector计算最大相似度
-        result = ''
+
+        def distance(vec, matrix):
+            vector_mat = np.mat(vec)
+            matrix_mat = np.mat(matrix)
+            num = matrix_mat * vector_mat.T
+            den = np.linalg.norm(vector_mat) * np.linalg.norm(matrix_mat, axis=1, keepdims=True)
+            # print(np.sum(num), np.sum(den))
+            sim = 0.5 + (0.5 * num) / den
+            return np.ravel(sim)
+
+        que_title_dis = distance(que_vec_title, self.__titles_vectors)
+        que_content_dis = distance(que_vec_content, self.__content_vectors)
+        max_title_index = int(np.argmax(que_title_dis))
+        max_content_index = int(np.argmax(que_content_dis))
+        title_node = self.__titles_nodes[max_title_index]
+        content_node = self.__content_nodes[max_content_index]
+        result = [list(title_node.values())[0], list(content_node.values())[0]]
+        # TODO 向文件方向检索当前所在条并加入到结果result中
         return result
 
 

@@ -1,16 +1,25 @@
 import json
 import os
 import re
+from itertools import chain
+import numpy as np
 
-from py2neo import Graph, Node, Relationship
+import jieba
+from py2neo import Graph, Node, Relationship, NodeMatcher
+from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
 
 
 class Neo4j(object):
+    """
+    对整个文件夹进行创建数据库
+    """
+    stopwords = None
+
     def __init__(self, dir_name):
+        root = Node('文件夹', name=dir_name)
         self.__dir_name = dir_name
         self.__graph = Graph('http://localhost:7474', username='ziuno', password='1234')
         self.__graph.delete_all()
-        root = Node('文件夹', name=dir_name)
         self.__graph.create(root)
         self.__laws = {}
         for dirs in os.listdir(dir_name):
@@ -26,6 +35,9 @@ class Neo4j(object):
                 self.__laws[text] = {'node': grandson, 'path': os.path.join(dir_name, dirs, txt)}
                 belong = Relationship(son, '包含', grandson)
                 self.__graph.create(belong)
+        with open(os.path.join(os.getcwd(), 'utils', '中文停用词表.txt'), 'r') as f:
+            stopwords = f.readlines()
+        Neo4j.stopwords = set([stopword.strip() for stopword in stopwords])
 
     def __expand_law(self, law):
         """
@@ -44,7 +56,7 @@ class Neo4j(object):
             if isinstance(item_content, str):
                 item_content_node = Node('内容', content=item_content)
             elif isinstance(item_content, dict):
-                item_content_node = Node('内容', content='内容')
+                item_content_node = Node('（内容）', content='内容')
                 for chapter in item_content:
                     chapter_node = Node('标签', label=chapter)
                     graph.create(Relationship(item_content_node, '包含', chapter_node))
@@ -67,11 +79,29 @@ class Neo4j(object):
             if piece_title_node is not None:
                 self.__graph.create(Relationship(piece_node, '标题', piece_title_node))
             self.__graph.create(Relationship(piece_node, '内容', piece_content_node))
+        selector = NodeMatcher(self.__graph)
+        titles = list(selector.match('标题'))
+        titles = {title['title']: title for title in titles}
+        contents = list(selector.match('内容'))
+        contents = {content['content']: content for content in contents}
+
+        def get_words_vec_dict(item):
+            keys = list(item.keys())
+            nodes = [item[key] for key in keys]
+            keys = [' '.join(jieba.cut(key)) for key in keys]
+            tf_idf = TfidfVectorizer(stop_words=Neo4j.stopwords)
+            vectors = tf_idf.fit_transform(keys).toarray()
+            vocabulary = tf_idf.vocabulary_
+            return vocabulary, vectors, nodes
+
+        self.__titles_vocabulary, self.__titles_vectors, self.__titles_nodes = get_words_vec_dict(titles)
+        self.__content_vocabulary, self.__content_vectors, self.__content_nodes = get_words_vec_dict(contents)
+        # vectors和nodes中的下标相对应
         print("SUCCESSFULLY EXPAND %s" % law)
 
     def expand(self, laws='ALL'):
         """
-        展开指定法律
+        展开指定法律（仅支持到各个条目级别的显示）
         :param laws: law（str类型）或laws（list类型，其中包含多个str）
         :return:
         """
@@ -80,4 +110,21 @@ class Neo4j(object):
         for law in laws:
             self.__expand_law(law)
 
+    def answer(self, question):
+        print('SEARCHING...')
+        question = ' '.join(jieba.cut(question))
+        tf_idf_title = TfidfVectorizer(vocabulary=self.__titles_vocabulary, stop_words=Neo4j.stopwords)
+        tf_idf_content = TfidfVectorizer(vocabulary=self.__content_vocabulary, stop_words=Neo4j.stopwords)
+        que_vec_title = tf_idf_title.fit_transform([question]).toarray()[0]
+        que_vec_content = tf_idf_content.fit_transform([question]).toarray()[0]
+        # TODO 根据que_vec_title和que_vec_content与self内的title_vector content_vector计算最大相似度
+        result = ''
+        return result
 
+
+class Neo4jLaw(object):
+    def __init__(self, json_file):
+        with open(json_file, 'r', encoding='utf-8') as f:
+            law = json.load(f)
+        self.__graph = Graph('http://localhost:7474', username='ziuno', password='1234')
+        self.__law = law

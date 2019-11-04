@@ -15,26 +15,41 @@ class Neo4j(object):
     """
     stopwords = None
 
-    def __init__(self, dir_name):
+    def __init__(self, dir_name, rebuild=False):
+        self.__rebuild = rebuild
         root = Node('文件夹', name=dir_name)
         self.__dir_name = dir_name
-        self.__graph = Graph('http://localhost:7474', username='ziuno', password='1234')
-        self.__graph.delete_all()
-        self.__graph.create(root)
+
+        self.__graph = Graph('http://192.168.140.61:7474', username='ziuno', password='1234')  # ip需更改为服务器的地址
+
         self.__laws = {}
-        for dirs in os.listdir(dir_name):
-            if dirs.startswith('.'):
-                continue
-            text = dirs
-            son = Node('文件夹', name=text)
-            belong = Relationship(root, '包含', son)
-            self.__graph.create(belong)
-            for txt in os.listdir(os.path.join(dir_name, dirs)):
-                text = txt.split('.')[0]
-                grandson = Node('文件', name=text)
-                self.__laws[text] = {'node': grandson, 'path': os.path.join(dir_name, dirs, txt)}
-                belong = Relationship(son, '包含', grandson)
+        if rebuild:
+            self.__graph.delete_all()
+            self.__graph.create(root)
+            for dirs in os.listdir(dir_name):
+                if dirs.startswith('.'):
+                    continue
+                text = dirs
+                son = Node('文件夹', name=text)
+                belong = Relationship(root, '包含', son)
                 self.__graph.create(belong)
+                for txt in os.listdir(os.path.join(dir_name, dirs)):
+                    text = txt.split('.')[0]
+                    grandson = Node('文件', name=text)
+                    self.__laws[text] = {'node': grandson, 'path': os.path.join(dir_name, dirs, txt)}
+                    belong = Relationship(son, '包含', grandson)
+                    self.__graph.create(belong)
+        else:
+            def get_law_path(law, dir_name):
+                law = law + '.json'
+                for root, dirs, files in list(os.walk(dir_name)):
+                    if law in files:
+                        return os.path.join(root, law)
+
+            selector = NodeMatcher(self.__graph)
+            laws = list(selector.match('文件'))
+            for law in laws:
+                self.__laws[law['name']] = {'node': law, 'path': get_law_path(law['name'], dir_name)}
         with open(os.path.join(os.getcwd(), 'utils', '中文停用词表.txt'), 'r', encoding='utf-8') as f:
             stopwords = f.readlines()
         Neo4j.stopwords = set([stopword.strip() for stopword in stopwords])
@@ -44,48 +59,49 @@ class Neo4j(object):
         在数据库中展开指定法律名的法律文件
         :param law: 法律名
         """
+        if self.__rebuild:
+            def get_nodes(graph, item):
+                item_title_node = None
+                try:
+                    item_title = item['title']
+                    item_title_node = Node('标题', title=item_title)
+                except KeyError:
+                    pass
+                item_content = item['content']
+                if isinstance(item_content, str):
+                    item_content_node = Node('内容', content=item_content)
+                elif isinstance(item_content, dict):
+                    item_content_node = Node('（内容）', content='内容')
+                    for chapter in item_content:
+                        chapter_node = Node('标签', label=chapter)
+                        graph.create(Relationship(item_content_node, '包含', chapter_node))
+                        chapter_title_node, chapter_content_node = get_nodes(graph, item_content[chapter])
+                        if chapter_title_node is not None:
+                            graph.create(Relationship(chapter_node, '标题', chapter_title_node))
+                        graph.create(Relationship(chapter_node, '内容', chapter_content_node))
+                else:
+                    raise RuntimeError("数据类型错误")
+                return item_title_node, item_content_node
 
-        def get_nodes(graph, item):
-            item_title_node = None
-            try:
-                item_title = item['title']
-                item_title_node = Node('标题', title=item_title)
-            except KeyError:
-                pass
-            item_content = item['content']
-            if isinstance(item_content, str):
-                item_content_node = Node('内容', content=item_content)
-            elif isinstance(item_content, dict):
-                item_content_node = Node('（内容）', content='内容')
-                for chapter in item_content:
-                    chapter_node = Node('标签', label=chapter)
-                    graph.create(Relationship(item_content_node, '包含', chapter_node))
-                    chapter_title_node, chapter_content_node = get_nodes(graph, item_content[chapter])
-                    if chapter_title_node is not None:
-                        graph.create(Relationship(chapter_node, '标题', chapter_title_node))
-                    graph.create(Relationship(chapter_node, '内容', chapter_content_node))
-            else:
-                raise RuntimeError("数据类型错误")
-            return item_title_node, item_content_node
+            law_node = self.__laws[law]['node']
+            law_path = self.__laws[law]['path']
+            with open(law_path, 'r', encoding='utf-8') as f:
+                law_content = json.load(f)
+            for piece in law_content:
+                piece_node = Node('标签', label=piece)
+                self.__graph.create(Relationship(law_node, '包含', piece_node))
+                piece_title_node, piece_content_node = get_nodes(self.__graph, law_content[piece])
+                if piece_title_node is not None:
+                    self.__graph.create(Relationship(piece_node, '标题', piece_title_node))
+                self.__graph.create(Relationship(piece_node, '内容', piece_content_node))
 
-        law_node = self.__laws[law]['node']
-        law_path = self.__laws[law]['path']
-        with open(law_path, 'r', encoding='utf-8') as f:
-            law_content = json.load(f)
-        for piece in law_content:
-            piece_node = Node('标签', label=piece)
-            self.__graph.create(Relationship(law_node, '包含', piece_node))
-            piece_title_node, piece_content_node = get_nodes(self.__graph, law_content[piece])
-            if piece_title_node is not None:
-                self.__graph.create(Relationship(piece_node, '标题', piece_title_node))
-            self.__graph.create(Relationship(piece_node, '内容', piece_content_node))
         selector = NodeMatcher(self.__graph)
         titles = list(selector.match('标题'))
         titles = {title['title']: title for title in titles}
         contents = list(selector.match('内容'))
         contents = {content['content']: content for content in contents}
 
-        def get_words_vec_dict(item):
+        def get_voca_vec_node(item):
             keys = list(item.keys())
             nodes = [item[key] for key in keys]
             keys = [' '.join(jieba.cut(key)) for key in keys]
@@ -94,8 +110,8 @@ class Neo4j(object):
             vocabulary = tf_idf.vocabulary_
             return vocabulary, vectors, nodes
 
-        self.__titles_vocabulary, self.__titles_vectors, self.__titles_nodes = get_words_vec_dict(titles)
-        self.__content_vocabulary, self.__content_vectors, self.__content_nodes = get_words_vec_dict(contents)
+        self.__titles_vocabulary, self.__titles_vectors, self.__titles_nodes = get_voca_vec_node(titles)
+        self.__content_vocabulary, self.__content_vectors, self.__content_nodes = get_voca_vec_node(contents)
         # vectors和nodes中的下标相对应
         print("SUCCESSFULLY EXPAND %s" % law)
 
@@ -134,7 +150,7 @@ class Neo4j(object):
         title_node = self.__titles_nodes[max_title_index]
         content_node = self.__content_nodes[max_content_index]
         result = [list(title_node.values())[0], list(content_node.values())[0]]
-        # TODO 向文件方向检索当前所在条并加入到结果result中
+        # TODO 在graph中向文件方向逆向检索当前所在条并加入到结果result中（检索出当前检索出的条文在法律中的位置）
         return result
 
 

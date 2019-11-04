@@ -35,7 +35,7 @@ class Neo4j(object):
                 self.__laws[text] = {'node': grandson, 'path': os.path.join(dir_name, dirs, txt)}
                 belong = Relationship(son, '包含', grandson)
                 self.__graph.create(belong)
-        with open(os.path.join(os.getcwd(), 'utils', '中文停用词表.txt'), 'r') as f:
+        with open(os.path.join(os.getcwd(), 'utils', '中文停用词表.txt'), 'r', encoding='utf-8') as f:
             stopwords = f.readlines()
         Neo4j.stopwords = set([stopword.strip() for stopword in stopwords])
 

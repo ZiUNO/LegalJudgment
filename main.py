@@ -14,11 +14,11 @@ if __name__ == '__main__':
     graph = Neo4j(law_path)
     graph.expand('中华人民共和国刑法')
     # TODO 直接根据法条回答简易问题
-    say = None
+    say = input('>>>')
     while say != 'q':
-        say = input('>>>')
         ans = graph.answer(say)  # 抢劫罪是什么？
         for a in ans:
             print(a)
+        say = input('>>>')
     # TODO 直接根据json文件分析
     # n_law = Neo4jLaw(os.path.join('中国法律大全JSON', '刑法', '中华人民共和国刑法.json')) # 功能待实现

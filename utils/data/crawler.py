@@ -80,7 +80,7 @@ class DuXiaoFaCrawler(Crawler):
         starttime = time.time()
         with open(config_path, 'r', encoding='utf-8') as f:
             config = json.load(f)
-        save_path = config['DOWNLOAD_SAVE_PATH']
+        save_path = r'..\\..\\' + config['DOWNLOAD_SAVE_PATH']
         laws = config['LAW_NAME']
         total_law = []
         executor = ThreadPoolExecutor(max_workers=4)
@@ -105,3 +105,8 @@ class DuXiaoFaCrawler(Crawler):
         print("total: %d, success: %d, failed: %d, success rate=%.02f" % (total, count, total - count, count / total))
         print('CANNOT FIND:')
         _ = [print(law) for law in total_law]
+
+
+if __name__ == '__main__':
+    config_path = r'..\\..\\config.json'
+    DuXiaoFaCrawler.download(config_path)  # 法律条文爬取

@@ -13,13 +13,13 @@ class Neo4j(object):
     """
     stopwords = None
 
-    def __init__(self, dir_name, rebuild=False):
+    def __init__(self, dir_name, rebuild=True):
         self.__rebuild = rebuild
         root = Node('文件夹', name=dir_name)
         self.__dir_name = dir_name
 
-        self.__graph = Graph('http://192.168.140.61:7474', username='ziuno', password='1234')  # ip需更改为服务器的地址
-
+        # self.__graph = Graph('http://192.168.140.61:7474', username='ziuno', password='1234')  # ip需更改为服务器的地址
+        self.__graph = Graph('http://localhost:7474', username='ziuno', password='1234')
         self.__laws = {}
         if rebuild:
             self.__graph.delete_all()
@@ -48,7 +48,7 @@ class Neo4j(object):
             laws = list(selector.match('文件'))
             for law in laws:
                 self.__laws[law['name']] = {'node': law, 'path': get_law_path(law['name'], dir_name)}
-        with open(os.path.join(os.getcwd(), 'utils', '中文停用词表.txt'), 'r', encoding='utf-8') as f:
+        with open(os.path.join(os.path.split(os.path.realpath(__file__))[0], '中文停用词表.txt'), 'r', encoding='utf-8') as f:
             stopwords = f.readlines()
         Neo4j.stopwords = set([stopword.strip() for stopword in stopwords])
 
@@ -151,10 +151,3 @@ class Neo4j(object):
         # TODO 向文件方向检索当前所在条并加入到结果result中
         return result
 
-
-class Neo4jLaw(object):
-    def __init__(self, json_file):
-        with open(json_file, 'r', encoding='utf-8') as f:
-            law = json.load(f)
-        self.__graph = Graph('http://localhost:7474', username='ziuno', password='1234')
-        self.__law = law

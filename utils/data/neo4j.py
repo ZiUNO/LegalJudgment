@@ -1,12 +1,10 @@
 import json
 import os
-import re
-from itertools import chain
-import numpy as np
 
 import jieba
+import numpy as np
 from py2neo import Graph, Node, Relationship, NodeMatcher
-from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 class Neo4j(object):
@@ -150,7 +148,7 @@ class Neo4j(object):
         title_node = self.__titles_nodes[max_title_index]
         content_node = self.__content_nodes[max_content_index]
         result = [list(title_node.values())[0], list(content_node.values())[0]]
-        # TODO 在graph中向文件方向逆向检索当前所在条并加入到结果result中（检索出当前检索出的条文在法律中的位置）
+        # TODO 向文件方向检索当前所在条并加入到结果result中
         return result
 
 

@@ -1,6 +1,6 @@
 {
-  "DOWNLOAD_SAVE_PATH": "中国法律大全JSON_DXF",
-  "LAW_PATH": "中国法律大全JSON",
+  "DOWNLOAD_SAVE_PATH": "data\\中国法律大全JSON_DXF",
+  "LAW_PATH": "data\\中国法律大全JSON",
   "TIMESTAMP": 1572498896,
   "LAW_NAME": {
     "环境保护法": [

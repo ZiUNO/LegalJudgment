@@ -30,7 +30,8 @@ def __trans_main_body(raw_main_body):
         return title
 
     def handle_content(content):
-        return re.sub('\s*', '', content)
+        # return re.sub('\s*', '', content)
+        return content  # 保留条文中的换行符
 
     main_body = {}
     for piece in raw_main_body:

@@ -103,15 +103,11 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# txt
-*.txt
-
 # .idea
 .idea
 
 # LegalJudgment.iml
 LegalJudgment.iml
 
-# json
-*.json
-!config.json
+# data
+data/

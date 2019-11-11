@@ -1,24 +1,21 @@
 # LegalJudgment
 ## Dir Structure
 > LegalJudgment
+>> data
+>
 >> utils
->>>\_\_init\_\_.py
->>>
->>>neo4j.py
->>>
->>>crawler.py
->>>
->>>transform.py
->
->>中国法律大全JSON_DXF
 >>
->>> 刑法
->>>> 中华人民共和国刑法.json
->
->>中国法律大全JSON
+>>> data
+>>>> \_\_init\_\_.py
+>>>
+>>>> neo4j.py
+>>>
+>>>> crawler.py
+>>>
+>>>> transform.py
 >>
->>> 刑法
- >>>> 中华人民共和国刑法.json
+>>> doc2vec.py
+>
 >
 >>config.json
 >

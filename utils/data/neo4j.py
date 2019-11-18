@@ -92,7 +92,7 @@ class Neo4j(object):
                 if piece_title_node is not None:
                     self.__graph.create(Relationship(piece_node, '标题', piece_title_node))
                 self.__graph.create(Relationship(piece_node, '内容', piece_content_node))
-
+        # TODO 以下与具体检索相关
         selector = NodeMatcher(self.__graph)
         titles = list(selector.match('标题'))
         titles = {title['title']: title for title in titles}
@@ -125,6 +125,7 @@ class Neo4j(object):
             self.__expand_law(law)
 
     def answer(self, question):
+        # TODO 以下与具体检索相关
         print('SEARCHING...')
         question = ' '.join(jieba.cut(question, cut_all=True))
         tf_idf_title = TfidfVectorizer(vocabulary=self.__titles_vocabulary, stop_words=Neo4j.stopwords)
@@ -148,6 +149,5 @@ class Neo4j(object):
         title_node = self.__titles_nodes[max_title_index]
         content_node = self.__content_nodes[max_content_index]
         result = [list(title_node.values())[0], list(content_node.values())[0]]
-        # TODO 向文件方向检索当前所在条并加入到结果result中
         return result
 

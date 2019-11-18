@@ -1,6 +1,7 @@
 import json
 import os
 import pathlib
+import platform
 import re
 import time
 from concurrent.futures.thread import ThreadPoolExecutor
@@ -80,7 +81,10 @@ class DuXiaoFaCrawler(Crawler):
         starttime = time.time()
         with open(config_path, 'r', encoding='utf-8') as f:
             config = json.load(f)
-        save_path = r'..\\..\\' + config['DOWNLOAD_SAVE_PATH']
+        if platform.system() == "Windows":
+            save_path = r'..\\..\\' + config['DOWNLOAD_SAVE_PATH']
+        else:
+            save_path = os.path.join('..', '..', config['DOWNLOAD_SAVE_PATH'].replace("\\", os.path.sep))
         laws = config['LAW_NAME']
         total_law = []
         executor = ThreadPoolExecutor(max_workers=4)
@@ -108,5 +112,5 @@ class DuXiaoFaCrawler(Crawler):
 
 
 if __name__ == '__main__':
-    config_path = r'..\\..\\config.json'
+    config_path = os.path.join('..', '..', 'config.json')
     DuXiaoFaCrawler.download(config_path)  # 法律条文爬取

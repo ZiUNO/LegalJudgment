@@ -116,6 +116,6 @@ def to_law(source_dir, target_dir):
 
 
 if __name__ == '__main__':
-    dxf_path = r'..\\..\\data\\中国法律大全JSON_DXF'
-    law_path = r'..\\..\\data\\中国法律大全JSON'  # 格式化后的法律条文的保存路径
+    dxf_path = os.path.join('..', '..', 'data', '中国法律大全JSON_DXF')
+    law_path = os.path.join('..', '..', 'data', '中国法律大全JSON')  # 格式化后的法律条文的保存路径
     to_law(dxf_path, law_path)  # 格式化下载的法律条文

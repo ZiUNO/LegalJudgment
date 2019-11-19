@@ -153,7 +153,7 @@ def to_dir(source_dir, target_dir):
         elif path_type.is_file():
             with open(source_path, 'r', encoding='utf-8') as f:
                 law = json.load(f)
-            target_path = target_path[:-4]
+            target_path = target_path[:-5]
             if not pathlib.Path(target_path).exists():
                 os.makedirs(target_path)
             json_to_dir(law, target_path)

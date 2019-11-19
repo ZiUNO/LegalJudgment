@@ -82,9 +82,9 @@ class DuXiaoFaCrawler(Crawler):
         with open(config_path, 'r', encoding='utf-8') as f:
             config = json.load(f)
         if platform.system() == "Windows":
-            save_path = r'..\\..\\' + config['DOWNLOAD_SAVE_PATH']
+            save_path = r'..\\..\\' + config['DOWNLOAD_SAVE_PATH_DXF']
         else:
-            save_path = os.path.join('..', '..', config['DOWNLOAD_SAVE_PATH'].replace("\\", os.path.sep))
+            save_path = os.path.join('..', '..', config['DOWNLOAD_SAVE_PATH_DXF'].replace("\\", os.path.sep))
         laws = config['LAW_NAME']
         total_law = []
         executor = ThreadPoolExecutor(max_workers=4)

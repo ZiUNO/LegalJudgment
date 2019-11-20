@@ -4,8 +4,7 @@ import pathlib
 import jieba
 from jieba.analyse import ChineseAnalyzer
 from whoosh.fields import *
-from whoosh.index import create_in
-from whoosh.index import open_dir
+from whoosh.index import create_in, open_dir
 from whoosh.qparser import QueryParser
 from whoosh.sorting import FieldFacet
 
@@ -73,17 +72,27 @@ class WhooshEngine(object):
 
         index = open_dir(index_dir)
         new_list = []
-        answer = []
         stopwords = cls.__stopwords
+
+        # FROMHERE 类似归并实现对答案的逐级合并，当and结果为none时转为or
+        """
+        该部分代码，待实现
+        :param index: 索引
+        :param ques: 问题
+        :param stopwords: 停用词
+        :return new_list 保存最终返回的结果
+        """
         with index.searcher() as searcher:
             parser = QueryParser("content", index.schema)
             ques = " ".join(list(set(jieba.lcut_for_search(ques)).difference(stopwords)))
-            # TODO 会怎么样在分词过程中会被分为“会”“怎么样”-》需要分词或称中自行更新停用词
             query = parser.parse(ques)
             facet = FieldFacet("content", reverse=True)  # 按序排列搜索结果
             results = searcher.search(query, limit=None, sortedby=facet)
             for result in results:
                 new_list.append(dict(result))
+        # TOHERE
+
+        answer = []
         for result in new_list:
             path = result["path"]
             title = result["title"]

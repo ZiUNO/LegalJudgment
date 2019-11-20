@@ -20,7 +20,7 @@ if __name__ == '__main__':
     if 0:
         WhooshEngine.create_index(index_dir, source_dir)
     start_time = datetime.now()
-    answer = WhooshEngine.search_index(index_dir, "列车内抢劫会怎么样？")
+    answer = WhooshEngine.search_index(index_dir, "抢劫会被判什么刑？")
     end_time = datetime.now()
     for ans in answer:
         for i in ans:

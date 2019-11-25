@@ -73,34 +73,37 @@ class WhooshEngine(object):
         index = open_dir(index_dir)
         new_list = []
         stopwords = cls.__stopwords
+        ques = list(set(jieba.lcut_for_search(ques)).difference(stopwords))
+        # FROMHERE 需创建一个新的索引，通过检索替换当前问题中的关键词为指定的关键词
+        # TOHERE
 
         # FROMHERE 类似归并实现对答案的逐级合并，当and结果为none时转为or
         """
         该部分代码，待实现
         :param index: 索引
-        :param ques: 问题
-        :param stopwords: 停用词
+        :param ques: 关键词列表
         :return new_list 保存最终返回的结果
         """
-        with index.searcher() as searcher:
-            parser = QueryParser("content", index.schema)
-            ques = " ".join(list(set(jieba.lcut_for_search(ques)).difference(stopwords)))
-            query = parser.parse(ques)
-            facet = FieldFacet("content", reverse=True)  # 按序排列搜索结果
-            results = searcher.search(query, limit=None, sortedby=facet)
-            for result in results:
-                new_list.append(dict(result))
+        for keyword in ques:
+            with index.searcher() as searcher:
+
+                parser = QueryParser("content", index.schema)
+                query = parser.parse(keyword)
+                results = searcher.search(query, limit=None)
+                for result in results:
+                    new_list.append(([keyword], dict(result)))
+
         # TOHERE
 
         answer = []
-        for result in new_list:
+        for keyword, result in new_list:
             path = result["path"]
             title = result["title"]
             answer_from = path.split(os.path.sep)
             answer_from = [ans for ans in answer_from if ans not in {'..', 'data', 'title', 'content', '[PIECE]'}]
             *answer_from, answer_no = answer_from
             # each answer : {'from': '', 'no': ''[, 'title': ''][, 'content': '']}
-            new_answer = {'from': answer_from, 'no': answer_no}
+            new_answer = {'keyword': keyword, 'from': answer_from, 'no': answer_no}
             if title == answer_no:
                 title_path = os.path.join(path, 'title.txt')
                 content_path = os.path.join(path, 'content.txt')

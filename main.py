@@ -20,7 +20,7 @@ if __name__ == '__main__':
     if 0:
         WhooshEngine.create_index(index_dir, source_dir)
     start_time = datetime.now()
-    answer = WhooshEngine.search_index(index_dir, "抢劫会被判什么刑？")
+    answer = WhooshEngine.search_index(index_dir, "列车内抢劫会怎么样？")
     end_time = datetime.now()
     for ans in answer:
         for i in ans:
@@ -28,4 +28,5 @@ if __name__ == '__main__':
         print('-' * 10)
     if not len(answer):
         print('none')
+    print("total results: %d" % len(answer))
     print("cost time: %.02f" % (end_time - start_time).total_seconds())

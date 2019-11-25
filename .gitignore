@@ -111,3 +111,6 @@ LegalJudgment.iml
 
 # data
 data/
+
+# csv
+*.csv

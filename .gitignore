@@ -110,7 +110,7 @@ venv.bak/
 LegalJudgment.iml
 
 # data
-data/
+/data/
 
 # csv
 *.csv

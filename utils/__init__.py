@@ -1,4 +1,4 @@
-# from gensim.models.doc2vec import Doc2Vec
+# from gensim.model.doc2vec import Doc2Vec
 #
 #
 # def doc2vec(title_content):

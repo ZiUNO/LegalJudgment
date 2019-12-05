@@ -1,3 +1,7 @@
+"""
+废弃使用
+"""
+
 import os
 import pathlib
 
@@ -6,7 +10,6 @@ from jieba.analyse import ChineseAnalyzer
 from whoosh.fields import *
 from whoosh.index import create_in, open_dir
 from whoosh.qparser import QueryParser
-from whoosh.sorting import FieldFacet
 
 
 class WhooshEngine(object):

@@ -1,3 +1,5 @@
+# Initially taken from Github's Python gitignore file
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -38,6 +40,7 @@ pip-delete-this-directory.txt
 # Unit test / coverage reports
 htmlcov/
 .tox/
+.nox/
 .coverage
 .coverage.*
 .cache
@@ -72,6 +75,10 @@ target/
 # Jupyter Notebook
 .ipynb_checkpoints
 
+# IPython
+profile_default/
+ipython_config.py
+
 # pyenv
 .python-version
 
@@ -102,15 +109,17 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+.dmypy.json
+dmypy.json
 
-# .idea
-.idea
+# Pyre type checker
+.pyre/
 
-# LegalJudgment.iml
-LegalJudgment.iml
+# !idea
+!.idea
 
-# data
-/data/
-
-# csv
-*.csv
+# dataset&initmodel
+chinese_L-12_H-768_A-12/
+data_dir/
+tmp/
+runs/

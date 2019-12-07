@@ -1,13 +1,15 @@
 from bertviz import model_view
 from transformers import BertTokenizer, BertForSequenceClassification
 
-model_version = r"E:/PyCharmWorkspace/LegalJudgment/utils/model/transformers_bert/tmp/self"
+model_version = r"E:/PyCharmWorkspace/LegalJudgment/utils/model/torch_pretrained_bert_multi_label/tmp/self"
 do_lower_case = True
-model = BertForSequenceClassification.from_pretrained(model_version, output_attentions=True)
+model = BertForSequenceClassification.from_pretrained(model_version, num_labels=202, output_attentions=True)
 tokenizer = BertTokenizer.from_pretrained(model_version, do_lower_case=do_lower_case)
 
-sentence_a = "周某打伤刘某"
-sentence_b = "马某被孙某打伤"
+
+sentence_a = "被告人周某在越野车内窃得黑色手机。"
+# sentence_b = "马某被孙某打伤"
+sentence_b = None
 
 hide_delimiter_attn = False
 
@@ -32,8 +34,4 @@ if hide_delimiter_attn:
                 layer_attn[0, :, i, :] = 0
                 layer_attn[0, :, :, i] = 0
 
-model_view(attention, tokens, sentence_b_start)
-
-for lay in attention:
-    for i in lay:
-        print(" ".join(i.values))
+print(logits)

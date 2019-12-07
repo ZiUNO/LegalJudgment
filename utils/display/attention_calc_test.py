@@ -27,10 +27,9 @@ if __name__ == '__main__':
         to_consider_head = head[0:-1, 0:-1]
         consider_layers.append(to_consider_head)
     consider_layers = np.average(consider_layers, axis=0)
-    cls2others = consider_layers[0]
-    cls2others[0] = 0
+    cls2others = consider_layers[0, 1:]
     threshold = 0.5
     max_rate = cls2others.max()
     rate_threshold = max_rate * threshold
-    huge_w_ids = list(np.where(cls2others>=rate_threshold)[0])
+    huge_w_ids = list(np.where(cls2others >= rate_threshold)[0])
     print(huge_w_ids)

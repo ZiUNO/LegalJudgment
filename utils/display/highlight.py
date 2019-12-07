@@ -23,15 +23,4 @@ attention = logits[-1]
 input_id_list = input_ids[0].tolist()  # Batch index 0
 tokens = tokenizer.convert_ids_to_tokens(input_id_list)
 
-if sentence_b:
-    sentence_b_start = token_type_ids[0].tolist().index(1)
-else:
-    sentence_b_start = None
-if hide_delimiter_attn:
-    for i, t in enumerate(tokens):
-        if t in ("[SEP]", "[CLS]"):
-            for layer_attn in attention:
-                layer_attn[0, :, i, :] = 0
-                layer_attn[0, :, :, i] = 0
-
 print(logits)

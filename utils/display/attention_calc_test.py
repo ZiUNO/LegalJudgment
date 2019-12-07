@@ -15,3 +15,4 @@ if __name__ == '__main__':
         result_data = f.readlines()
     result = [float(data.strip()) for data in result_data]
     # TODO 根据attention计算result，得到计算过程，用于计算词汇权重
+

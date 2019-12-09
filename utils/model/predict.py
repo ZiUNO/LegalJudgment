@@ -42,6 +42,18 @@ class Predict(object):
                 ]
 
     @staticmethod
+    def __get_articles_labels():
+        return [184, 336, 314, 351, 224, 132, 158, 128, 223, 308, 341, 349, 382, 238, 369, 248, 266, 313, 127, 340, 288,
+                172, 209, 243, 302, 200, 227, 155, 147, 143, 261, 124, 359, 343, 291, 241, 235, 367, 393, 274, 240, 269,
+                199, 119, 246, 282, 133, 177, 170, 310, 364, 201, 312, 244, 357, 233, 236, 264, 225, 234, 328, 417, 151,
+                135, 136, 348, 217, 168, 134, 237, 262, 150, 114, 196, 303, 191, 392, 226, 267, 272, 212, 353, 315, 205,
+                372, 215, 350, 275, 385, 164, 338, 292, 159, 162, 333, 388, 356, 375, 326, 402, 397, 125, 395, 290, 176,
+                354, 185, 141, 279, 399, 192, 383, 307, 295, 361, 286, 404, 390, 294, 115, 344, 268, 171, 117, 273, 193,
+                418, 220, 198, 231, 386, 363, 346, 210, 270, 144, 347, 280, 281, 118, 122, 116, 360, 239, 228, 305, 130,
+                152, 389, 276, 213, 186, 413, 285, 316, 245, 232, 175, 149, 263, 387, 283, 391, 211, 396, 352, 345, 258,
+                253, 163, 140, 293, 194, 342, 161, 358, 271, 156, 260, 384, 153, 277, 214]
+
+    @staticmethod
     def __get_highlight_ids(attentions, threshold=0.01):  # FIXME 调整阈值
         """
         获取高亮句子下标
@@ -129,9 +141,11 @@ class Predict(object):
         config = {key: default_config[key] if (key not in config_keys) else config[key] for
                   key in default_config}
         label_ids, highlight_ids = Predict.__predict_charge_and_highlight_ids(model_version=config["model"],
-                                                                      sentence=sentence,
-                                                                      charge_labels_threshold=config["labels_threshold"],
-                                                                      highlight_threshold=config["highlight_threshold"])
+                                                                              sentence=sentence,
+                                                                              charge_labels_threshold=config[
+                                                                                  "labels_threshold"],
+                                                                              highlight_threshold=config[
+                                                                                  "highlight_threshold"])
         label_list = Predict.__get_charge_labels()
         labels = [label_list[ids] for ids in label_ids]
         highlight_sentence_format = "<%s class='{highlight_cls}'>{word}</%s>" % (
@@ -152,18 +166,27 @@ class Predict(object):
         sentence = re.sub(need_eliminate, u"", sentence)
         return labels, sentence
 
+    @staticmethod
+    def predict_articles(charges, model, labels_threshold):
+        articles = [123]
+        article_list = Predict().__get_articles_labels()
+        # TODO 根据预测的罪名，使用模型，预测法条
+        return articles
+
 
 if __name__ == '__main__':
-    sentence = u"被告人周某在越野车内窃得黑色手机。祁阳县人民检察院指控，2013年9月22日、25日，被告人李某在祁阳县潘市镇石峡洲村，因怀疑别人在谩骂自己，便手持木棍、刀等凶器冲出屋外，追逐本村无辜村民，随意殴打他人，致多人受伤，任意损毁他人财物。经鉴定，被害人李某甲的损伤构成重伤；被害人李某乙、李某丙的损伤均构成了轻伤；被害人李某丁、李某戊、李某己、李某庚、李某辛、黄某某、李某壬、李某癸的损伤均构成轻微伤。2013年9月25日12时许，祁阳县公安局民警将被告人李某抓获归案。该院就上述指控，向本院提供了被害人李某甲、李某乙、李某丙等人的陈述；证人王某甲、王某乙、于某某等人的证言；法医鉴定意见书及伤情照片；现场勘验检查笔录、现场方位图及照片、提取笔录及扣押物品清单、指认木棒和刀照片；公安机关证明；户籍证明及被告人李某供述等相关证据予以证明。该院以被告人李某××他人身体，致一人重伤；同时持凶器追逐、殴打他人，致二人轻伤，多人轻微伤，情节恶劣；任意损毁他人财物，造成恶劣社会影响，情节严重。"
-    labels, highlight_sentence = Predict().predict_charge_and_highlight(sentence=sentence,
-                                                              config={"label_type": "div",
-                                                                      "label_cls": "pred-text",
-                                                                      "highlight_cls": "pred-text-highlight",
-                                                                      "highlight_label_type": "div",
-                                                                      "model": r"/model/torch_pretrained_bert_multi_label/tmp/self/",
-                                                                      "labels_threshold": -0.6,
-                                                                      "highlight_threshold": 0.01})
-    print("*" * 10 + " labels " + "*" * 10)
-    print(labels)
-    print("*" * 10 + " sentence " + "*" * 10)
-    print(highlight_sentence)
+    # sentence = u"被告人周某在越野车内窃得黑色手机。祁阳县人民检察院指控，2013年9月22日、25日，被告人李某在祁阳县潘市镇石峡洲村，因怀疑别人在谩骂自己，便手持木棍、刀等凶器冲出屋外，追逐本村无辜村民，随意殴打他人，致多人受伤，任意损毁他人财物。经鉴定，被害人李某甲的损伤构成重伤；被害人李某乙、李某丙的损伤均构成了轻伤；被害人李某丁、李某戊、李某己、李某庚、李某辛、黄某某、李某壬、李某癸的损伤均构成轻微伤。2013年9月25日12时许，祁阳县公安局民警将被告人李某抓获归案。该院就上述指控，向本院提供了被害人李某甲、李某乙、李某丙等人的陈述；证人王某甲、王某乙、于某某等人的证言；法医鉴定意见书及伤情照片；现场勘验检查笔录、现场方位图及照片、提取笔录及扣押物品清单、指认木棒和刀照片；公安机关证明；户籍证明及被告人李某供述等相关证据予以证明。该院以被告人李某××他人身体，致一人重伤；同时持凶器追逐、殴打他人，致二人轻伤，多人轻微伤，情节恶劣；任意损毁他人财物，造成恶劣社会影响，情节严重。"
+    # labels, highlight_sentence = Predict().predict_charge_and_highlight(sentence=sentence,
+    #                                                                     config={"label_type": "div",
+    #                                                                             "label_cls": "pred-text",
+    #                                                                             "highlight_cls": "pred-text-highlight",
+    #                                                                             "highlight_label_type": "div",
+    #                                                                             "model": r"/model/torch_pretrained_bert_multi_label/tmp/self/",
+    #                                                                             "labels_threshold": -0.6,
+    #                                                                             "highlight_threshold": 0.01})
+    # print("*" * 10 + " labels " + "*" * 10)
+    # print(labels)
+    # print("*" * 10 + " sentence " + "*" * 10)
+    # print(highlight_sentence)
+
+    charge_labels = ['寻衅滋事', '故意伤害']

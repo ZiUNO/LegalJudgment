@@ -5,9 +5,9 @@
 |-- data
 |-- utils
 |   |-- data
-|   |    |-- cail2tsv.py  -- cail-2018转tsv
-|   |    |-- crawler.py  -- 度小法爬虫
-|   |    |-- transform.py  -- 度小法格式转换
+|   |   |-- cail2tsv.py  -- cail-2018转tsv
+|   |   |-- crawler.py  -- 度小法爬虫
+|   |   |-- transform.py  -- 度小法格式转换
 |   |-- display  -- [废弃]测试用
 |   |-- engine
 |   |   |-- neo4j_engine.py  -- 使用neo4j进行检索

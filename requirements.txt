@@ -1,0 +1,5 @@
+jieba==0.39
+numpy>=1.17.3
+py2neo==4.3.0
+sklearn
+transformers==2.2.1

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a15929d1-e96e-4c3d-8b19-b5fe1947a741" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/utils/model/svm_classifier/classifier.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    <list default="true" id="a15929d1-e96e-4c3d-8b19-b5fe1947a741" name="Default Changelist" comment="Add:&#10;classifier:svm多标签分类器">
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/model/svm_classifier/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/model/svm_classifier/classifier.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/model/svm_classifier/classifier.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -264,7 +265,7 @@
       <workItem from="1575634147277" duration="3191000" />
       <workItem from="1575694717913" duration="16862000" />
       <workItem from="1575851760650" duration="21213000" />
-      <workItem from="1575880812965" duration="8489000" />
+      <workItem from="1575880812965" duration="23772000" />
     </task>
     <task id="LOCAL-00001" summary="Delete:&#10;datatransform&#10;Update:&#10;config:添加格式转换后存储位置&#10;Add:&#10;transform:to_law将原始DXF中的格式转换为树结构（需树实现）">
       <created>1572439616153</created>
@@ -476,7 +477,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575871814206</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Add:&#10;classifier:svm多标签分类器">
+      <created>1575891877384</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1575891877386</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -548,7 +556,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update:&#10;neo4j:标记后续具体检索修改位置&#10;__init__:标记doc2vec库，可能使用" />
     <MESSAGE value="Modify:&#10;crawler:路径为度小法&#10;Update:&#10;transform:将原本的json文件转换为文件夹结构（用于检索）（注：正则表达式存在部分问题，导致部分JSON文件标题存在问题，需手动更改）&#10;Add:&#10;whoosh_engine:使用whoosh进行检索，具体添加法律文件为检索待实现" />
     <MESSAGE value="Update:&#10;whoosh:搜索引擎初步实现&#10;Next:&#10;whoosh:在用户提问的过程中针对问题更新针对当前问题的停用词" />
     <MESSAGE value="Next:&#10;whoosh:类似归并排序的方法对多个关键词检索到的答案进行取舍（and或or）" />
@@ -573,7 +580,8 @@
     <MESSAGE value="Delete:&#10;main:删除用于多线程的预测函数&#10;Modify:&#10;predict:添加注解及重构结构，便于进行调用" />
     <MESSAGE value="Add:&#10;predict:法条标签&#10;Modify:&#10;main/predict:微调调用结构" />
     <MESSAGE value="Add:&#10;predict:法条标签&#10;Modify:&#10;main/predict:微调调用结构&#10;Next:&#10;使用罪名标签预测法条标签" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add:&#10;predict:法条标签&#10;Modify:&#10;main/predict:微调调用结构&#10;Next:&#10;使用罪名标签预测法条标签" />
+    <MESSAGE value="Add:&#10;classifier:svm多标签分类器" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add:&#10;classifier:svm多标签分类器" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/LegalJudgment$neo4j.coverage" NAME="neo4j Coverage Results" MODIFIED="1573476059441" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/data" />
@@ -585,7 +593,7 @@
     <SUITE FILE_PATH="coverage/LegalJudgment$transform.coverage" NAME="transform Coverage Results" MODIFIED="1574153122393" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/data" />
     <SUITE FILE_PATH="coverage/LegalJudgment$whoosh_engine.coverage" NAME="whoosh_engine Coverage Results" MODIFIED="1574161870440" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/engine" />
     <SUITE FILE_PATH="coverage/LegalJudgment$main.coverage" NAME="main Coverage Results" MODIFIED="1575871614837" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$classifier.coverage" NAME="classifier Coverage Results" MODIFIED="1575890764445" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/model/svm_classifier" />
+    <SUITE FILE_PATH="coverage/LegalJudgment$classifier.coverage" NAME="classifier Coverage Results" MODIFIED="1575958501800" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/model/svm_classifier" />
     <SUITE FILE_PATH="coverage/LegalJudgment$run_squad.coverage" NAME="run_squad Coverage Results" MODIFIED="1573193119203" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/LegalJudgment$cail2tsv.coverage" NAME="cail2tsv Coverage Results" MODIFIED="1575371282383" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/data" />
     <SUITE FILE_PATH="coverage/LegalJudgment$test.coverage" NAME="highlight Coverage Results" MODIFIED="1575550682187" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/display" />

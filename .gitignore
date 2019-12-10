@@ -111,3 +111,6 @@ LegalJudgment.iml
 
 # csv
 *.csv
+
+# .idea
+.idea

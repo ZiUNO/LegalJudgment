@@ -2,13 +2,45 @@
 import re
 from time import time
 
+import joblib
 import numpy as np
 from transformers import BertTokenizer, BertForSequenceClassification
 
 
 class Predict(object):
+
     @staticmethod
-    def __get_charge_labels():
+    def convert_charge_to_ids(charges):
+        charge_list = Predict.get_charge_labels()
+        charge_len = len(charge_list)
+        charge_ids = [0] * charge_len
+        for ch in charges:
+            charge_ids[charge_list.index(ch)] = 1
+        return charge_ids
+
+    @staticmethod
+    def convert_ids_to_charge(ids):
+        charge_list = Predict.get_charge_labels()
+        charge_ids = list(np.where(ids)[0])
+        return [charge_list[index] for index in charge_ids]
+
+    @staticmethod
+    def convert_ids_to_article(ids):
+        article_list = Predict.get_articles_labels()
+        article_ids = list(np.where(ids)[0])
+        return [article_list[index] for index in article_ids]
+
+    @staticmethod
+    def convert_article_to_ids(articles):
+        article_list = Predict.get_articles_labels()
+        article_len = len(article_list)
+        article_ids = [0] * article_len
+        for ar in articles:
+            article_ids[article_list.index(ar)] = 1
+        return article_ids
+
+    @staticmethod
+    def get_charge_labels():
         """
         获取罪名标签
         :return: 罪名标签列表
@@ -42,7 +74,7 @@ class Predict(object):
                 ]
 
     @staticmethod
-    def __get_articles_labels():
+    def get_articles_labels():
         return [184, 336, 314, 351, 224, 132, 158, 128, 223, 308, 341, 349, 382, 238, 369, 248, 266, 313, 127, 340, 288,
                 172, 209, 243, 302, 200, 227, 155, 147, 143, 261, 124, 359, 343, 291, 241, 235, 367, 393, 274, 240, 269,
                 199, 119, 246, 282, 133, 177, 170, 310, 364, 201, 312, 244, 357, 233, 236, 264, 225, 234, 328, 417, 151,
@@ -53,17 +85,47 @@ class Predict(object):
                 152, 389, 276, 213, 186, 413, 285, 316, 245, 232, 175, 149, 263, 387, 283, 391, 211, 396, 352, 345, 258,
                 253, 163, 140, 293, 194, 342, 161, 358, 271, 156, 260, 384, 153, 277, 214]
 
-    @staticmethod
-    def __get_highlight_ids(attentions, threshold=0.01):  # FIXME 调整阈值
+    config = {
+        "model_version": None,
+        "clf": None,
+        "highlight_consider_layer_ids": None,
+        "charge_labels_threshold": None,
+        "highlight_threshold": None,
+        "model": None,
+        "tokenizer": None,
+        "highlight_consider_layers_ids": None,
+    }
+
+    @classmethod
+    def init(cls, config):
+        for c in config:
+            cls.config[c] = config[c]
+        cls.config["tokenizer"] = BertTokenizer.from_pretrained(config["model_version"], do_lower_case=True)
+        cls.config["model"] = BertForSequenceClassification.from_pretrained(config["model_version"], num_labels=202,
+                                                                            output_attentions=True)
+        cls.__load(load_path=config["clf"])
+
+    @classmethod
+    def __load(cls, load_path=None, clf=None):
+        if clf is not None:
+            cls.config["clf"] = clf
+        elif load_path is not None:
+            cls.config["clf"] = joblib.load(load_path)
+        else:
+            raise ValueError("clf and load path should not be None at the same time")
+        return cls.config["clf"]
+
+    @classmethod
+    def __get_highlight_ids(cls, attentions):
         """
         获取高亮句子下标
         :param attentions: BERT输出的12层注意力
-        :param threshold: 阈值
         :return: 高亮字下标位置列表
         """
+        threshold = cls.config["highlight_threshold"]
         attentions = list(attentions)
         attentions = [att.detach().numpy() for att in attentions]
-        consider_layers_ids = [7, 10]  # FIXME 0-11共12层，调整考虑的神经层下标数以调整高亮部分的位置
+        consider_layers_ids = cls.config["highlight_consider_layer_ids"]
         consider_layers = []
         for layer_id in consider_layers_ids:
             layer = attentions[layer_id]
@@ -77,50 +139,43 @@ class Predict(object):
         huge_w_ids = list(np.where(cls2others >= rate_threshold)[0])
         return huge_w_ids
 
-    @staticmethod
-    def __get_charge_label_ids(preds, threshold=-0.6):  # FIXME 调整阈值
+    @classmethod
+    def __get_charge_label_ids(cls, preds):
         """
         获取罪名标签下标
         :param preds: 预测结果
         :param threshold: 阈值
         :return: 罪名标签下标列表
         """
+        threshold = cls.config["charge_labels_threshold"]
         preds = preds.view(-1)
         preds_max = preds.max()
         preds_threshold = preds_max * threshold
         return list(np.where(preds > preds_threshold)[0])
 
-    @staticmethod
-    def __predict_charge_and_highlight_ids(model_version, sentence, charge_labels_threshold=-0.6,
-                                           highlight_threshold=0.01):
+    @classmethod
+    def __predict_charge_and_highlight_ids(cls, sentence):
         """
         预测罪名与高亮位置下标
-        :param model_version: 模型版本或位置
         :param sentence: 需预测的句子字符串
-        :param charge_labels_threshold: 预测罪名标签时的阈值
-        :param highlight_threshold: 预测高亮位置时的阈值
         :return: 预测罪名标签下标与高亮位置下标
         """
-        do_lower_case = True
-        model = BertForSequenceClassification.from_pretrained(model_version, num_labels=202,
-                                                              output_attentions=True)
-        tokenizer = BertTokenizer.from_pretrained(model_version, do_lower_case=do_lower_case)
         max_seq_length = 256
         sentence = sentence[:max_seq_length]
 
-        inputs = tokenizer.encode_plus(sentence, None, return_tensors='pt', add_special_tokens=True)
+        inputs = cls.config["tokenizer"].encode_plus(sentence, None, return_tensors='pt', add_special_tokens=True)
         token_type_ids = inputs['token_type_ids']
         input_ids = inputs['input_ids']
 
-        preds, attentions = model(input_ids, token_type_ids=token_type_ids)
+        preds, attentions = cls.config["model"](input_ids, token_type_ids=token_type_ids)
 
-        preds_charge_labels_ids = Predict.__get_charge_label_ids(preds=preds, threshold=charge_labels_threshold)
-        preds_highlight_ids = Predict.__get_highlight_ids(attentions=attentions, threshold=highlight_threshold)
+        preds_charge_labels_ids = Predict.__get_charge_label_ids(preds=preds)
+        preds_highlight_ids = Predict.__get_highlight_ids(attentions=attentions)
 
         return preds_charge_labels_ids, preds_highlight_ids
 
-    @staticmethod
-    def predict_charge_and_highlight(sentence, config=None):
+    @classmethod
+    def predict_charge_and_highlight(cls, sentence, config=None):
 
         """
         预测罪名与高亮语句
@@ -134,19 +189,11 @@ class Predict(object):
         default_config = {"label_type": "text",
                           "label_cls": "pred-text",
                           "highlight_cls": "pred-text-highlight",
-                          "highlight_label_type": "text",
-                          "model": r"./torch_pretrained_bert_multi_label/tmp/self/",
-                          "labels_threshold": -0.6,
-                          "highlight_threshold": 0.01}
+                          "highlight_label_type": "text"}
         config = {key: default_config[key] if (key not in config_keys) else config[key] for
                   key in default_config}
-        label_ids, highlight_ids = Predict.__predict_charge_and_highlight_ids(model_version=config["model"],
-                                                                              sentence=sentence,
-                                                                              charge_labels_threshold=config[
-                                                                                  "labels_threshold"],
-                                                                              highlight_threshold=config[
-                                                                                  "highlight_threshold"])
-        label_list = Predict.__get_charge_labels()
+        label_ids, highlight_ids = Predict.__predict_charge_and_highlight_ids(sentence=sentence)
+        label_list = Predict.get_charge_labels()
         labels = [label_list[ids] for ids in label_ids]
         highlight_sentence_format = "<%s class='{highlight_cls}'>{word}</%s>" % (
             config["highlight_label_type"],
@@ -166,27 +213,38 @@ class Predict(object):
         sentence = re.sub(need_eliminate, u"", sentence)
         return labels, sentence
 
-    @staticmethod
-    def predict_articles(charges, model, labels_threshold):
-        articles = [123]
-        article_list = Predict().__get_articles_labels()
-        # TODO 根据预测的罪名，使用模型，预测法条
-        return articles
+    @classmethod
+    def predict_articles(cls, charges):
+        return Predict.convert_ids_to_article(
+            cls.config["clf"].predict([Predict.convert_charge_to_ids(charges=charges)])[0])
 
 
 if __name__ == '__main__':
-    # sentence = u"被告人周某在越野车内窃得黑色手机。祁阳县人民检察院指控，2013年9月22日、25日，被告人李某在祁阳县潘市镇石峡洲村，因怀疑别人在谩骂自己，便手持木棍、刀等凶器冲出屋外，追逐本村无辜村民，随意殴打他人，致多人受伤，任意损毁他人财物。经鉴定，被害人李某甲的损伤构成重伤；被害人李某乙、李某丙的损伤均构成了轻伤；被害人李某丁、李某戊、李某己、李某庚、李某辛、黄某某、李某壬、李某癸的损伤均构成轻微伤。2013年9月25日12时许，祁阳县公安局民警将被告人李某抓获归案。该院就上述指控，向本院提供了被害人李某甲、李某乙、李某丙等人的陈述；证人王某甲、王某乙、于某某等人的证言；法医鉴定意见书及伤情照片；现场勘验检查笔录、现场方位图及照片、提取笔录及扣押物品清单、指认木棒和刀照片；公安机关证明；户籍证明及被告人李某供述等相关证据予以证明。该院以被告人李某××他人身体，致一人重伤；同时持凶器追逐、殴打他人，致二人轻伤，多人轻微伤，情节恶劣；任意损毁他人财物，造成恶劣社会影响，情节严重。"
-    # labels, highlight_sentence = Predict().predict_charge_and_highlight(sentence=sentence,
-    #                                                                     config={"label_type": "div",
-    #                                                                             "label_cls": "pred-text",
-    #                                                                             "highlight_cls": "pred-text-highlight",
-    #                                                                             "highlight_label_type": "div",
-    #                                                                             "model": r"/model/torch_pretrained_bert_multi_label/tmp/self/",
-    #                                                                             "labels_threshold": -0.6,
-    #                                                                             "highlight_threshold": 0.01})
-    # print("*" * 10 + " labels " + "*" * 10)
-    # print(labels)
-    # print("*" * 10 + " sentence " + "*" * 10)
-    # print(highlight_sentence)
+    sentence = u"被告人周某在越野车内窃得黑色手机。祁阳县人民检察院指控，2013年9月22日、25日，被告人李某在祁阳县潘市镇石峡洲村，因怀疑别人在谩骂自己，便手持木棍、刀等凶器冲出屋外，追逐本村无辜村民，随意殴打他人，致多人受伤，任意损毁他人财物。经鉴定，被害人李某甲的损伤构成重伤；被害人李某乙、李某丙的损伤均构成了轻伤；被害人李某丁、李某戊、李某己、李某庚、李某辛、黄某某、李某壬、李某癸的损伤均构成轻微伤。2013年9月25日12时许，祁阳县公安局民警将被告人李某抓获归案。该院就上述指控，向本院提供了被害人李某甲、李某乙、李某丙等人的陈述；证人王某甲、王某乙、于某某等人的证言；法医鉴定意见书及伤情照片；现场勘验检查笔录、现场方位图及照片、提取笔录及扣押物品清单、指认木棒和刀照片；公安机关证明；户籍证明及被告人李某供述等相关证据予以证明。该院以被告人李某××他人身体，致一人重伤；同时持凶器追逐、殴打他人，致二人轻伤，多人轻微伤，情节恶劣；任意损毁他人财物，造成恶劣社会影响，情节严重。"
+    config = {"model_version": r"torch_pretrained_bert_multi_label/tmp/self/",
+              "clf": r"svm_classifier/svm_clf.pkl",
+              "highlight_consider_layer_ids": (7, 10),
+              # FIXME [highlight_consider_layer_ids] 0-11共12层，调整考虑的神经层下标数以调整高亮部分的位置
+              "charge_labels_threshold": -0.6,
+              "highlight_threshold": 0.01}
+    # init
+    start_time = time()
+    Predict.init(config)
+    print("initializer cost time: %d(s)" % (time() - start_time))
 
-    charge_labels = ['寻衅滋事', '故意伤害']
+    # predict
+    start_time = time()
+    charge_labels, highlight_sentence = \
+        Predict.predict_charge_and_highlight(sentence=sentence,
+                                             config={"label_type": "div",
+                                                     "label_cls": "pred-text",
+                                                     "highlight_cls": "pred-text-highlight",
+                                                     "highlight_label_type": "div"})
+    articles = Predict.predict_articles(charges=charge_labels)
+    print("*" * 10 + " charge labels " + "*" * 10)
+    print(charge_labels)
+    print("*" * 10 + " highlight sentence " + "*" * 10)
+    print(highlight_sentence)
+    print("*" * 10 + " articles " + "*" * 10)
+    print(articles)
+    print("*" * 10 + " predict cost time: %d(s)" % (time() - start_time))

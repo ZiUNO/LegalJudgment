@@ -1,135 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a15929d1-e96e-4c3d-8b19-b5fe1947a741" name="Default Changelist" comment="">
+    <list default="true" id="046c1889-d37f-490a-bf54-96d3c010c6ab" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/model/predict.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/model/predict.py" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Jupyter Notebook" />
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="highlight" />
+        <entry key="$PROJECT_DIR$" value="flask" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RESET_MODE" value="HARD" />
+    <option name="UPDATE_TYPE" value="MERGE" />
   </component>
-  <component name="ProjectId" id="1SrLTIQkUws0WPaWEFhNCDsNDkH" />
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="$PROJECT_DIR$/.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1UkOBWkKmsKharn6qNs5IAomyKO" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
   <component name="PropertiesComponent">
-    <property name="TODO_SCOPE" value="All Places" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/utils/model" />
-    <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.notebooks.jupyter.connections.configuration.JupyterServerConfigurable" />
-  </component>
-  <component name="PyConsoleOptionsProvider">
-    <option name="myPythonConsoleState">
-      <console-settings>
-        <option name="useSoftWraps" value="true" />
-      </console-settings>
-    </option>
-  </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="E:\PyCharmWorkspace\LegalJudgment\utils\model\torch_pretrained_bert_multi_label" />
-      <recent name="E:\PyCharmWorkspace\LegalJudgment\utils\models\transformers_bert" />
-      <recent name="E:\PyCharmWorkspace\LegalJudgment\utils\models\torch_pretrained_bert_multi_label" />
-      <recent name="E:\PyCharmWorkspace\LegalJudgment\utils\models\torch_pretained_bert" />
-      <recent name="E:\PyCharmWorkspace\LegalJudgment\utils\models" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\PyCharmWorkspace\LegalJudgment\utils\data" />
-      <recent name="E:\PyCharmWorkspace\LegalJudgment\utils" />
-      <recent name="E:\PyCharmWorkspace\LegalJudgment\utils\engine" />
-      <recent name="E:\PyCharmWorkspace\LegalJudgment\data" />
-      <recent name="E:\PyCharmWorkspace\LegalJudgment" />
-    </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RunManager" selected="Python.predict">
-    <configuration name="classifier" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="LegalJudgment" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils/model/svm_classifier" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/model/svm_classifier/classifier.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="highlight" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
-      <module name="LegalJudgment" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="D:\Anaconda3\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils/display" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="E:\PyCharmWorkspace\LegalJudgment\utils\display\highlight.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="LegalJudgment" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="D:\Anaconda3\python.exe" />
+      <option name="SDK_HOME" value="$USER_HOME$/.conda/envs/py37/bin/python3.7" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="config.json" />
+      <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -137,20 +63,20 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="multi_label_predict" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="LegalJudgment" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils/model" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="SDK_HOME" value="$USER_HOME$/.conda/envs/py37/bin/python3.7" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/model/multi_label_predict.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -182,296 +108,41 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.highlight" />
       <item itemvalue="Python.main" />
-      <item itemvalue="Python.multi_label_predict" />
-      <item itemvalue="Python.classifier" />
       <item itemvalue="Python.predict" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.predict" />
-        <item itemvalue="Python.classifier" />
-        <item itemvalue="Python.main" />
-        <item itemvalue="Python.multi_label_predict" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="a15929d1-e96e-4c3d-8b19-b5fe1947a741" name="Default Changelist" comment="" />
-      <created>1572316773665</created>
+      <changelist id="046c1889-d37f-490a-bf54-96d3c010c6ab" name="Default Changelist" comment="" />
+      <created>1575896991442</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1572316773665</updated>
-      <workItem from="1572316778973" duration="430000" />
-      <workItem from="1572322965805" duration="362000" />
-      <workItem from="1572411270008" duration="3216000" />
-      <workItem from="1572433324729" duration="15154000" />
-      <workItem from="1572572244162" duration="6167000" />
-      <workItem from="1572836747376" duration="122000" />
-      <workItem from="1572849133714" duration="3016000" />
-      <workItem from="1573092129328" duration="1000" />
-      <workItem from="1573092230602" duration="1000" />
-      <workItem from="1573094691430" duration="78000" />
-      <workItem from="1573128278836" duration="616000" />
-      <workItem from="1573128906122" duration="6464000" />
-      <workItem from="1573202350652" duration="8000" />
-      <workItem from="1573453052929" duration="9898000" />
-      <workItem from="1574061918572" duration="42103000" />
-      <workItem from="1574412137884" duration="2408000" />
-      <workItem from="1574668429739" duration="3001000" />
-      <workItem from="1574675710048" duration="4950000" />
-      <workItem from="1574818950698" duration="5051000" />
-      <workItem from="1574833266912" duration="282000" />
-      <workItem from="1574833615256" duration="1413000" />
-      <workItem from="1575028829013" duration="715000" />
-      <workItem from="1575280594183" duration="115000" />
-      <workItem from="1575371243491" duration="116000" />
-      <workItem from="1575448263219" duration="1411000" />
-      <workItem from="1575535893345" duration="9308000" />
-      <workItem from="1575549951549" duration="1401000" />
-      <workItem from="1575594110094" duration="20499000" />
-      <workItem from="1575634147277" duration="3191000" />
-      <workItem from="1575694717913" duration="16862000" />
-      <workItem from="1575851760650" duration="21213000" />
-      <workItem from="1575880812965" duration="31971000" />
+      <updated>1575896991442</updated>
+      <workItem from="1575897004513" duration="758000" />
+      <workItem from="1575899689270" duration="556000" />
+      <workItem from="1575947238087" duration="1473000" />
     </task>
-    <task id="LOCAL-00001" summary="Delete:&#10;datatransform&#10;Update:&#10;config:添加格式转换后存储位置&#10;Add:&#10;transform:to_law将原始DXF中的格式转换为树结构（需树实现）">
-      <created>1572439616153</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1572439616153</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Update:&#10;neo4J:改为对文件夹进行构件图&#10;transform:实现对初始下载数据进行格式转换&#10;config:添加格式转换后存储位置&#10;main:添加格式转换功能调用">
-      <created>1572497844785</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1572497844785</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Update:&#10;neo4j:更改编码格式&#10;main:更改输入部分代码">
-      <created>1572836844598</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1572836844598</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Update:&#10;修改文件夹结构&#10;transform:保留条文中的换行符，便于后期显示等&#10;Add:&#10;doc2vec:文本向量化">
-      <created>1573462367689</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1573462367689</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Update:&#10;修改文件结构&#10;transform:保留条文中的换行符，便于后期显示等&#10;Add:&#10;__init__:初始化文件中实现doc2vec模型">
-      <created>1573477814045</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1573477814045</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Update:&#10;neo4j:标记后续具体检索修改位置&#10;__init__:标记doc2vec库，可能使用">
-      <created>1574063587992</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1574063587992</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Modify:&#10;crawler:路径为度小法&#10;Update:&#10;transform:将原本的json文件转换为文件夹结构（用于检索）（注：正则表达式存在部分问题，导致部分JSON文件标题存在问题，需手动更改）&#10;Add:&#10;whoosh_engine:使用whoosh进行检索，具体添加法律文件为检索待实现">
-      <created>1574152045183</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1574152045183</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Update:&#10;whoosh:搜索引擎初步实现&#10;Next:&#10;whoosh:在用户提问的过程中针对问题更新针对当前问题的停用词">
-      <created>1574169621615</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1574169621615</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Next:&#10;whoosh:类似归并排序的方法对多个关键词检索到的答案进行取舍（and或or）">
-      <created>1574230871766</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1574230871766</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Merge:&#10;whoosh_engine">
-      <created>1574669387442</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1574669387442</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Model:&#10;bert模型测试分支">
-      <created>1574685184132</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1574685184132</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Add:&#10;cail2tsv:cail数据集转换为tsv文件，包含单标签与多标签两种转换">
-      <created>1575029474212</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1575029474212</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Delete:&#10;whoosh:废弃使用Whoosh全文搜索框架&#10;__init__:废弃使用doc2vec">
-      <created>1575536347663</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1575536347663</updated>
-    </task>
-    <task id="LOCAL-00014" summary="Add:&#10;bert,torch_pretrained_bert（单&amp;多标签）,transformers_bert模型，用于分类训练/测试">
-      <created>1575537108057</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1575537108057</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Modify:&#10;main:清空whoosh调用">
-      <created>1575541804119</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1575541804119</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Modify:&#10;utils/__init__:废弃doc2vec">
-      <created>1575542051715</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1575542051715</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Add:&#10;model/README:model文件夹说明&#10;model/*/.idea:多个模型项目的idea，便于直接加载执行参数">
-      <created>1575544091031</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1575544091031</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Abandoned:&#10;whoosh:废弃使用whoosh框架，转为使用neo4j数据库">
-      <created>1575544607734</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1575544607734</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Add:&#10;highlight:预计实现高亮原文贡献权重大的字&#10;highlight_test:jupyter测试">
-      <created>1575601593259</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1575601593259</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Add:&#10;multi_label_predict:多标签预测，输入文本，预测罪名信息">
-      <created>1575617947443</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1575617947443</updated>
-    </task>
-    <task id="LOCAL-00021" summary="Modify:&#10;highlight_test:jupyter测试高亮功能&#10;Add:&#10;attention/result:用于进行注意力计算测试，用于高亮测试">
-      <created>1575636386353</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1575636386353</updated>
-    </task>
-    <task id="LOCAL-00022" summary="Add:&#10;attention_calc_test:尝试由注意力权重计算最终分类结果">
-      <created>1575637185865</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1575637185865</updated>
-    </task>
-    <task id="LOCAL-00023" summary="Add:&#10;attention_calc_test:尝试由注意力权重计算最终分类结果">
-      <created>1575699775910</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1575699775910</updated>
-    </task>
-    <task id="LOCAL-00024" summary="Conclusion:&#10;单标签类加载多标签模型同样可进行预测，且相较于多标签模型可以添加output_attentions=True参数，可以用于输出多标签模型中注意力的参数">
-      <created>1575702871985</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1575702871985</updated>
-    </task>
-    <task id="LOCAL-00025" summary="Complete:&#10;attention_calc_test:完成根据注意力输出计算高亮词汇下标功能测试">
-      <created>1575712168777</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1575712168777</updated>
-    </task>
-    <task id="LOCAL-00026" summary="Complete:&#10;predict:将获取预测标签与高亮合并为预测内容，需添加结合高亮内容&lt;strong&gt;等格式转换函数、标签下标转换为标签功能">
-      <created>1575714936164</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1575714936164</updated>
-    </task>
-    <task id="LOCAL-00027" summary="Modify:&#10;README:增加predict说明">
-      <created>1575715126879</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1575715126879</updated>
-    </task>
-    <task id="LOCAL-00028" summary="Modify:&#10;predict:预测模块化&#10;main:调用模块化的predict&#10;Update:&#10;README:更新">
-      <created>1575859716653</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1575859716653</updated>
-    </task>
-    <task id="LOCAL-00029" summary="Delete:&#10;main:删除用于多线程的预测函数&#10;Modify:&#10;predict:添加注解及重构结构，便于进行调用">
-      <created>1575870760781</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1575870760781</updated>
-    </task>
-    <task id="LOCAL-00030" summary="Add:&#10;predict:法条标签&#10;Modify:&#10;main/predict:微调调用结构&#10;Next:&#10;使用罪名标签预测法条标签">
-      <created>1575871814206</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1575871814206</updated>
-    </task>
-    <task id="LOCAL-00031" summary="Add:&#10;classifier:svm多标签分类器">
-      <created>1575891877384</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1575891877386</updated>
-    </task>
-    <task id="LOCAL-00032" summary="Add:&#10;.gitignore:忽略pkl文件&#10;requirements:添加部分包&#10;Modify:&#10;classifier:完成分类器并重构">
-      <created>1575958669798</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1575958669798</updated>
-    </task>
-    <task id="LOCAL-00033" summary="Modify:&#10;predict/classifier:重构实现全静态调用，不需创建对象，预测类初始化后即可进行预测，降低预测时间">
-      <created>1575966417610</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1575966417610</updated>
-    </task>
-    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -482,110 +153,58 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_WIDTH">
-                <map>
-                  <entry key="2" value="91" />
-                  <entry key="3" value="108" />
-                </map>
-              </option>
-              <option name="COLUMN_ORDER" />
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="RECENT_FILTERS">
-      <map>
-        <entry key="Branch">
-          <value>
-            <list>
-              <RecentGroup>
-                <option name="FILTER_VALUES">
-                  <option value="origin/master" />
-                </option>
-              </RecentGroup>
-              <RecentGroup>
-                <option name="FILTER_VALUES">
-                  <option value="master" />
-                </option>
-              </RecentGroup>
-              <RecentGroup>
-                <option name="FILTER_VALUES">
-                  <option value="HEAD" />
-                </option>
-              </RecentGroup>
-              <RecentGroup>
-                <option name="FILTER_VALUES">
-                  <option value="origin/whoosh" />
-                </option>
-              </RecentGroup>
-              <RecentGroup>
-                <option name="FILTER_VALUES">
-                  <option value="whoosh" />
-                </option>
-              </RecentGroup>
-            </list>
-          </value>
-        </entry>
-        <entry key="User">
-          <value>
-            <list>
-              <RecentGroup>
-                <option name="FILTER_VALUES">
-                  <option value="me" />
-                </option>
-              </RecentGroup>
-            </list>
+            <State />
           </value>
         </entry>
       </map>
     </option>
   </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Next:&#10;whoosh:类似归并排序的方法对多个关键词检索到的答案进行取舍（and或or）" />
-    <MESSAGE value="Merge:&#10;whoosh_engine" />
-    <MESSAGE value="Model:&#10;bert模型测试分支" />
-    <MESSAGE value="Add:&#10;cail2tsv:cail数据集转换为tsv文件，包含单标签与多标签两种转换" />
-    <MESSAGE value="Delete:&#10;whoosh:废弃使用Whoosh全文搜索框架&#10;__init__:废弃使用doc2vec" />
-    <MESSAGE value="Add:&#10;bert,torch_pretrained_bert（单&amp;多标签）,transformers_bert模型，用于分类训练/测试" />
-    <MESSAGE value="Modify:&#10;main:清空whoosh调用" />
-    <MESSAGE value="Modify:&#10;utils/__init__:废弃doc2vec" />
-    <MESSAGE value="Add:&#10;model/README:model文件夹说明&#10;model/*/.idea:多个模型项目的idea，便于直接加载执行参数" />
-    <MESSAGE value="Abandoned:&#10;whoosh:废弃使用whoosh框架，转为使用neo4j数据库" />
-    <MESSAGE value="Add:&#10;highlight:预计实现高亮原文贡献权重大的字&#10;highlight_test:jupyter测试" />
-    <MESSAGE value="Add:&#10;multi_label_predict:多标签预测，输入文本，预测罪名信息" />
-    <MESSAGE value="Modify:&#10;highlight_test:jupyter测试高亮功能&#10;Add:&#10;attention/result:用于进行注意力计算测试，用于高亮测试" />
-    <MESSAGE value="Add:&#10;attention_calc_test:尝试由注意力权重计算最终分类结果" />
-    <MESSAGE value="Conclusion:&#10;单标签类加载多标签模型同样可进行预测，且相较于多标签模型可以添加output_attentions=True参数，可以用于输出多标签模型中注意力的参数" />
-    <MESSAGE value="Complete:&#10;attention_calc_test:完成根据注意力输出计算高亮词汇下标功能测试" />
-    <MESSAGE value="Complete:&#10;predict:将获取预测标签与高亮合并为预测内容，需添加结合高亮内容&lt;strong&gt;等格式转换函数、标签下标转换为标签功能" />
-    <MESSAGE value="Modify:&#10;README:增加predict说明" />
-    <MESSAGE value="Modify:&#10;predict:预测模块化&#10;main:调用模块化的predict&#10;Update:&#10;README:更新" />
-    <MESSAGE value="Delete:&#10;main:删除用于多线程的预测函数&#10;Modify:&#10;predict:添加注解及重构结构，便于进行调用" />
-    <MESSAGE value="Add:&#10;predict:法条标签&#10;Modify:&#10;main/predict:微调调用结构" />
-    <MESSAGE value="Add:&#10;predict:法条标签&#10;Modify:&#10;main/predict:微调调用结构&#10;Next:&#10;使用罪名标签预测法条标签" />
-    <MESSAGE value="Add:&#10;classifier:svm多标签分类器" />
-    <MESSAGE value="Add:&#10;.gitignore:忽略pkl文件&#10;requirements:添加部分包&#10;Modify:&#10;classifier:完成分类器并重构" />
-    <MESSAGE value="Modify:&#10;predict/classifier:重构实现全静态调用，不需创建对象，预测类初始化后即可进行预测，降低预测时间" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modify:&#10;predict/classifier:重构实现全静态调用，不需创建对象，预测类初始化后即可进行预测，降低预测时间" />
+  <component name="WindowStateProjectService">
+    <state x="304" y="152" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1575968430956">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="304" y="152" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1575968430956" />
+    <state x="304" y="161" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.953@0.23.1680.953" timestamp="1575899989722" />
+    <state x="203" y="187" key="FileChooserDialogImpl" timestamp="1575897738360">
+      <screen x="0" y="23" width="1680" height="953" />
+    </state>
+    <state x="203" y="187" key="FileChooserDialogImpl/0.23.1680.953@0.23.1680.953" timestamp="1575897738360" />
+    <state width="1638" height="295" key="GridCell.Tab.0.bottom" timestamp="1575968472068">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1638" height="295" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1575968472068" />
+    <state width="1638" height="295" key="GridCell.Tab.0.center" timestamp="1575968472066">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1638" height="295" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1575968472066" />
+    <state width="1638" height="295" key="GridCell.Tab.0.left" timestamp="1575968472066">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1638" height="295" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1575968472066" />
+    <state width="1638" height="295" key="GridCell.Tab.0.right" timestamp="1575968472067">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1638" height="295" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1575968472067" />
+    <state x="551" y="248" key="MultipleFileMergeDialog" timestamp="1575967890489">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="551" y="248" key="MultipleFileMergeDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1575967890489" />
+    <state x="334" y="122" key="SettingsEditor" timestamp="1575968211058">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="334" y="122" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1575968211058" />
+    <state x="334" y="134" key="SettingsEditor/0.23.1680.953@0.23.1680.953" timestamp="1575899767394" />
+    <state x="517" y="332" key="com.intellij.ide.util.TipDialog" timestamp="1575947242259">
+      <screen x="0" y="23" width="1680" height="953" />
+    </state>
+    <state x="517" y="332" key="com.intellij.ide.util.TipDialog/0.23.1680.953@0.23.1680.953" timestamp="1575947242259" />
+    <state x="623" y="441" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1575967876780">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="623" y="441" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1680.1050@0.0.1680.1050" timestamp="1575967876780" />
+    <state x="623" y="423" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1680.953@0.23.1680.953" timestamp="1575899800505" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/LegalJudgment$neo4j.coverage" NAME="neo4j Coverage Results" MODIFIED="1573476059441" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/data" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$attention_calc_test.coverage" NAME="attention_calc_test Coverage Results" MODIFIED="1575712060028" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/display" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$predict__1_.coverage" NAME="predict (1) Coverage Results" MODIFIED="1575963218737" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/model" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$predict.coverage" NAME="predict Coverage Results" MODIFIED="1575966894998" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/model" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$crawler.coverage" NAME="crawler Coverage Results" MODIFIED="1573477520632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/data" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$whoosh_py.coverage" NAME="whoosh_py Coverage Results" MODIFIED="1574143177372" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/engine" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$multi_label_predict.coverage" NAME="multi_label_predict Coverage Results" MODIFIED="1575855019136" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/model" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$transform.coverage" NAME="transform Coverage Results" MODIFIED="1574153122393" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/data" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$whoosh_engine.coverage" NAME="whoosh_engine Coverage Results" MODIFIED="1574161870440" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/engine" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$main.coverage" NAME="main Coverage Results" MODIFIED="1575871614837" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$classifier.coverage" NAME="classifier Coverage Results" MODIFIED="1575958501800" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/model/svm_classifier" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$run_squad.coverage" NAME="run_squad Coverage Results" MODIFIED="1573193119203" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$cail2tsv.coverage" NAME="cail2tsv Coverage Results" MODIFIED="1575371282383" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/data" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$test.coverage" NAME="highlight Coverage Results" MODIFIED="1575550682187" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/display" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$whoosh.coverage" NAME="whoosh Coverage Results" MODIFIED="1574141338233" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/engine" />
-    <SUITE FILE_PATH="coverage/LegalJudgment$highlight.coverage" NAME="highlight Coverage Results" MODIFIED="1575701806739" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/display" />
+    <SUITE FILE_PATH="coverage/LegalJudgment$predict.coverage" NAME="predict Coverage Results" MODIFIED="1575968472057" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils/model" />
   </component>
 </project>

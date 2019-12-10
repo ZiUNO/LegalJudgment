@@ -230,13 +230,13 @@ if __name__ == '__main__':
     # init
     start_time = time()
     Predict.init(config)
-    print("initializer cost time: %d(s)" % (time() - start_time))
+    print("initializer cost time: %.02f(s)" % (time() - start_time))
 
     # predict
     start_time = time()
     charge_labels, highlight_sentence = \
         Predict.predict_charge_and_highlight(sentence=sentence,
-                                             config={"label_type": "div",
+                                             config={"label_type": "text",
                                                      "label_cls": "pred-text",
                                                      "highlight_cls": "pred-text-highlight",
                                                      "highlight_label_type": "div"})
@@ -247,4 +247,4 @@ if __name__ == '__main__':
     print(highlight_sentence)
     print("*" * 10 + " articles " + "*" * 10)
     print(articles)
-    print("*" * 10 + " predict cost time: %d(s)" % (time() - start_time))
+    print("*" * 10 + " predict cost time: %.02f(s)" % (time() - start_time))

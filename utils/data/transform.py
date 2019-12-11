@@ -6,7 +6,6 @@ import re
 """
 标记：['title', 'content', '[PIECE]']
 """
-from tensorflow_estimator.python.estimator.gc import Path
 
 """
 用于转换原始法律条文（度小法）

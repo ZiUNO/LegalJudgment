@@ -1,3 +1,9 @@
+joblib
+scipy
+tqdm
+torch
+requests
+flask
 jieba==0.39
 numpy>=1.17.3
 py2neo==4.3.0

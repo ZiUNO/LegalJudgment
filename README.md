@@ -20,6 +20,7 @@
 |   |   |-- torch_pretrained_bert_multi_label  -- pytorch-pretrained-bert[多标签]改写
 |   |   |-- transformers_bert                  -- transformers[单标签]改写
 |   |   |-- predict.py                         -- 预测标签、高亮后文字
+|   |-- web
 |-- main.py
 ```
 ## P.S.

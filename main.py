@@ -33,7 +33,7 @@ if __name__ == '__main__':
               "highlight_threshold": 0.01}
     # init
     start_time = time()
-    Predict.init(config)
+    Predict(config)
     print("initializer cost time: %.02f(s)" % (time() - start_time))
 
     # predict

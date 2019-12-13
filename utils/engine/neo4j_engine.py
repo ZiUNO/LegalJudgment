@@ -101,9 +101,9 @@ class Neo4j(object):
         :param laws: law（str类型）或laws（list类型，其中包含多个str）
         :return:
         """
-        laws = self.__laws.keys() if laws == 'ALL' else laws
+        laws = list(self.__laws.keys()) if laws == 'ALL' else laws
         laws = [laws] if isinstance(laws, str) else laws
-        for law in tqdm(laws):
+        for law in tqdm(laws, desc="EXPANDING LAWS"):
             self.__expand_law(law)
 
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 from threading import Thread
+from time import time
 
 from flask import Flask, render_template, request
 from werkzeug.exceptions import HTTPException
@@ -27,6 +28,7 @@ with open("config.json", "r") as f:
 
 Predict(configs["SMART_EVALUATION"])
 CASE_TYPES = configs["CASE_TYPES"]
+HTTP_CODE_MESSAGE = configs["HTTP_CODE_MESSAGE"]
 app = Flask(__name__)
 
 
@@ -57,6 +59,7 @@ def search():
     }
     # 当案件种类为"刑事案件"时，预测罪名、高亮位置、法条
     if case_type == "刑事案件":
+        pred_start_time = time()
         pred_charge_labels, highlight_sentence = \
             Predict.predict_charge_and_highlight(final_q,
                                                  {"label_type": "text",
@@ -67,7 +70,8 @@ def search():
         # TODO 汇总结果
         result["pred"] = {"pred_charge_labels": pred_charge_labels,
                           "highlight_sentence": highlight_sentence,
-                          "articles": articles}
+                          "articles": articles,
+                          "pred_cost_time": round(time() - pred_start_time, 2)}
     # TO HERE
     result = json.dumps(result)
     return result
@@ -81,9 +85,12 @@ def case():
 
 @app.errorhandler(HTTPException)
 def handle_exception(e):
+    code = e.code
+    message = HTTP_CODE_MESSAGE[str(code)]
     exception = {
         "code": e.code,
         "name": e.name,
         "description": e.description,
+        "message": message
     }
     return render_template("exception.html", exception=exception)

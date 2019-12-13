@@ -5,6 +5,7 @@ import jieba
 import numpy as np
 from py2neo import Graph, Node, Relationship, NodeMatcher
 from sklearn.feature_extraction.text import TfidfVectorizer
+from tqdm import tqdm
 
 
 class Neo4j(object):
@@ -15,7 +16,7 @@ class Neo4j(object):
 
     def __init__(self, dir_name, rebuild=True):
         self.__rebuild = rebuild
-        root = Node('文件夹', name=dir_name)
+        root = Node('文件夹', name=dir_name.split('/')[-1])
         self.__dir_name = dir_name
 
         # self.__graph = Graph('http://192.168.140.61:7474', username='ziuno', password='1234')  # ip需更改为服务器的地址
@@ -92,26 +93,7 @@ class Neo4j(object):
                 if piece_title_node is not None:
                     self.__graph.create(Relationship(piece_node, '标题', piece_title_node))
                 self.__graph.create(Relationship(piece_node, '内容', piece_content_node))
-        # TODO 以下与具体检索相关
-        selector = NodeMatcher(self.__graph)
-        titles = list(selector.match('标题'))
-        titles = {title['title']: title for title in titles}
-        contents = list(selector.match('内容'))
-        contents = {content['content']: content for content in contents}
-
-        def get_voca_vec_node(item):
-            keys = list(item.keys())
-            nodes = [item[key] for key in keys]
-            keys = [' '.join(jieba.cut(key)) for key in keys]
-            tf_idf = TfidfVectorizer(stop_words=Neo4j.stopwords)
-            vectors = tf_idf.fit_transform(keys).toarray()
-            vocabulary = tf_idf.vocabulary_
-            return vocabulary, vectors, nodes
-
-        self.__titles_vocabulary, self.__titles_vectors, self.__titles_nodes = get_voca_vec_node(titles)
-        self.__content_vocabulary, self.__content_vectors, self.__content_nodes = get_voca_vec_node(contents)
-        # vectors和nodes中的下标相对应
-        print("SUCCESSFULLY EXPAND %s" % law)
+        # print("SUCCESSFULLY EXPAND %s" % law)
 
     def expand(self, laws='ALL'):
         """
@@ -121,33 +103,7 @@ class Neo4j(object):
         """
         laws = self.__laws.keys() if laws == 'ALL' else laws
         laws = [laws] if isinstance(laws, str) else laws
-        for law in laws:
+        for law in tqdm(laws):
             self.__expand_law(law)
 
-    def answer(self, question):
-        # TODO 以下与具体检索相关
-        print('SEARCHING...')
-        question = ' '.join(jieba.cut(question, cut_all=True))
-        tf_idf_title = TfidfVectorizer(vocabulary=self.__titles_vocabulary, stop_words=Neo4j.stopwords)
-        tf_idf_content = TfidfVectorizer(vocabulary=self.__content_vocabulary, stop_words=Neo4j.stopwords)
-        que_vec_title = tf_idf_title.fit_transform([question]).toarray()[0]
-        que_vec_content = tf_idf_content.fit_transform([question]).toarray()[0]
-
-        def distance(vec, matrix):
-            vector_mat = np.mat(vec)
-            matrix_mat = np.mat(matrix)
-            num = matrix_mat * vector_mat.T
-            den = np.linalg.norm(vector_mat) * np.linalg.norm(matrix_mat, axis=1, keepdims=True)
-            # print(np.sum(num), np.sum(den))
-            sim = 0.5 + (0.5 * num) / den
-            return np.ravel(sim)
-
-        que_title_dis = distance(que_vec_title, self.__titles_vectors)
-        que_content_dis = distance(que_vec_content, self.__content_vectors)
-        max_title_index = int(np.argmax(que_title_dis))
-        max_content_index = int(np.argmax(que_content_dis))
-        title_node = self.__titles_nodes[max_title_index]
-        content_node = self.__content_nodes[max_content_index]
-        result = [list(title_node.values())[0], list(content_node.values())[0]]
-        return result
 

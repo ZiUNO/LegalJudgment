@@ -1,0 +1,17 @@
+{
+  "SMART_EVALUATION": {
+    "model_version": "../../../utils/model/torch_pretrained_bert_multi_label/tmp/self",
+    "clf": "../../../utils/model/svm_classifier/svm_clf.pkl",
+    "highlight_consider_layer_ids": [
+      7,
+      10
+    ],
+    "charge_labels_threshold": -0.6,
+    "highlight_threshold": 0.01
+  },
+  "CASE_TYPES": [
+    "刑事案件",
+    "民事案件",
+    "行政案件"
+  ]
+}

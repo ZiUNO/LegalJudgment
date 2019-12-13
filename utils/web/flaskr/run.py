@@ -1,28 +1,33 @@
 # -*- coding: utf-8 -*-
 import json
-import os
+from threading import Thread
 
 from flask import Flask, render_template, request
 from werkzeug.exceptions import HTTPException
 
 from utils.model.predict import Predict
 
-config = {
-    "model_version": os.path.join("..", "..", "..", "utils", "model",
-                                  "torch_pretrained_bert_multi_label", "tmp", "self"),
-    "clf": os.path.join("..", "..", "..", "utils", "model", "svm_classifier", "svm_clf.pkl"),
-    "highlight_consider_layer_ids": (7, 10),
-    # FIXME [highlight_consider_layer_ids] 0-11共12层，调整考虑的神经层下标数以调整高亮部分的位置
-    "charge_labels_threshold": -0.6,
-    "highlight_threshold": 0.01}
-Predict(config)
-app = Flask(__name__)
 
-CASES = {
-    1: u"刑事案件",
-    2: u"民事案件",
-    3: u"行政案件"
-}
+class MultiThread(Thread):
+    def __init__(self, func, args=()):
+        super().__init__()
+        self.__func = func
+        self.__args = args
+        self.__result = None
+
+    def run(self):
+        self.__result = self.__func(*self.__args)
+
+    def get_prediction(self):
+        return self.__result
+
+
+with open("config.json", "r") as f:
+    configs = json.load(f)
+
+Predict(configs["SMART_EVALUATION"])
+CASE_TYPES = configs["CASE_TYPES"]
+app = Flask(__name__)
 
 
 @app.route('/')
@@ -35,7 +40,7 @@ def search():
     q = request.args.get('q')
     # TODO q纠正错别字->correct_q
     correct_q = q
-    # TODO correct_q同义词替换->final_q
+    # TODO correct_q同义词替换并获取关键词->final_q, keywords
     final_q = correct_q
     # FROM HERE 根据final_q获得最终结果
     # TODO 检索获得来自数据库的法条
@@ -43,8 +48,8 @@ def search():
     # TODO 根据关键词获取相关案例
     similar_cases = []
     # TODO 根据final_q预测案件种类case_type_id
-    case_type_id = 1
-    case_type = CASES[case_type_id]
+    case_type_id = 0
+    case_type = CASE_TYPES[case_type_id]
     result = {
         "db_items": db_items,
         "similar_cases": similar_cases,

@@ -16,7 +16,7 @@ class DB(object):
     @classmethod
     def __search_single_keyword(cls, keyword):
         matcher = NodeMatcher(cls.graph)
-        title_nodes = list(matcher.match("标题", ).where("_.content CONTAINS '%s'" % keyword))
+        title_nodes = list(matcher.match("标题").where("_.content CONTAINS '%s'" % keyword))
         content_nodes = list(matcher.match("内容").where("_.content CONTAINS '%s'" % keyword))
 
         def merge_title_content(title, content):

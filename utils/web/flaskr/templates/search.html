@@ -9,13 +9,13 @@
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function () {
-           $('.nav > li').click(function (e) {
-              e.preventDefault(); //加上这句就可以实现当前选中的li高亮显示，但同时也阻止了href中的页面跳转行为
-              $('.nav > li').removeClass('active');
-              $(this).addClass('active');
-           });
-           $(' textarea').keydown(function (e) {
-                if (e.which === 13){
+            $('.nav > li').click(function (e) {
+                e.preventDefault(); //加上这句就可以实现当前选中的li高亮显示，但同时也阻止了href中的页面跳转行为
+                $('.nav > li').removeClass('active');
+                $(this).addClass('active');
+            });
+            $(' textarea').keydown(function (e) {
+                if (e.which === 13) {
                     e.preventDefault();
                     $(' form').submit();
                 }
@@ -24,10 +24,10 @@
     </script>
 </head>
 <body>
-<div class="container-fluid" style="margin-left: 15%; margin-right: 15%;">
+<div class="container-fluid" style="margin-left: 10%; margin-right: 10%;">
     <div class="row-fluid">
         <div class="span12">
-            <div class="row-fluid" style="display: flex; align-items: center; margin-left: 50px;">
+            <div class="row-fluid" style="display: flex; align-items: center; margin-left: 20px;">
                 <div class="span6">
                     <a href="index.html"><img alt="SOFA" src="img/logo.png" width="100" height="100"/></a>
                 </div>
@@ -40,7 +40,7 @@
                         </h1>
                     </a>
                 </div>
-                <div class="col-md-4" style="margin-left: 20px; margin-top: 34px;">
+                <div class="col-md-4" style="margin-left: 28px; margin-top: 30px; margin-bottom: 20px;">
                     <form class="form-search input-group" method="get" action="search.html">
                         <textarea class="input-medium search-query form-control"
                                   name="q" rows="3" style="resize: none;"></textarea>
@@ -49,13 +49,10 @@
                                     style="height: 74px; width: 74px; font-size: 16px;">搜索</button>
                         </span>
                     </form>
-                    <p class="text-left text-muted" style="font-weight: lighter;">剩余字数</p>
-                    <!--TODO 最多剩余输入200字 结合jquery-->
                 </div>
             </div>
-            <!-- TODO 添加显示结果列表-->
             <div class="row-fluid" style="margin-top: 10px;">
-                <div class="span4 col-md-4">
+                <div class="span4 col-md-2">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <ul id="nav" class="nav nav-pills nav-stacked">
@@ -66,7 +63,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div id="pinggu" class="panel panel-danger">
@@ -86,7 +83,40 @@
                                     <h4 class="panel-title">法条&emsp;<span class="badge">12</span></h4>
                                 </div>
                                 <div class="panel-body">
-                                    法条主体
+                                    <div class="panel panel-warning">
+                                        <ol class="breadcrumb panel-heading" style="margin-bottom: 2px;">
+                                            <li>刑法</li>
+                                            <li>第一编</li>
+                                            <li>第一章</li>
+                                            <li class="active">第一条&emsp;立法宗旨</li>
+                                        </ol>
+                                        <div class="panel-body">
+                                            <p>为了惩罚犯罪，保护人民，根据宪法，结合我国同犯罪作斗争的具体经验及实际情况，制定本法。</p>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-warning">
+                                        <ol class="breadcrumb panel-heading" style="margin-bottom: 2px;">
+                                            <li>刑法</li>
+                                            <li>第一编</li>
+                                            <li>第一章</li>
+                                            <li class="active">第二条&emsp;本法任务</li>
+                                        </ol>
+                                        <div class="panel-body">
+                                            <p>
+                                                中华人民共和国刑法的任务，是用刑罚同一切犯罪行为作斗争，以保卫国家安全，保卫人民民主专政的政权和社会主义制度，保护国有财产和劳动群众集体所有的财产，保护公民私人所有的财产，保护公民的人身权利、民主权利和其他权利，维护社会秩序、经济秩序，保障社会主义建设事业的顺利进行。</p>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-warning">
+                                        <ol class="breadcrumb panel-heading" style="margin-bottom: 2px;">
+                                            <li>刑法</li>
+                                            <li>第一编</li>
+                                            <li>第一章</li>
+                                            <li class="active">第三条&emsp;罪刑法定</li>
+                                        </ol>
+                                        <div class="panel-body">
+                                            <p>法律明文规定为犯罪行为的，依照法律定罪处刑；法律没有明文规定为犯罪行为的，不得定罪处刑。</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div id="anli" class="panel panel-info">
@@ -94,14 +124,7 @@
                                     <h4 class="panel-title">案例&emsp;<span class="badge">113</span></h4>
                                 </div>
                                 <div class="panel-body">
-                                    <nav aria-label="...">
-                                        <ul class="pager">
-                                            <li class="previous disabled"><a href="#"><span
-                                                    aria-hidden="true">&larr;</span> 上一页</a></li>
-                                            <li class="next"><a href="#">下一页 <span
-                                                    aria-hidden="true">&rarr;</span></a></li>
-                                        </ul>
-                                    </nav>
+                                    <!--TODO 显示来自觅律搜索的相关案例-->
                                 </div>
                             </div>
                         </div>
@@ -111,12 +134,5 @@
         </div>
     </div>
 </div>
-<footer class="text-center" style="width: 100%; position: absolute; bottom: 34px;">
-    <div class="row-fluid">
-        <div class="span12">
-            <button type="button" class="btn btn-link"><a href="about.html">关于SO·FA</a></button>
-        </div>
-    </div>
-</footer>
 </body>
 </html>

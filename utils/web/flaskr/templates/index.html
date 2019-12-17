@@ -12,6 +12,11 @@
             $(' textarea').keydown(function (e) {
                 if (e.which === 13){
                     e.preventDefault();
+                    let textarea_text = $(' textarea').val().replace(/\s*/g,"");
+                    $(' textarea').text(textarea_text);
+                    if (textarea_text === ''){
+                        return
+                    }
                     $(' form').submit();
                 }
             })
@@ -53,8 +58,6 @@
                                                     style="width: 94px; height: 94px; font-size: 16px;">搜索</button>
 										</span>
                                     </form>
-                                    <p class="text-left text-muted" style="font-weight: lighter;">剩余字数</p>
-                                    <!--TODO 最多剩余输入200字 结合jquery-->
                                 </div>
                             </div>
                         </div>

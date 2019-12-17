@@ -13,6 +13,8 @@
                 e.preventDefault(); //加上这句就可以实现当前选中的li高亮显示，但同时也阻止了href中的页面跳转行为
                 $('.nav > li').removeClass('active');
                 $(this).addClass('active');
+                let href = $(this).children(" a").attr('href');
+                $("html,body").animate({scrollTop: $(href).offset().top}, 1000)
             });
             $(' textarea').keydown(function (e) {
                 if (e.which === 13) {
@@ -27,7 +29,7 @@
 <div class="container-fluid" style="margin-left: 10%; margin-right: 10%;">
     <div class="row-fluid">
         <div class="span12">
-            <div class="row-fluid" style="display: flex; align-items: center; margin-left: 20px;">
+            <div class="row-fluid" style="display: flex; align-items: center; margin-left: 20px; margin-top: 8px;">
                 <div class="span6">
                     <a href="index.html"><img alt="SOFA" src="img/logo.png" width="100" height="100"/></a>
                 </div>
@@ -59,6 +61,12 @@
                                 <li role="presentation" class="active"><a href="#pinggu">评估</a></li>
                                 <li role="presentation"><a href="#fatiao">法条&emsp;<span class="badge">12</span></a></li>
                                 <li role="presentation"><a href="#anli">案例&emsp;<span class="badge">113</span></a></li>
+                                <li role="presentation" style="margin-left: 15px;"><a href="#anli_qw">权威&emsp;<span
+                                        class="badge">10</span></a>
+                                </li>
+                                <li role="presentation" style="margin-left: 15px;"><a href="#anli_pt">普通&emsp;<span
+                                        class="badge">103</span></a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -125,6 +133,22 @@
                                 </div>
                                 <div class="panel-body">
                                     <!--TODO 显示来自觅律搜索的相关案例-->
+                                    <div class="panel panel-info" id="anli_qw">
+                                        <div class="panel-heading">
+                                            <h5 class="panel-title">权威&emsp;<span class="badge">10</span></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                            <p>anli_quanwei</p>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-info" id="anli_pt">
+                                        <div class="panel-heading">
+                                            <h5 class="panel-title">普通&emsp;<span class="badge">103</span></h5>
+                                        </div>
+                                        <div class="panel-body">
+                                            <p>anli_putong</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -8,7 +8,14 @@
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
-        // TODO textarea回车键提交请求
+        $(document).ready(function () {
+            $(' textarea').keydown(function (e) {
+                if (e.which === 13){
+                    e.preventDefault();
+                    $(' form').submit();
+                }
+            })
+        })
     </script>
 </head>
 <body>

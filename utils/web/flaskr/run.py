@@ -2,7 +2,7 @@
 import json
 from threading import Thread
 from time import time
-
+import requests
 from flask import Flask, render_template, request
 from werkzeug.exceptions import HTTPException
 
@@ -133,10 +133,20 @@ def search():
     return render_template('search.html', result=result)
 
 
-@app.route('/search/case')
+@app.route("/case")
 def case():
     # TODO 爬去觅律经过并返回
-    return None
+    uniqid = request.args.get('uniqid')
+    case_type = request.args.get('type')
+    assert case_type in ("authcase", "case")
+    url = "https://solegal.cn/api/v2/%s/detail?uniqid=%s" % (case_type, uniqid)
+    case_raw = requests.get(url=url).json()["data"]
+    case_detail = {
+        "title": case_raw["TITLE"],
+        "baseList": case_raw["baseList"],
+        "contents": [{'title': c["title"], "strContent": c["strContent"].split('\n')}for c in case_raw["contents"]]
+    }
+    return render_template("case.html", case_detail=case_detail)
 
 
 @app.route('/about')

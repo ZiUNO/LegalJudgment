@@ -102,6 +102,12 @@ class DuXiaoFaCrawler(Crawler):
         _ = [print(law) for law in total_law]
 
 
+def get_synonyms(word):
+    # TODO 爬去word的所有同义词
+    synonyms = []
+    return synonyms
+
+
 if __name__ == '__main__':
     config_path = os.path.join('..', '..', 'config.json')
     DuXiaoFaCrawler.download(config_path)  # 法律条文爬取

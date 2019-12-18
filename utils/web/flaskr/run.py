@@ -29,6 +29,7 @@ def hello_world():
 
 @app.route('/search')
 def search():
+    # TODO 待完善
     q = request.args.get('q')
     # # TODO q纠正错别字->correct_q
     # correct_q = q
@@ -135,7 +136,6 @@ def search():
 
 @app.route("/case")
 def case():
-    # TODO 爬去觅律经过并返回
     uniqid = request.args.get('uniqid')
     case_type = request.args.get('type')
     assert case_type in ("authcase", "case")

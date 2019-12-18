@@ -65,7 +65,7 @@ def search():
     #                       "pred_cost_time": round(time() - pred_start_time, 2)}
     # TO HERE
     result = {
-        "sentence": q,
+        "sentence": "抢劫",
         "highlight": [0, 1],
         "predictions": [
             {
@@ -130,7 +130,6 @@ def search():
         },
 
     }
-    result = json.dumps(result)
     return render_template('search.html', result=result)
 
 

@@ -4,6 +4,7 @@
 .
 |-- data/
 |-- utils/
+|   |-- __init__.py
 |   |-- data/
 |   |   |-- cail2tsv.py                        -- cail-2018转tsv
 |   |   |-- crawler.py                         -- 度小法爬虫
@@ -21,6 +22,24 @@
 |   |   |-- transformers_bert/                 -- transformers[单标签]改写
 |   |   |-- predict.py                         -- 预测标签、高亮后文字
 |   |-- web/
+|       |-- flaskr/
+|           |-- models/
+|           |-- static/
+|           |   |-- img/
+|           |   |   |-- logo.png               -- 程序图标
+|           |   |   |-- qrcode.png             -- 小程序码（待更换）
+|           |-- templates/
+|           |   |-- about.html                 -- 关于界面
+|           |   |-- case.html                  -- 案例界面
+|           |   |-- exception.html             -- 异常界面
+|           |   |-- index.html                 -- 主页界面
+|           |   |-- search.html                -- 检索界面
+|           |-- views/
+|           |-- config.json                    -- 程序配置文件
+|           |-- run.py                         -- 服务器运行文件
+|           |-- setting.py
+|-- config.json
+|-- requirements.txt
 |-- main.py
 ```
 ## P.S.

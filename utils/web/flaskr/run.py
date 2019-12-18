@@ -65,11 +65,11 @@ def search():
     #                       "pred_cost_time": round(time() - pred_start_time, 2)}
     # TO HERE
     result = {
-        "sentence": "抢劫",
+        "sentence": "抢劫会被判什么刑？",
         "highlight": [0, 1],
         "predictions": [
             {
-                "title": "案情种类",
+                "title": "种类",
                 "content": ["刑事案件"]
             },
             {
@@ -88,7 +88,7 @@ def search():
                 "content": "为了惩罚犯罪，保护人民，根据宪法，结合我国同犯罪作斗争的具体经验及实际情况，制定本法。"
             },
             {
-                "title:": ["第二条", "本法任务"],
+                "title": ["第二条", "本法任务"],
                 "from": ["刑法", "第一编", "第一章"],
                 "content": "中华人民共和国刑法的任务，是用刑罚同一切犯罪行为作斗争，以保卫国家安全，"
                            "保卫人民民主专政的政权和社会主义制度，保护国有财产和劳动群众集体所有的财产，"

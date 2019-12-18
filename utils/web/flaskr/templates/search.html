@@ -86,6 +86,7 @@
                                 <div class="panel-body">
                                     <div>
                                         <div>
+<!--                                            FIXME 关键词颜色分深浅表示重要程度-->
                                             <h5>关键词{% for word in result.sentence %}{% if loop.index0 in result.highlight %}&emsp;&emsp;<span class="label label-danger">{{word}}</span>{% endif %}{% endfor %}</h5>
                                         </div>
                                         {% for prediction in result.predictions %}

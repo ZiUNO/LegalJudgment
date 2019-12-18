@@ -33,15 +33,17 @@ def search():
     q = request.args.get('q')
     # # TODO q纠正错别字->correct_q
     # correct_q = q
-    # # TODO correct_q同义词替换并获取关键词->final_q, keywords
+    # # TODO correct_q分词，在数据库中检索每个分词的同义词，并替换，从而获取关键词->final_q, keyword
+    # # TODO 单独线程keyword_highlight_thread ==> 根据keyword与final_q先进行标记高亮位置下标列表
+    # # TODO 单独线程mp_thread ==> 建立q,correct_q,final_q三者之间的位置映射mp
     # final_q = correct_q
     # keywords = ["抢劫", "盗窃"]
     # # FROM HERE 根据final_q获得最终结果
-    # # TODO 检索获得来自数据库的法条
+    # # TODO 单独线程article_thread ==> 使用keyword检索获得来自数据库的法条db_items(articles) ==> 对多线程返回的每个法条检索结果进行合并并返回
     # db_items = DB.search(keywords=keywords)
-    # # TODO 根据关键词获取相关案例
+    # # TODO 单独线程similar_cases_thread ==> 根据keyword在觅律上搜索，获取相关案例similar_cases(similarCases) ==> 对多线程返回的结果进行合并并返回
     # similar_cases = []
-    # # TODO 根据final_q预测案件种类case_type_id
+    # # TODO 根据final_q预测案件种类case_type_id(type)
     # case_type_id = 0
     # case_type = CASE_TYPES[case_type_id]
     # result = {
@@ -49,7 +51,7 @@ def search():
     #     "similar_cases": similar_cases,
     #     "case_type": case_type
     # }
-    # # 当案件种类为"刑事案件"时，预测罪名、高亮位置、法条
+    # # TODO 当case_type_id案件种类为"刑事案件"时，预测罪名、高亮位置、法条（刑期区间）
     # if case_type == "刑事案件":
     #     pred_start_time = time()
     #     pred_charge_labels, highlight_sentence = \
@@ -65,9 +67,10 @@ def search():
     #                       "articles": articles,
     #                       "pred_cost_time": round(time() - pred_start_time, 2)}
     # TO HERE
+    # TODO 根据高亮位置及mp反向计算原句的高亮位置
     result = {
         "sentence": "抢劫会被判什么刑？",
-        "highlight": [0, 1],
+        "highlight": [0, 1],  # FIXME 根据高亮的不同程度表示对当前词语的重要程度
         "predictions": [
             {
                 "title": "种类",
@@ -144,7 +147,7 @@ def case():
     case_detail = {
         "title": case_raw["TITLE"],
         "baseList": case_raw["baseList"],
-        "contents": [{'title': c["title"], "strContent": c["strContent"].split('\n')}for c in case_raw["contents"]]
+        "contents": [{'title': c["title"], "strContent": c["strContent"].split('\n')} for c in case_raw["contents"]]
     }
     return render_template("case.html", case_detail=case_detail)
 

@@ -110,6 +110,8 @@ def get_synonyms(words):
         words = [words]
     for word in tqdm(words, desc="GET SYNONYMS"):
         get_data = requests.get(url % word)
+        if get_data.status_code != 200:
+            continue
         html = get_data.content.decode('utf-8')
         about_words = re.findall(u'<span class="keywordsred">.*?</span>(.*?)<br>', html, re.S)[0]
         about_words = about_words.split(',')
@@ -120,4 +122,4 @@ def get_synonyms(words):
 if __name__ == '__main__':
     # config_path = os.path.join('..', '..', 'config.json')
     # DuXiaoFaCrawler.download(config_path)  # 法律条文爬取
-    print(get_synonyms(["盗窃", "抢劫"]))
+    print(get_synonyms(["盗窃", "抢劫罪"]))

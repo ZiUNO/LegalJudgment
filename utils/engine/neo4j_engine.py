@@ -2,8 +2,9 @@ import json
 import os
 
 import jieba
+import jieba.analyse
 import numpy as np
-from py2neo import Graph, Node, Relationship, NodeMatcher
+from py2neo import Graph, Node, Relationship, NodeMatcher, RelationshipMatcher
 from sklearn.feature_extraction.text import TfidfVectorizer
 from tqdm import tqdm
 
@@ -106,4 +107,29 @@ class Neo4j(object):
         for law in tqdm(laws, desc="EXPANDING LAWS"):
             self.__expand_law(law)
 
-
+    def keywords(self, title_top_k=100, content_top_k=150):
+        file2content = self.__graph.run(
+            '''
+            MATCH(file:文件)-[*]->(content:内容)
+            RETURN file.name, content.content
+            '''
+        ).data()
+        file2title = self.__graph.run(
+            '''
+            MATCH(file:文件)-[*]->(title:标题)
+            RETURN file.name, title.title
+            '''
+        ).data()
+        file = list([file["file.name"] for file in file2content])
+        content = {f: [] for f in file}
+        title = {f: [] for f in file}
+        data = {f: [] for f in file}
+        _ = [content[f["file.name"]].append(f["content.content"]) for f in file2content]
+        _ = [title[f["file.name"]].append(f["title.title"]) for f in file2title]
+        # jieba.analyse.set_stop_words(os.path.join(os.path.split(os.path.realpath(__file__))[0], '中文停用词表.txt'))
+        # content = {f: jieba.analyse.extract_tags('\n'.join(content[f]), topK=content_top_k) for f in content}
+        # title = {f: jieba.analyse.extract_tags('\n'.join(title[f]), topK=title_top_k) for f in title}
+        # print(title)
+        # TODO 使用精确分词进行分词，抢劫罪==>抢劫/抢劫罪（抢劫有同义词但抢劫罪没有）
+        data = {f: tuple(set(content[f] + title[f])) for f in data}
+        return data

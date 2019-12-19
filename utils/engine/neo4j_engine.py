@@ -1,5 +1,6 @@
 import json
 import os
+import re
 
 import jieba
 import jieba.analyse
@@ -107,7 +108,7 @@ class Neo4j(object):
         for law in tqdm(laws, desc="EXPANDING LAWS"):
             self.__expand_law(law)
 
-    def keywords(self, title_top_k=100, content_top_k=150):
+    def keywords(self, top_k=20):
         file2content = self.__graph.run(
             '''
             MATCH(file:文件)-[*]->(content:内容)
@@ -126,10 +127,19 @@ class Neo4j(object):
         data = {f: [] for f in file}
         _ = [content[f["file.name"]].append(f["content.content"]) for f in file2content]
         _ = [title[f["file.name"]].append(f["title.title"]) for f in file2title]
-        # jieba.analyse.set_stop_words(os.path.join(os.path.split(os.path.realpath(__file__))[0], '中文停用词表.txt'))
-        # content = {f: jieba.analyse.extract_tags('\n'.join(content[f]), topK=content_top_k) for f in content}
-        # title = {f: jieba.analyse.extract_tags('\n'.join(title[f]), topK=title_top_k) for f in title}
-        # print(title)
-        # TODO 使用精确分词进行分词，抢劫罪==>抢劫/抢劫罪（抢劫有同义词但抢劫罪没有）
+        jieba.analyse.set_stop_words(os.path.join(os.path.split(os.path.realpath(__file__))[0], '中文停用词表.txt'))
+        for f in title:
+            lines = title[f]
+            words = []
+            for line in lines:
+                words += jieba.lcut_for_search(line.replace(" ", ""))
+            words = list(set(words).difference(Neo4j.stopwords))
+            title[f] = words
+        for f in content:
+            lines = content[f]
+            words = jieba.analyse.extract_tags(
+                '\n'.join([' '.join(jieba.lcut_for_search(re.sub(u"[0-9]*", "", line))) for line in lines]),
+                topK=top_k)
+            content[f] = words
         data = {f: tuple(set(content[f] + title[f])) for f in data}
         return data

@@ -93,7 +93,6 @@ class Neo4j(object):
                 if piece_title_node is not None:
                     self.__graph.create(Relationship(piece_node, '标题', piece_title_node))
                 self.__graph.create(Relationship(piece_node, '内容', piece_content_node))
-        # print("SUCCESSFULLY EXPAND %s" % law)
 
     def expand(self, laws='ALL'):
         """
@@ -147,5 +146,8 @@ class Neo4j(object):
         return words
 
     def save_synonyms(self, synonyms):
-        # TODO 在graph中存储同义词
-        pass
+        for keyword in tqdm(synonyms, desc="HANDLE KEYWORD"):
+            keyword_node = Node('关键词', keyword=keyword)
+            for synonym in tqdm(synonyms[keyword], desc="SAVING SYNONYM"):
+                synonym_node = Node('同义词', synonym=synonym)
+                self.__graph.create(Relationship(keyword_node, '同义', synonym_node))

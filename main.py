@@ -15,11 +15,11 @@ if __name__ == '__main__':
     law_path = os.path.join(config['LAW_PATH'].replace('\\', os.path.sep))  # 格式化后的法律条文的保存路径
     graph = Neo4j(law_path, rebuild=False)
     # graph.expand()
-    keywords = graph.keywords(1)
+    keywords = graph.keywords(20)
 
     # test 100
     # print(keywords)
-    keywords = set(list(keywords)[:100])
+    # keywords = set(list(keywords))
 
     # single thread
     synonyms = get_synonyms(keywords)

@@ -1,3 +1,5 @@
 svm_clf.pkl
 
 svm_reg.pkl
+
+svm_single_label_clf.pkl

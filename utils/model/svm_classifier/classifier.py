@@ -17,6 +17,7 @@ class SVM(object):
     PREDS = {
         "article": 1,
         "imprisonment": 6,
+        "single_label": 6,
     }
     model = None
     save_path = None
@@ -49,6 +50,15 @@ class SVM(object):
                 life_imprisonment = True if line[7] == "True" else False
                 imprison = float(
                     line[SVM.PREDS[pred_type]]) + death_penality * 30.0 * 12 + life_imprisonment * 20.0 * 12
+                datasets["y"].append(imprison)
+            elif pred_type == "single_label":
+                death_penality = True if line[5] == "True" else False
+                life_imprisonment = True if line[7] == "True" else False
+                imprison = float(line[SVM.PREDS[pred_type]])
+                imprison = 2 if death_penality or life_imprisonment or (imprison >= 10 * 12.0) else (
+                    1 if 3 * 12.0 <= imprison < 10 * 12.0 else 0)
+                # 2:  长期（10年以上/无期/死刑） 1： 中期（3年以上10年以下） 0： 短期（3年以下）
+
                 datasets["y"].append(imprison)
             charge = list(set(re.findall(u"'(.*?)'", line[2], re.S)))
             charge_ids = Predict.convert_charge_to_ids(charges=charge)
@@ -117,31 +127,60 @@ class SVMClassifier(SVM):
         return cls.model
 
 
+class SVMSingleLabelClassifier(SVM):
+
+    @classmethod
+    def train(cls, train_datasets):
+        X_train, y_train = train_datasets
+        cls.model = SVC() if cls.model is None else cls.model
+        cls.model.fit(X_train, y_train)
+        return cls.model
+
+
 if __name__ == '__main__':
     path = r"E:/PyCharmWorkspace/LegalJudgment/utils/model/torch_pretrained_bert_multi_label/multi_data_dir/exercise_contest/"
+    # # dataset file name dict
     # clf_datasets = {"train": "train.tsv", "test": "test.tsv", "val": "val.tsv"}
-    reg_datasets = {"train": "train.tsv", "test": "test.tsv", "val": "val.tsv"}
+    # reg_datasets = {"train": "train.tsv", "test": "test.tsv", "val": "val.tsv"}
+    single_label_clf_datasets = {"train": "train.tsv", "test": "test.tsv", "val": "val.tsv"}
+
+    # # dataset path dict
     # clf_datasets = {key: path + clf_datasets[key] for key in clf_datasets}
-    reg_datasets = {key: path + reg_datasets[key] for key in reg_datasets}
+    # reg_datasets = {key: path + reg_datasets[key] for key in reg_datasets}
+    single_label_clf_datasets = {key: path + single_label_clf_datasets[key] for key in single_label_clf_datasets}
+
+    # # dataset dict
     # clf_datasets = {key: SVMClassifier.tsv2dataset(SVMClassifier.read_tsv(clf_datasets[key]), "charge") for key in
     #                 clf_datasets}
-    reg_datasets = {key: SVM.tsv2dataset(SVM.read_tsv(
-        reg_datasets[key]), "imprisonment") for key in reg_datasets}
+    # reg_datasets = {key: SVM.tsv2dataset(SVM.read_tsv(
+    #     reg_datasets[key]), "imprisonment") for key in reg_datasets}
+    single_label_clf_datasets = {key: SVM.tsv2dataset(SVM.read_tsv(single_label_clf_datasets[key]),
+                                                      "single_label") for key in single_label_clf_datasets}
+
+    # # train & test datasets
     # X_train = clf_datasets["train"]["X"]
     # y_train = clf_datasets["train"]["y"]
     # X_test = clf_datasets["test"]["X"]
     # y_test = clf_datasets["test"]["y"]
-    X_train = reg_datasets["train"]["X"]
-    y_train = reg_datasets["train"]["y"]
-    X_test = reg_datasets["test"]["X"]
-    y_test = reg_datasets["test"]["y"]
-    pkl_path = "svm_reg.pkl"
+    # X_train = reg_datasets["train"]["X"]
+    # y_train = reg_datasets["train"]["y"]
+    # X_test = reg_datasets["test"]["X"]
+    # y_test = reg_datasets["test"]["y"]
+    X_train = single_label_clf_datasets["train"]["X"]
+    y_train = single_label_clf_datasets["train"]["y"]
+    X_test = single_label_clf_datasets["test"]["X"]
+    y_test = single_label_clf_datasets["test"]["y"]
+
+    # pkl_path = "svm_reg.pkl"
     # pkl_path = "svm_clf.pkl"
+    pkl_path = "svm_single_label_clf.pkl"
 
     # train
     start_time = time()
     # model = SVMClassifier.train((X_train, y_train))
-    model = SVMRegression.train((X_train, y_train))
+    # model = SVMRegression.train((X_train, y_train))
+    model = SVMSingleLabelClassifier.train((X_train, y_train))
+
     print("train cost time: %.02f(s)" % (time() - start_time))
 
     # save

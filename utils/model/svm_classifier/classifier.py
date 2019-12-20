@@ -7,6 +7,7 @@ from time import time
 import joblib
 import numpy as np
 from sklearn.multiclass import OneVsRestClassifier
+from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC, SVR
 
 from utils.model.predict import Predict
@@ -46,10 +47,8 @@ class SVM(object):
             elif pred_type == "imprisonment":
                 death_penality = True if line[5] == "True" else False
                 life_imprisonment = True if line[7] == "True" else False
-                if death_penality or life_imprisonment:
-                    continue
                 imprison = float(
-                    line[SVM.PREDS[pred_type]]) + death_penality * 20.0 * 12 + life_imprisonment * 20.0 * 12
+                    line[SVM.PREDS[pred_type]]) + death_penality * 30.0 * 12 + life_imprisonment * 20.0 * 12
                 datasets["y"].append(imprison)
             charge = list(set(re.findall(u"'(.*?)'", line[2], re.S)))
             charge_ids = Predict.convert_charge_to_ids(charges=charge)
@@ -99,7 +98,11 @@ class SVMRegression(SVM):
     @classmethod
     def train(cls, train_datasets):
         X_train, y_train = train_datasets
-        cls.model = SVR(kernel="linear") if cls.model is None else cls.model
+        cls.model = GridSearchCV(SVR(gamma="auto"),
+                                 param_grid={"kernel": ("linear", 'rbf'),
+                                             "C": np.logspace(-3, 3, 7),
+                                             "gamma": np.logspace(-3, 3, 7)},
+                                 n_jobs=-1) if cls.model is None else cls.model
         cls.model.fit(X=X_train, y=y_train)
         return cls.model
 

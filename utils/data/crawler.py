@@ -7,6 +7,7 @@ import time
 from concurrent.futures.thread import ThreadPoolExecutor
 
 import requests
+from tqdm import tqdm
 
 
 class Crawler(object):
@@ -102,6 +103,35 @@ class DuXiaoFaCrawler(Crawler):
         _ = [print(law) for law in total_law]
 
 
+def get_synonyms(words):
+    url = u"https://www.cilin.org/jyc/w_%s.html"
+    synonyms = {}
+    if isinstance(words, str):
+        words = [words]
+    for word in tqdm(words, desc="GET SYNONYMS"):
+        get_data = None
+        for _ in range(100):
+            try:
+                get_data = requests.get(url % word)
+            except Exception:
+                time.sleep(2)
+                continue
+            break
+        if get_data is None or get_data.status_code != 200:
+            continue
+        html = get_data.content.decode('utf-8')
+        about_words = re.findall(u'<b>近义词</b><br>汉语:(.*?)<br>', html, re.S)
+        if len(about_words) == 0:
+            continue
+        about_words = about_words[0]
+        about_words = about_words.split(',')
+        about_words = [tmp.strip() for tmp in about_words]
+        about_words = [re.sub(u"</?span.*?>", "", tmp) for tmp in about_words]
+        synonyms[word] = [tmp_word.strip() for tmp_word in about_words if tmp_word.strip() != '']
+    return synonyms
+
+
 if __name__ == '__main__':
-    config_path = os.path.join('..', '..', 'config.json')
-    DuXiaoFaCrawler.download(config_path)  # 法律条文爬取
+    # config_path = os.path.join('..', '..', 'config.json')
+    # DuXiaoFaCrawler.download(config_path)  # 法律条文爬取
+    print(get_synonyms(["盗窃", "抢劫罪"]))

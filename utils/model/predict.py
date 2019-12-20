@@ -231,11 +231,11 @@ class Predict(object):
         imprisonment = Predict.predict_imprisonment(charges=charge_labels)
         category = Predict.predict_category(sentence=sentence)
         return {
+            "类别": [category],
             "罪名": charge_labels,
             "高亮": highlight_ids,
             "法条": articles,
-            "监禁": imprisonment,
-            "类别": category
+            "监禁": [imprisonment]
         }
 
 

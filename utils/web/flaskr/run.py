@@ -70,19 +70,22 @@ def search():
     # TODO 根据高亮位置及mp反向计算原句的高亮位置
     result = {
         "sentence": "抢劫会被判什么刑？",
-        "highlight": [0, 1],  # FIXME 根据高亮的不同程度表示对当前词语的重要程度
         "predictions": [
             {
                 "title": "种类",
-                "content": ["刑事案件"]
-            },
-            {
+                "content": ['刑事案由']
+            }, {
                 "title": "罪名",
                 "content": ["抢劫", "盗窃"],
-            },
-            {
+            }, {
+                "title": "高亮",
+                "content": [10, 11, 14, 15, 16]
+            }, {
                 "title": "法条",
-                "content": ["20", "30"]
+                "content": [20, 30]
+            }, {
+                "title": "监禁",
+                "content": ['短期 (≤3)']
             }
         ],
         "articles": [

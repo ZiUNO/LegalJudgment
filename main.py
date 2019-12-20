@@ -22,7 +22,11 @@ if __name__ == '__main__':
     keywords = set(list(keywords)[:100])
 
     # single thread
-    print(get_synonyms(keywords))
+    synonyms = get_synonyms(keywords)
+    print(synonyms)
+
+    # 在数据库中保存同义词
+    graph.save_synonyms(synonyms=synonyms)
 
     # multi threads
     # threads = []

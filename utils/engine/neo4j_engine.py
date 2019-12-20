@@ -145,3 +145,7 @@ class Neo4j(object):
             words += list(data[file])
         words = set(words)
         return words
+
+    def save_synonyms(self, synonyms):
+        # TODO 在graph中存储同义词
+        pass

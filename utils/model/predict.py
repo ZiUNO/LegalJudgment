@@ -41,6 +41,22 @@ class Predict(object):
         return article_ids
 
     @staticmethod
+    def convert_index_to_imprisonment(index):
+        return Predict.get_imprisonment()[index]
+
+    @staticmethod
+    def convert_index_to_category(index):
+        return Predict.get_category()[index]
+
+    @staticmethod
+    def get_imprisonment():
+        return [("短期 (≤3)"), ("中期 (3-10)"), ("长期 ＞10", "无期", "死刑")]
+
+    @staticmethod
+    def get_category():
+        return ["刑事案由", "民事案由", "行政案由"]
+
+    @staticmethod
     def get_charge_labels():
         """
         获取罪名标签
@@ -88,7 +104,8 @@ class Predict(object):
 
     config = {
         "model_version": None,
-        "clf": None,
+        "multi_label_clf": None,
+        "single_label_clf": None,
         "highlight_consider_layer_ids": None,
         "charge_labels_threshold": None,
         "highlight_threshold": None,
@@ -103,18 +120,19 @@ class Predict(object):
         cls.config["tokenizer"] = BertTokenizer.from_pretrained(config["model_version"], do_lower_case=True)
         cls.config["model"] = BertForSequenceClassification.from_pretrained(config["model_version"], num_labels=202,
                                                                             output_attentions=True)
-        cls.__load(load_path=config["clf"])
+        cls.config["multi_label_clf"] = Predict.__load(load_path=config["multi_label_clf"])
+        cls.config["single_label_clf"] = Predict.__load(load_path=config["single_label_clf"])
         return None
 
     @classmethod
     def __load(cls, load_path=None, clf=None):
         if clf is not None:
-            cls.config["clf"] = clf
+            answer = clf
         elif load_path is not None:
-            cls.config["clf"] = joblib.load(load_path)
+            answer = joblib.load(load_path)
         else:
             raise ValueError("clf and load path should not be None at the same time")
-        return cls.config["clf"]
+        return answer
 
     @classmethod
     def __get_highlight_ids(cls, attentions):
@@ -155,7 +173,7 @@ class Predict(object):
         return list(np.where(preds > preds_threshold)[0])
 
     @classmethod
-    def __predict_charge_and_highlight_ids(cls, sentence):
+    def __predict_charge_ids_and_highlight_ids(cls, sentence):
         """
         预测罪名与高亮位置下标
         :param sentence: 需预测的句子字符串
@@ -176,76 +194,70 @@ class Predict(object):
         return preds_charge_labels_ids, preds_highlight_ids
 
     @classmethod
-    def predict_charge_and_highlight(cls, sentence, config=None):
+    def predict_charge_and_highlight_ids(cls, sentence):
 
         """
         预测罪名与高亮语句
         :param sentence: 需预测的语句
-        :param config: 配置信息，包含 label_type/highlight_label_type: div或text等，用于<div>或<text>； label_cls/highlight_cls: pred-text等。
         :return: 罪名标签列表，高亮后的语句
         """
-        if config is None:
-            config = dict()
-        config_keys = list(config.keys())
-        default_config = {"label_type": "text",
-                          "label_cls": "pred-text",
-                          "highlight_cls": "pred-text-highlight",
-                          "highlight_label_type": "text"}
-        config = {key: default_config[key] if (key not in config_keys) else config[key] for
-                  key in default_config}
-        label_ids, highlight_ids = Predict.__predict_charge_and_highlight_ids(sentence=sentence)
+        label_ids, highlight_ids = Predict.__predict_charge_ids_and_highlight_ids(sentence=sentence)
         label_list = Predict.get_charge_labels()
         labels = [label_list[ids] for ids in label_ids]
-        highlight_sentence_format = "<%s class='{highlight_cls}'>{word}</%s>" % (
-            config["highlight_label_type"],
-            config["highlight_label_type"])
-        highlight_sentence = "".join(
-            [highlight_sentence_format.format(
-                **{"highlight_cls": config["highlight_cls"],
-                   "word": word})
-             if i in highlight_ids else word for i, word in enumerate(sentence)])
-        sentence = "%s%s%s" % (r"<%s class='%s'>" %
-                               (config["label_type"],
-                                config["label_cls"]),
-                               highlight_sentence,
-                               r"</%s>" % config["label_type"])
-        need_eliminate = u"</%s><%s class='%s'>" % (
-            config["highlight_label_type"], config["highlight_label_type"], config["highlight_cls"])
-        sentence = re.sub(need_eliminate, u"", sentence)
-        return labels, sentence
+        return labels, highlight_ids
 
     @classmethod
     def predict_articles(cls, charges):
         return Predict.convert_ids_to_article(
-            cls.config["clf"].predict([Predict.convert_charge_to_ids(charges=charges)])[0])
+            cls.config["multi_label_clf"].predict([Predict.convert_charge_to_ids(charges=charges)])[0]
+        )
+
+    @classmethod
+    def predict_imprisonment(cls, charges):
+        return Predict.convert_index_to_imprisonment(
+            cls.config["single_label_clf"].predict([Predict.convert_charge_to_ids(charges=charges)])[0]
+        )
+
+    @classmethod
+    def predict_category(cls, sentence):
+        # TODO 根据sentence预测案情类别
+        return Predict.get_category()[0]
+
+    @classmethod
+    def predict(cls, sentence):
+        charge_labels, highlight_ids = \
+            Predict.predict_charge_and_highlight_ids(sentence=sentence)
+        articles = Predict.predict_articles(charges=charge_labels)
+        imprisonment = Predict.predict_imprisonment(charges=charge_labels)
+        category = Predict.predict_category(sentence=sentence)
+        return {
+            "罪名": charge_labels,
+            "高亮": highlight_ids,
+            "法条": articles,
+            "监禁": imprisonment,
+            "类别": category
+        }
 
 
 if __name__ == '__main__':
-    sentence = u"被告人周某在越野车内窃得黑色手机。祁阳县人民检察院指控，2013年9月22日、25日，被告人李某在祁阳县潘市镇石峡洲村，因怀疑别人在谩骂自己，便手持木棍、刀等凶器冲出屋外，追逐本村无辜村民，随意殴打他人，致多人受伤，任意损毁他人财物。经鉴定，被害人李某甲的损伤构成重伤；被害人李某乙、李某丙的损伤均构成了轻伤；被害人李某丁、李某戊、李某己、李某庚、李某辛、黄某某、李某壬、李某癸的损伤均构成轻微伤。2013年9月25日12时许，祁阳县公安局民警将被告人李某抓获归案。该院就上述指控，向本院提供了被害人李某甲、李某乙、李某丙等人的陈述；证人王某甲、王某乙、于某某等人的证言；法医鉴定意见书及伤情照片；现场勘验检查笔录、现场方位图及照片、提取笔录及扣押物品清单、指认木棒和刀照片；公安机关证明；户籍证明及被告人李某供述等相关证据予以证明。该院以被告人李某××他人身体，致一人重伤；同时持凶器追逐、殴打他人，致二人轻伤，多人轻微伤，情节恶劣；任意损毁他人财物，造成恶劣社会影响，情节严重。"
+    sentence = u"被告人周某在越野车内窃得黑色手机。"
     config = {"model_version": os.path.join("torch_pretrained_bert_multi_label", "tmp", "self"),
-              "clf": os.path.join("svm_classifier", "svm_clf.pkl"),
+              "multi_label_clf": os.path.join("svm_classifier", "svm_clf.pkl"),
+              "single_label_clf": os.path.join("svm_classifier", "svm_single_label_clf.pkl"),
               "highlight_consider_layer_ids": (7, 10),
               # FIXME [highlight_consider_layer_ids] 0-11共12层，调整考虑的神经层下标数以调整高亮部分的位置
-              "charge_labels_threshold": -0.6,
-              "highlight_threshold": 0.01}
+              "charge_labels_threshold": 0.2,
+              "highlight_threshold": 0.2}
+
     # init
     start_time = time()
-    Predict.init(config)
+    Predict(config)
     print("initializer cost time: %.02f(s)" % (time() - start_time))
 
     # predict
     start_time = time()
-    charge_labels, highlight_sentence = \
-        Predict.predict_charge_and_highlight(sentence=sentence,
-                                             config={"label_type": "text",
-                                                     "label_cls": "pred-text",
-                                                     "highlight_cls": "pred-text-highlight",
-                                                     "highlight_label_type": "div"})
-    articles = Predict.predict_articles(charges=charge_labels)
-    print("*" * 10 + " charge labels " + "*" * 10)
-    print(charge_labels)
-    print("*" * 10 + " highlight sentence " + "*" * 10)
-    print(highlight_sentence)
-    print("*" * 10 + " articles " + "*" * 10)
-    print(articles)
+    predict = Predict.predict(sentence=sentence)
+    for pred in predict:
+        print("*" * 10 + " %s " % pred + "*" * 10)
+        print(predict[pred])
     print("*" * 10 + " predict cost time: %.02f(s)" % (time() - start_time) + "*" * 10)

@@ -2,7 +2,8 @@
   "PREDICT": {
     "SMART_EVALUATION": {
       "model_version": "../../../utils/model/torch_pretrained_bert_multi_label/tmp/self",
-      "clf": "../../../utils/model/svm_classifier/svm_clf.pkl",
+      "multi_label_clf": "../../../utils/model/svm_classifier/svm_clf.pkl",
+      "single_label_clf": "../../../utils/model/svm_classifier/svm_single_label_clf.pkl",
       "highlight_consider_layer_ids": [
         7,
         10

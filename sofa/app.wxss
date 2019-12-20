@@ -8,3 +8,27 @@
   padding: 200rpx 0;
   box-sizing: border-box;
 } 
+
+.logo-img{
+  width: 200rpx; 
+  height: 200rpx;
+}
+
+.logo-text{
+   font-size: 70rpx; 
+   display: flex; 
+   margin-bottom: 60rpx;
+}
+
+.footer{
+  width: 100%;
+  position: absolute;
+  text-align: center;
+  bottom: 60rpx;
+}
+
+.footer-href{
+  font-weight: lighter; 
+  font-size: small;
+  color: #428bca;
+}

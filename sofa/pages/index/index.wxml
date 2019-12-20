@@ -2,9 +2,9 @@
 <view class="container">
   <view>
     <view>
-      <image src="../../images/logo.png" style="width: 200rpx; height: 200rpx;"/>
+      <image class="logo-img" src="../../images/logo.png"/>
     </view>
-    <view style="font-size: 70rpx; display: flex; margin-bottom: 60rpx;">
+    <view class="logo-text">
       <view style="color: #428bca;">
       SO
       </view>
@@ -14,8 +14,18 @@
       </view>
     </view>
   </view>
-  <form>
-    <textarea auto-focus="true" auto-height="true" cursor-spacing="20rpx">
+  <form bindsubmit="search">
+    <textarea 
+      name="textarea"
+      auto-focus="true" 
+      maxlength="200" 
+      show-confirm-bar="false"
+      bindinput="handleInput"
+    >
     </textarea>
+    <button class="form-btn" bindtap="search" form-type="submit">搜索</button>
   </form>
 </view>
+<footer class="footer">
+  <text class="footer-href" bindtap="about">关于SO·FA</text>
+</footer>

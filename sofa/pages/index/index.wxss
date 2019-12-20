@@ -1,7 +1,16 @@
 /**index.wxss**/
 textarea{
-  border:3rpx solid; 
-  border-radius: 20rpx; 
-  width: 500rpx; 
-  height: 300rpx;
+  border:2rpx solid; 
+  border-radius: 10rpx; 
+  width: 500rpx;
+  height: 200rpx;
+}
+
+.form-btn{
+  border: 3rpx solid;
+  margin-top: 50rpx;
+  border-radius: 10rpx;
+  background-color: #428bca;
+  color: white;
+  font-weight: normal;
 }

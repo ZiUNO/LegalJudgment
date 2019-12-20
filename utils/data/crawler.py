@@ -109,12 +109,24 @@ def get_synonyms(words):
     if isinstance(words, str):
         words = [words]
     for word in tqdm(words, desc="GET SYNONYMS"):
-        get_data = requests.get(url % word)
-        if get_data.status_code != 200:
+        get_data = None
+        for _ in range(100):
+            try:
+                get_data = requests.get(url % word)
+            except Exception:
+                time.sleep(2)
+                continue
+            break
+        if get_data is None or get_data.status_code != 200:
             continue
         html = get_data.content.decode('utf-8')
-        about_words = re.findall(u'<span class="keywordsred">.*?</span>(.*?)<br>', html, re.S)[0]
+        about_words = re.findall(u'<b>近义词</b><br>汉语:(.*?)<br>', html, re.S)
+        if len(about_words) == 0:
+            continue
+        about_words = about_words[0]
         about_words = about_words.split(',')
+        about_words = [tmp.strip() for tmp in about_words]
+        about_words = [re.sub(u"</?span.*?>", "", tmp) for tmp in about_words]
         synonyms[word] = [tmp_word.strip() for tmp_word in about_words if tmp_word.strip() != '']
     return synonyms
 

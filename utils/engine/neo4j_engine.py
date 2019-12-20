@@ -4,9 +4,7 @@ import re
 
 import jieba
 import jieba.analyse
-import numpy as np
-from py2neo import Graph, Node, Relationship, NodeMatcher, RelationshipMatcher
-from sklearn.feature_extraction.text import TfidfVectorizer
+from py2neo import Graph, Node, Relationship, NodeMatcher
 from tqdm import tqdm
 
 
@@ -142,4 +140,8 @@ class Neo4j(object):
                 topK=top_k)
             content[f] = words
         data = {f: tuple(set(content[f] + title[f])) for f in data}
-        return data
+        words = []
+        for file in data:
+            words += list(data[file])
+        words = set(words)
+        return words

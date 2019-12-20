@@ -9,15 +9,6 @@ from concurrent.futures.thread import ThreadPoolExecutor
 import requests
 
 
-class ClassOverWriteError(RuntimeError):
-    """
-    自定义类中函数未重写错误
-    """
-
-    def __init__(self, arg):
-        self.args = arg
-
-
 class Crawler(object):
     """
     法律爬虫基类
@@ -29,7 +20,7 @@ class Crawler(object):
         下载函数（虚静态函数）
         :param config_path:配置文件路径（包括保存路径及法律分类名称）
         """
-        raise ClassOverWriteError('未重写Crawler中的download函数')
+        raise NotImplementedError('未重写Crawler中的download函数')
 
 
 class DuXiaoFaCrawler(Crawler):

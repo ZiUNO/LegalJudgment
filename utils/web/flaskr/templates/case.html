@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SO·FA·案例</title>
+    <link rel="icon" href="../static/img/logo.png">
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div></div>
+<div class="container-fluid" style="margin-left: 10%; margin-right: 10%;">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="row-fluid" style="display: flex; align-items: center; margin-left: 20px; margin-top: 8px;">
+                <div class="span6">
+                    <a href="/"><img alt="SOFA" src="../static/img/logo.png" width="100" height="100"/></a>
+                </div>
+                <div class="span6">
+                    <a href="/" style="text-decoration: none;">
+                        <h1 class="text-center" style="font-weight: normal; display: flex;">
+                            <div style="color: #428bca">SO</div>
+                            ·
+                            <div style="color: #d9534f">FA</div>
+                        </h1>
+                    </a>
+                </div>
+                <div class="col-md-4" style="margin-left: 28px; margin-top: 30px; margin-bottom: 20px;">
+                    <form name="form1" class="form-search input-group" method="get" action="/search">
+                        <textarea class="input-medium search-query form-control"
+                                  name="q" rows="3" style="resize: none;"></textarea>
+                        <span class="input-group-btn">
+                            <button id="input-submit" type="submit" class="btn btn-primary"
+                                    style="height: 74px; width: 74px; font-size: 16px;">搜索</button>
+                        </span>
+                    </form>
+                </div>
+            </div>
+            <div class="row-fluid" style="margin-top: 10px;">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div id="pinggu" class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title">{{case_detail.title}}{% for b in case_detail.baseList %}&emsp;<span
+                                            class="badge">{{b}}</span>{% endfor %}</h1>
+                                </div>
+                                <div class="panel-body">
+                                    {% for content in case_detail.contents %}
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <div class="panel-title">{{content.title}}</div>
+                                        </div>
+                                        <div class="panel-body">
+                                            {% for s in content.strContent %}
+                                            <p style="text-indent:2em;">{{s}}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer text-center" style="margin-bottom: 34px;">
+            <div class="container">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <button type="button" class="btn btn-link"><a href="/about">关于SO·FA</a></button>
+                    </div>
+                </div>
+            </div>
+        </footer>
+</body>
+</html>

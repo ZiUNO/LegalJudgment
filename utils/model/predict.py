@@ -97,14 +97,14 @@ class Predict(object):
         "highlight_consider_layers_ids": None,
     }
 
-    @classmethod
-    def init(cls, config):
+    def __new__(cls, config):
         for c in config:
             cls.config[c] = config[c]
         cls.config["tokenizer"] = BertTokenizer.from_pretrained(config["model_version"], do_lower_case=True)
         cls.config["model"] = BertForSequenceClassification.from_pretrained(config["model_version"], num_labels=202,
                                                                             output_attentions=True)
         cls.__load(load_path=config["clf"])
+        return None
 
     @classmethod
     def __load(cls, load_path=None, clf=None):

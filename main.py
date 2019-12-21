@@ -13,12 +13,12 @@ if __name__ == '__main__':
     with open("config.json", 'r', encoding='utf-8') as f:
         config = json.load(f)
     law_path = os.path.join(config['LAW_PATH'].replace('\\', os.path.sep))  # 格式化后的法律条文的保存路径
-    graph = Neo4j(law_path, rebuild=False)
-    # graph.expand()
-    keywords = graph.keywords(20)
+    graph = Neo4j(law_path, rebuild=True)
+    graph.expand()
+    keywords = graph.keywords(50)
 
     # test 100
-    # print(keywords)
+    print(keywords)
     # keywords = set(list(keywords)[:10])
 
     # single thread

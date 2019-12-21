@@ -1,1 +1,27 @@
 /* pages/about/about.wxss */
+.table{
+  border-top:1px solid #dadada;
+  border-right:0;
+  border-bottom: 0;
+  width: 60%;
+  margin-left: 1%;
+}
+.tr{
+  width:100%;
+  display: flex;
+  justify-content: space-between;
+}
+.th,.td{
+  padding: 5rpx;
+  border-bottom: 1px solid #dadada;
+  text-align: center;
+  width: 100%;
+}
+.th{
+  font-weight: lighter;
+  font-size: medium;
+}
+.td{
+  font-weight: lighter;
+  font-size: medium;
+}

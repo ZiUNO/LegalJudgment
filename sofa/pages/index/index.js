@@ -48,6 +48,9 @@ Page({
     })
   },
   about: function (e) {
-    console.log('about')
+    console.log('[index] about')
+    wx.navigateTo({
+      url: '../about/about',
+    })
   }
 });

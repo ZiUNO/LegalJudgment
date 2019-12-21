@@ -1,9 +1,8 @@
 /**index.wxss**/
 textarea{
-  border:2rpx solid; 
-  border-radius: 10rpx; 
   width: 500rpx;
   height: 200rpx;
+  padding: 4rpx 2rpx 0 2rpx;
 }
 
 .form-btn{

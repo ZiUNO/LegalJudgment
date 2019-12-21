@@ -5,9 +5,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 200rpx 0;
   box-sizing: border-box;
 } 
+
+.row{
+  width: 100%;
+  margin: 10rpx 10rpx 30rpx 10rpx;
+}
 
 .logo-img{
   width: 200rpx; 
@@ -30,5 +34,65 @@
 .footer-href{
   font-weight: lighter; 
   font-size: small;
+}
+
+.border{
+  border:1rpx solid; 
+  border-radius: 8rpx; 
+  margin: 10rpx 15rpx 14rpx 15rpx;
+}
+
+.blue{
   color: #428bca;
+}
+
+.red{
+  color: #d9534f;
+}
+
+.yellow{
+  color: rgb(141, 112, 66);
+}
+
+.border-blue{
+  border-color: rgb(186, 232, 241)
+}
+
+.bg-red{
+  background-color: rgb(243, 222, 222)
+}
+
+.bg-yellow{
+  background-color: rgb(252, 248, 228);
+}
+
+.bg-blue{
+  background-color: rgb(216, 237, 247);
+}
+
+.border-red{
+  border-color: rgb(237, 204, 209);
+}
+
+.border-gray{
+  border-color: rgb(204, 204, 204);
+}
+
+.border-yellow{
+  border-color: rgb(251, 236, 206);
+}
+
+.title-text{
+  padding: 30rpx 10rpx 30rpx 10rpx;
+  font-size: larger;
+}
+
+.sub-title-text{
+  padding: 30rpx 10rpx 30rpx 10rpx;
+  font-size: large;
+}
+
+.span{
+  width: 100%;
+  padding: 3rpx 3rpx 0 3rpx;
 }

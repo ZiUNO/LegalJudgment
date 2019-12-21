@@ -1,31 +1,34 @@
 <!--index.wxml-->
 <view class="container">
-  <view>
+  <view style="padding: 200rpx 0 0 0;">
     <view>
       <image class="logo-img" src="../../images/logo.png"/>
     </view>
     <view class="logo-text">
-      <view style="color: #428bca;">
+      <view class="blue">
       SO
       </view>
       ·
-      <view style="color: #d9534f;">
+      <view class="red">
       FA
       </view>
     </view>
   </view>
   <form bindsubmit="search">
-    <textarea 
-      name="textarea"
-      auto-focus="true" 
-      maxlength="200" 
-      show-confirm-bar="false"
-      bindinput="handleInput"
-    >
-    </textarea>
-    <button class="form-btn" bindtap="search" form-type="submit">搜索</button>
+    <view class="border border-gray">
+      <textarea 
+          name="textarea"
+          auto-focus="true" 
+          maxlength="200" 
+          show-confirm-bar="false"
+          bindinput="handleInput"
+        >
+        </textarea>
+    </view>
+    
+    <button class="form-btn border-gray" form-type="submit">搜索</button>
   </form>
 </view>
 <footer class="footer">
-  <text class="footer-href" bindtap="about">关于SO·FA</text>
+  <text class="footer-href blue" bindtap="about">关于SO·FA</text>
 </footer>

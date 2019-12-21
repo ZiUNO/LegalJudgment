@@ -31,6 +31,8 @@ def hello_world():
 def search():
     # TODO 待完善
     q = request.args.get('q')
+    ask = request.args.get('ask')
+    assert ask in ('html', 'json')
     # # TODO q纠正错别字->correct_q
     # correct_q = q
     # # TODO correct_q分词，在数据库中检索每个分词的同义词，并替换，从而获取关键词->final_q, keyword
@@ -69,7 +71,7 @@ def search():
     # TO HERE
     # TODO 根据高亮位置及mp反向计算原句的高亮位置
     result = {
-        "sentence": "抢劫会被判什么刑？",
+        "sentence": q,
         "predictions": [
             {
                 "title": "种类",
@@ -137,7 +139,7 @@ def search():
         },
 
     }
-    return render_template('search.html', result=result)
+    return render_template('search.html', result=result) if ask == 'html' else result
 
 
 @app.route("/case")

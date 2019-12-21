@@ -1,2 +1,29 @@
 <!--pages/search/search.wxml-->
-<text>pages/search/search.wxml</text>
+<view class="container border border-gray">
+  <view class="span" id="pinggu">
+    <view class="border border-red">
+      <view class="border-red bg-red red"><text class="title-text">评估</text></view>
+      <view class="span">
+        <view>
+        评估
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="span" id="fatiao">
+    <view class="border border-yellow">
+      <view class="border-yellow bg-yellow yellow"><text class="title-text">法条</text></view>
+      <view class="span">
+        <view class="border border-yello">
+          法条
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="span" id="anli">
+    <view class="border border-blue">
+      <view class="border-blue bg-blue blue"><text class="title-text">案例</text></view>
+      案例
+    </view>
+  </view>
+</view>

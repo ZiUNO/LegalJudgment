@@ -19,14 +19,16 @@ if __name__ == '__main__':
 
     # test 100
     # print(keywords)
-    # keywords = set(list(keywords))
+    # keywords = set(list(keywords)[:10])
 
     # single thread
     synonyms = get_synonyms(keywords)
+    with open(os.path.join('data', 'synonyms.json'), 'w') as f:
+        json.dump(synonyms, f, ensure_ascii=False)
     print(synonyms)
 
     # 在数据库中保存同义词
-    graph.save_synonyms(synonyms=synonyms)
+    # graph.save_synonyms(synonyms=synonyms)
 
     # multi threads
     # threads = []

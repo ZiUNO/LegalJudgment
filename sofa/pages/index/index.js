@@ -22,15 +22,12 @@ Page({
       q = e.substring(0, e.length-1);
     }
     else{
-      try{
-        q = e.detail.value.textarea;
-      }catch(error){
-      }
+      q = e.detail.value.textarea
     }
     console.log("[index] search question: ", q)
     wx.showLoading({
       title: '加载中',
-      
+
     })
     wx.request({
       url: 'http://172.20.48.146:5000/search',

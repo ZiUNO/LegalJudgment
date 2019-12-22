@@ -30,5 +30,5 @@
   </form>
 </view>
 <footer class="footer">
-  <text class="footer-href blue" bindtap="about">关于SO·FA</text>
+  <text class="footer-href gray" bindtap="about">关于SO·FA</text>
 </footer>

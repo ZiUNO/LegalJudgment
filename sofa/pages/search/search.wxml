@@ -1,29 +1,68 @@
 <!--pages/search/search.wxml-->
-<view class="container border border-gray">
-  <view class="span" id="pinggu">
-    <view class="border border-red">
-      <view class="border-red bg-red red"><text class="title-text">评估</text></view>
-      <view class="span">
-        <view>
-          评估
+<view class="page">
+  <view class="page__bd page__bd_spacing">
+    <view class="kind-list">
+      <view class="kind-list__item">
+        <view id="{{result.predictions.id}}" class="weui-flex kind-list__item-hd {{result.predictions.open ? 'kind-list__item-hd_show' : ''}} bg-red" bindtap="kindToggle">
+          <view class="weui-flex__item red" style="font-size: large;">评估</view>
+        </view>
+        <view class="kind-list__item-bd {{result.predictions.open ? 'kind-list__item-bd_show' : ''}}">
+          <view class="weui-cells {{result.predictions.open ? 'weui-cells_show' : ''}}">
+            <block wx:for="{{result.predictions.value}}" wx:for-item="pred" wx:key="{{index}}">
+              <view>{{pred.title}}</view><view>{{pred.content}}</view>
+            </block>
+          </view>
         </view>
       </view>
-    </view>
-  </view>
-  <view class="span" id="fatiao">
-    <view class="border border-yellow">
-      <view class="border-yellow bg-yellow yellow"><text class="title-text">法条</text></view>
-      <view class="span">
-        <view class="border border-yello">
-          法条
+      <view class="kind-list__item">
+        <view id="{{result.articles.id}}" class="weui-flex kind-list__item-hd {{result.articles.open ? 'kind-list__item-hd_show' : ''}} bg-yellow" bindtap="kindToggle">
+          <view class="weui-flex__item yellow" style="font-size: large;">法条</view>
+        </view>
+        <view class="kind-list__item-bd {{result.articles.open ? 'kind-list__item-bd_show' : ''}}">
+          <view class="weui-cells {{result.articles.open ? 'weui-cells_show' : ''}}">
+            <block wx:for="{{result.articles.value}}" wx:for-item="art" wx:key="{{index}}">
+              <view>{{art.title}}{{art.source}}{{art.content}}</view>
+            </block>
+          </view>
         </view>
       </view>
-    </view>
-  </view>
-  <view class="span" id="anli">
-    <view class="border border-blue">
-      <view class="border-blue bg-blue blue"><text class="title-text">案例</text></view>
-      案例
+      <view class="kind-list__item">
+        <view id="{{result.similarCases.id}}" class="weui-flex kind-list__item-hd {{result.similarCases.open ? 'kind-list__item-hd_show' : ''}} bg-blue" bindtap="kindToggle">
+          <view class="weui-flex__item blue" style="font-size: large;">案例</view>
+        </view>
+        <view class="kind-list__item-bd {{result.similarCases.open ? 'kind-list__item-bd_show' : ''}}">
+        <view class="weui-flex__item blue" style="font-size: large;">权威</view>
+          <view class="weui-cells {{result.similarCases.open ? 'weui-cells_show' : ''}}">
+            <block wx:for="{{result.similarCases.value.authcase}}" wx:for-item="auth" wx:key="{{index}}">
+              <block wx:for="{{auth}}" wx:key="{{index}}">
+                <view>{{auth.title}}</view>
+                <view>{{auth.source}}</view>
+                <view>{{auth.content}}</view>
+              </block>
+            </block>
+          </view>
+        </view>
+      </view>
+
+
+
+      <!-- <block wx:for="{{list}}" wx:key="id">
+        <view class="kind-list__item">
+          <view id="{{item.id}}" class="weui-flex kind-list__item-hd {{item.open ? 'kind-list__item-hd_show' : ''}} bg-{{item.color}}" bindtap="kindToggle">
+            <view class="weui-flex__item {{item.color}}" style="font-size: large;">{{item.name}}</view>
+          </view>
+          <view class="kind-list__item-bd {{item.open ? 'kind-list__item-bd_show' : ''}}">
+            <view class="weui-cells {{item.open ? 'weui-cells_show' : ''}}">
+                <block wx:for="{{item.pages}}" wx:for-item="page" wx:key="*this">
+                    <navigator url="{{page}}/{{page}}" class="weui-cell weui-cell_access">
+                        <view class="weui-cell__bd">{{page}}</view>
+                        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+                    </navigator>
+                </block>
+            </view>
+          </view>
+        </view>
+      </block> -->
     </view>
   </view>
 </view>

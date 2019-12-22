@@ -1,4 +1,6 @@
 /**app.wxss**/
+@import 'styles/weui.wxss';
+
 .container {
   height: 100%;
   display: flex;
@@ -7,11 +9,6 @@
   justify-content: space-between;
   box-sizing: border-box;
 } 
-
-.row{
-  width: 100%;
-  margin: 10rpx 10rpx 30rpx 10rpx;
-}
 
 .logo-img{
   width: 200rpx; 
@@ -53,7 +50,9 @@
 .yellow{
   color: rgb(141, 112, 66);
 }
-
+.gray{
+  color: gray;
+}
 .border-blue{
   border-color: rgb(186, 232, 241)
 }
@@ -80,19 +79,4 @@
 
 .border-yellow{
   border-color: rgb(251, 236, 206);
-}
-
-.title-text{
-  padding: 30rpx 10rpx 30rpx 10rpx;
-  font-size: larger;
-}
-
-.sub-title-text{
-  padding: 30rpx 10rpx 30rpx 10rpx;
-  font-size: large;
-}
-
-.span{
-  width: 100%;
-  padding: 3rpx 3rpx 0 3rpx;
 }

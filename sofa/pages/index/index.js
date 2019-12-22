@@ -25,7 +25,6 @@ Page({
       try{
         q = e.detail.value.textarea;
       }catch(error){
-        console.log(typeof(q.last()))
       }
     }
     console.log("[index] search question: ", q)
@@ -33,7 +32,8 @@ Page({
       title: '加载中',
     })
     wx.request({
-      url: 'http://172.20.48.146:5000/search',
+      // url: 'http://172.20.48.146:5000/search',
+      url: 'http://localhost:5000/search',
       data: {
         'q': q,
         'ask': 'json'

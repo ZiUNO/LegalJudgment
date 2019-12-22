@@ -194,17 +194,21 @@ class Predict(object):
         return preds_charge_labels_ids, preds_highlight_ids
 
     @classmethod
-    def predict_charge_and_highlight_ids(cls, sentence):
+    def predict_charge_and_highlight(cls, sentence):
 
         """
         预测罪名与高亮语句
         :param sentence: 需预测的语句
         :return: 罪名标签列表，高亮后的语句
         """
+        sentence = re.sub(u"[\[\]]", "", sentence)
         label_ids, highlight_ids = Predict.__predict_charge_ids_and_highlight_ids(sentence=sentence)
         label_list = Predict.get_charge_labels()
         labels = [label_list[ids] for ids in label_ids]
-        return labels, highlight_ids
+        highlight = ''.join([s if i in highlight_ids else '[%s]' % s for i, s in enumerate(sentence)])
+        highlight = re.sub(u"\[.\]", " ", highlight)
+        highlight = highlight.split()
+        return labels, highlight
 
     @classmethod
     def predict_articles(cls, charges):
@@ -225,15 +229,15 @@ class Predict(object):
 
     @classmethod
     def predict(cls, sentence):
-        charge_labels, highlight_ids = \
-            Predict.predict_charge_and_highlight_ids(sentence=sentence)
+        charge_labels, highlight = \
+            Predict.predict_charge_and_highlight(sentence=sentence)
         articles = Predict.predict_articles(charges=charge_labels)
         imprisonment = Predict.predict_imprisonment(charges=charge_labels)
         category = Predict.predict_category(sentence=sentence)
         return {
             "类别": [category],
             "罪名": charge_labels,
-            "高亮": highlight_ids,
+            "高亮": highlight,
             "法条": articles,
             "监禁": [imprisonment]
         }

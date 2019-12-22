@@ -81,7 +81,7 @@ def search():
                 "content": ["抢劫", "盗窃"],
             }, {
                 "title": "高亮",
-                "content": [10, 11, 14, 15, 16]
+                "content": ['抢', '手机']
             }, {
                 "title": "法条",
                 "content": [20, 30]

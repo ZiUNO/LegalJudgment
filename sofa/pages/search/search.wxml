@@ -11,8 +11,15 @@
                 <view class="kind-list__item-bd {{predictions.open ? 'kind-list__item-bd_show' : ''}}">
                     <view class="weui-cells {{predictions.open ? 'weui-cells_show' : ''}}">
                         <block wx:for="{{predictions.value}}" wx:for-item="pred" wx:key="{{index}}">
-                            <view>{{pred.title}}</view>
-                            <view>{{pred.content}}</view>
+                        
+                        <view class="weui-cell">
+                          
+                          <view class="weui-ceil__bd">{{pred.title}}</view>
+                          <view class="weui-cell__ft" wx:for="{{pred.content}}" wx:key="*this">
+                            <text decode="{{true}}">&emsp;</text><view class="weui-badge" style="margin-left: 5px; margin-bottom: 7rpx; background-color: #d9534f;">{{item}}</view>
+                          </view>
+                        </view>
+                            
                         </block>
                     </view>
                 </view>

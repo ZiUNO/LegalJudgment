@@ -100,7 +100,7 @@
                                     {% for article in result.articles %}
                                     <div class="panel panel-warning">
                                         <ol class="breadcrumb panel-heading" style="margin-bottom: 2px;">
-                                            {% for fr in article.from %}
+                                            {% for fr in article.source %}
                                             <li>{{fr}}</li>
                                             {% endfor %}
                                             <li class="active">{% for t in article.title %}{{t}}&emsp;{% endfor %}</li>

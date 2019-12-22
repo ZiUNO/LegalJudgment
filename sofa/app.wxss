@@ -29,12 +29,12 @@
 }
 
 .footer-href{
-  font-weight: lighter; 
+  font-weight: normal; 
   font-size: small;
 }
 
 .border{
-  border:1rpx solid; 
+  border:4rpx solid; 
   border-radius: 8rpx; 
   margin: 10rpx 15rpx 14rpx 15rpx;
 }

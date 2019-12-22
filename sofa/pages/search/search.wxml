@@ -35,21 +35,21 @@
                 <view id="{{similarCases.id}}"
                       class="weui-flex kind-list__item-hd {{similarCases.open ? 'kind-list__item-hd_show' : ''}} bg-blue"
                       bindtap="kindToggle">
-                    <view class="weui-flex__item blue" style="font-size: large;">案例</view>
+                    <view class="weui-flex__item blue" style="font-size: large;">案例<view class="weui-badge" style="margin-left: 5px;  background-color: #428bca; margin-bottom: 7rpx;">{{similarCases.case.length+similarCases.authcase.length}}</view></view>
                 </view>
                 <view class="kind-list__item-bd {{similarCases.open ? 'kind-list__item-bd_show' : ''}}">
-                    <view class="weui-cells__title">权威<view class="weui-badge bg-blue blue" style="margin-left: 5px;">{{similarCases.authcase.length}}</view></view>
+                    <view class="weui-cells__title blue">权威<view class="weui-badge" style="margin-left: 5px; margin-bottom: 7rpx; background-color: #428bca;">{{similarCases.authcase.length}}</view></view>
                     <view class="weui-cells weui-cells_after-title {{similarCases.open ? 'weui-cells_show' : ''}}">
                         <block wx:for="{{similarCases.authcase}}" wx:key="uniqid" wx:for-item="singleAuth">
-                            <navigator url="../../case/case/case?caseType=authcase&uniqid={{singleAuth.uniqid}}" class="weui-cell weui-cell_access">
+                            <navigator url="../case/case?caseType=authcase&uniqid={{singleAuth.uniqid}}" class="weui-cell weui-cell_access">
                                 <view class="weui-cell__bd">{{singleAuth.title}}</view>
                             </navigator>
                         </block>
                     </view>
-                    <view class="weui-cells__title">普通<view class="weui-badge bg-blue blue" style="margin-left: 5px;">{{similarCases.case.length}}</view></view>
+                    <view class="weui-cells__title blue">普通<view class="weui-badge" style="margin-left: 5px;  background-color: #428bca; margin-bottom: 7rpx;">{{similarCases.case.length}}</view></view>
                     <view class="weui-cells weui-cells_after-title {{similarCases.open ? 'weui-cells_show' : ''}}">
                         <block wx:for="{{similarCases.case}}" wx:key="uniqid" wx:for-item="singleAuth">
-                            <navigator url="../../case/case/case?caseType=case&uniqid={{singleAuth.uniqid}}" class="weui-cell weui-cell_access">
+                            <navigator url="../case/case?caseType=case&uniqid={{singleAuth.uniqid}}" class="weui-cell weui-cell_access">
                                 <view class="weui-cell__bd">{{singleAuth.title}}</view>
                             </navigator>
                         </block>

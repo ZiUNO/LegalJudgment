@@ -51,6 +51,7 @@
                     <form name="form1" class="form-search input-group" method="get" action="/search">
                         <textarea class="input-medium search-query form-control"
                                   name="q" rows="3" style="resize: none;" maxlength="200">{{result.sentence}}</textarea>
+                        <input hidden="hidden" name="ask" value="html">
                         <span class="input-group-btn">
                             <button id="input-submit" type="submit" class="btn btn-primary"
                                     style="height: 74px; width: 74px; font-size: 16px;">搜索</button>
@@ -85,9 +86,6 @@
                                 </div>
                                 <div class="panel-body">
                                     <div>
-                                        <div>
-                                            <h5>关键词{% for word in result.sentence %}{% if loop.index0 in result.highlight %}&emsp;&emsp;<span class="label label-danger">{{word}}</span>{% endif %}{% endfor %}</h5>
-                                        </div>
                                         {% for prediction in result.predictions %}
                                         <div><h5>{{prediction.title}}{% for c in prediction.content %}&emsp;&emsp;<span class="label label-danger">{{c}}</span>{% endfor %}</h5></div>
                                         {% endfor %}
@@ -102,13 +100,13 @@
                                     {% for article in result.articles %}
                                     <div class="panel panel-warning">
                                         <ol class="breadcrumb panel-heading" style="margin-bottom: 2px;">
-                                            {% for fr in article.from %}
+                                            {% for fr in article.source %}
                                             <li>{{fr}}</li>
                                             {% endfor %}
                                             <li class="active">{% for t in article.title %}{{t}}&emsp;{% endfor %}</li>
                                         </ol>
                                         <div class="panel-body">
-                                            <p>{{article.content}}</p>
+                                            <p style="text-indent:2em;">{{article.content}}</p>
                                         </div>
                                     </div>
                                     {% endfor %}
@@ -126,7 +124,7 @@
                                         <div class="panel-body">
                                             {% for au in result.similarCases.authcase %}
                                             <div class="panel panel-info">
-                                                <div class="panel-heading"><a href="/case?type=authcase&uniqid={{au.uniqid}}">{{au.title}}</a>{% for a in au.baseList %}&emsp;<span class="badge">{{a}}</span>{% endfor %}</div>
+                                                <div class="panel-heading"><a href="/case?type=authcase&uniqid={{au.uniqid}}&ask=html">{{au.title}}</a>{% for a in au.baseList %}&emsp;<span class="badge">{{a}}</span>{% endfor %}</div>
                                             </div>
                                             {% endfor %}
                                         </div>
@@ -138,7 +136,7 @@
                                         <div class="panel-body">
                                             {% for ca in result.similarCases.case %}
                                             <div class="panel panel-info">
-                                                <div class="panel-heading"><a href="/case?type=case&uniqid={{ca.uniqid}}">{{ca.title}}</a>{% for c in ca.baseList %}&emsp;<span class="badge">{{c}}</span>{% endfor %}</div>
+                                                <div class="panel-heading"><a href="/case?type=case&uniqid={{ca.uniqid}}&ask=html">{{ca.title}}</a>{% for c in ca.baseList %}&emsp;<span class="badge">{{c}}</span>{% endfor %}</div>
                                             </div>
                                             {% endfor %}
                                         </div>

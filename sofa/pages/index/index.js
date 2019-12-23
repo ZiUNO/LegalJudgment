@@ -1,54 +1,53 @@
 //index.js
 //获取应用实例
-const app = getApp()
+const app = getApp();
 
 Page({
   data: {
-    motto: 'Hello World',
-    userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
-  },
-  //事件处理函数
-  bindViewTap: function() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
+    
   },
   onLoad: function () {
-    if (app.globalData.userInfo) {
-      this.setData({
-        userInfo: app.globalData.userInfo,
-        hasUserInfo: true
-      })
-    } else if (this.data.canIUse){
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      app.userInfoReadyCallback = res => {
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
-      }
-    } else {
-      // 在没有 open-type=getUserInfo 版本的兼容处理
-      wx.getUserInfo({
-        success: res => {
-          app.globalData.userInfo = res.userInfo
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
+    
+  },
+  handleInput: function (e) {
+    let input = e.detail.value;
+    let lastChar = input.charAt(input.length - 1);
+    if (lastChar === '\n'){
+      this.search(e.detail.value)
     }
   },
-  getUserInfo: function(e) {
-    console.log(e)
-    app.globalData.userInfo = e.detail.userInfo
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
+  search: function (e) {
+    let q;
+    if (e.constructor === String){
+      q = e.substring(0, e.length-1);
+    }
+    else{
+      q = e.detail.value.textarea
+    }
+    console.log("[index] search question: ", q)
+    wx.showLoading({
+      title: '分析中',
+
+    })
+    wx.request({
+      url: 'http://localhost:5000/search',
+      data: {
+        'q': q,
+        'ask': 'json'
+      },
+      success: function (result){
+        wx.hideLoading()
+        console.log("[index] result: ", result.data)
+        wx.navigateTo({
+          url: '../search/search?result=' + JSON.stringify(result.data)
+        })
+      },
+    })
+  },
+  about: function (e) {
+    console.log('[index] about')
+    wx.navigateTo({
+      url: '../about/about',
     })
   }
-})
+});

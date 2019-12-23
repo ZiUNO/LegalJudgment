@@ -1,2 +1,150 @@
 <!--pages/search/search.wxml-->
-<text>pages/search/search.wxml</text>
+<view class="page">
+    <view class="page__hd">
+        <view style="display: flex;">
+            <view style="display: inline-block; padding-right: 20rpx;">
+                <image class="logo-img" src="../../images/logo.png" style="width: 115rpx; height: 115rpx;"/>
+            </view>
+            <view class="logo-text" style="margin-bottom: 0;">
+                <view class="blue">
+                    SO
+                </view>
+                ·
+                <view class="red">
+                    FA
+                </view>
+            </view>
+        </view>
+    </view>
+    <view class="page__bd page__bd_spacing">
+        <view class="kind-list">
+            <view class="kind-list__item">
+                <view id="{{predictions.id}}"
+                      class="weui-flex kind-list__item-hd {{predictions.open ? 'kind-list__item-hd_show' : ''}} bg-red"
+                      bindtap="kindToggle">
+                    <view class="weui-flex__item red" style="font-size: large;">评估</view>
+                </view>
+                <view class="kind-list__item-bd {{predictions.open ? 'kind-list__item-bd_show' : ''}}">
+                    <view class="weui-cells {{predictions.open ? 'weui-cells_show' : ''}}">
+                        <block wx:for="{{predictions.value}}" wx:for-item="pred" wx:key="{{index}}">
+                            <view class="weui-cell">
+                                <view class="weui-ceil__bd">
+                                    <view>{{pred.title}}</view>
+                                </view>
+                                <view class="weui-cell__ft" wx:for="{{pred.content}}" wx:key="*this">
+                                    <text decode="{{true}}">&emsp;</text>
+                                    <view class="weui-badge"
+                                          style="margin-left: 5px; margin-bottom: 7rpx; background-color: #d9534f;">
+                                        {{item}}
+                                    </view>
+                                </view>
+                            </view>
+
+                        </block>
+                    </view>
+                </view>
+            </view>
+            <view class="kind-list__item">
+                <view id="{{articles.id}}"
+                      class="weui-flex kind-list__item-hd {{articles.open ? 'kind-list__item-hd_show' : ''}} bg-yellow"
+                      bindtap="kindToggle">
+                    <view class="weui-flex__item yellow" style="font-size: large;">法条
+                        <view class="weui-badge"
+                              style="margin-left: 5px;  background-color: rgb(141, 112, 66); margin-bottom: 7rpx;">
+                            {{articles.value.length}}
+                        </view>
+                    </view>
+                </view>
+                <view class="kind-list__item-bd {{articles.open ? 'kind-list__item-bd_show' : ''}}">
+                    <view class="weui-cells {{articles.open ? 'weui-cells_show' : ''}}">
+                        <block wx:for="{{articles.value}}" wx:for-item="art" wx:key="{{index}}">
+
+
+                            <view class="weui-cell">
+                                <view class="weui-ceil__bd">
+                                    <view wx:for="{{art.source}}" wx:key="*this" wx:for-item="s" class="yellow"
+                                          style="display: inline-block;">{{s}}
+                                        <text decode="{{true}}">&nbsp;/&nbsp;</text>
+                                    </view>
+                                    <view wx:for="{{art.title}}" wx:key="*this" wx:for-item="t"
+                                          style="display: inline-block;">{{t}}
+                                        <text decode="{{true}}">&nbsp;</text>
+                                    </view>
+                                    <view>
+                                        <view style="font-size: 15px;color: #888888; text-indent: 2em;">
+                                            {{art.content}}
+                                        </view>
+                                    </view>
+                                </view>
+                            </view>
+                        </block>
+                    </view>
+                </view>
+            </view>
+            <view class="kind-list__item">
+                <view id="{{similarCases.id}}"
+                      class="weui-flex kind-list__item-hd {{similarCases.open ? 'kind-list__item-hd_show' : ''}} bg-blue"
+                      bindtap="kindToggle">
+                    <view class="weui-flex__item blue" style="font-size: large;">案例
+                        <view class="weui-badge"
+                              style="margin-left: 5px;  background-color: #428bca; margin-bottom: 7rpx;">
+                            {{similarCases.case.length+similarCases.authcase.length}}
+                        </view>
+                    </view>
+                </view>
+                <view class="kind-list__item-bd {{similarCases.open ? 'kind-list__item-bd_show' : ''}}">
+                    <view class="weui-cells__title blue">权威
+                        <view class="weui-badge"
+                              style="margin-left: 5px; margin-bottom: 7rpx; background-color: #428bca;">
+                            {{similarCases.authcase.length}}
+                        </view>
+                    </view>
+                    <view class="weui-cells weui-cells_after-title {{similarCases.open ? 'weui-cells_show' : ''}}">
+                        <block wx:for="{{similarCases.authcase}}" wx:key="uniqid" wx:for-item="singleAuth">
+                            <navigator url="../case/case?caseType=authcase&uniqid={{singleAuth.uniqid}}"
+                                       class="weui-cell weui-cell_access">
+                                <view class="weui-cell__bd">
+                                    <view>{{singleAuth.title}}</view>
+
+                                    <view style="display: inline-block;;" wx:for="{{singleAuth.baseList}}"
+                                          wx:key="*this">
+                                        <!-- <text decode="{{true}}">&emsp;</text> -->
+                                        <view class="weui-badge"
+                                              style="margin-left: 5px; margin-bottom: 7rpx; background-color: #428bca;">
+                                            {{item}}
+                                        </view>
+                                    </view>
+                                </view>
+                                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+                            </navigator>
+                        </block>
+                    </view>
+                    <view class="weui-cells__title blue">普通
+                        <view class="weui-badge"
+                              style="margin-left: 5px;  background-color: #428bca; margin-bottom: 7rpx;">
+                            {{similarCases.case.length}}
+                        </view>
+                    </view>
+                    <view class="weui-cells weui-cells_after-title {{similarCases.open ? 'weui-cells_show' : ''}}">
+                        <block wx:for="{{similarCases.case}}" wx:key="uniqid" wx:for-item="singleAuth">
+                            <navigator url="../case/case?caseType=case&uniqid={{singleAuth.uniqid}}"
+                                       class="weui-cell weui-cell_access">
+                                <view class="weui-cell__bd">
+                                    <view>{{singleAuth.title}}</view>
+                                    <view style="display: inline-block;" wx:for="{{singleAuth.baseList}}"
+                                          wx:key="*this">
+                                        <view class="weui-badge"
+                                              style="margin-left: 5px; margin-bottom: 7rpx; background-color: #428bca;">
+                                            {{item}}
+                                        </view>
+                                    </view>
+                                </view>
+                                <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+                            </navigator>
+                        </block>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+</view>

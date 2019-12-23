@@ -1,2 +1,39 @@
 <!--pages/about/about.wxml-->
-<text>pages/about/about.wxml</text>
+<view class="container">
+  <view style="padding: 200rpx 0 0 0;">
+    <view>
+      <image class="logo-img" src="../../images/logo.png"/>
+    </view>
+    <view class="logo-text">
+      <view class="blue">
+      SO
+      </view>
+      ·
+      <view class="red">
+      FA
+      </view>
+    </view>
+  </view>
+  <view class="table">
+    <view class="tr">
+      <view class="td">开发者</view>
+      <view class="td">ZiUNO</view>
+    </view>
+    <view class="tr">
+      <view class="td">前端</view>
+      <view class="td">微信小程序</view>
+    </view>
+    <view class="tr">
+      <view class="td">后端</view>
+      <view class="td">Flask</view>
+    </view>
+    <view class="tr">
+      <view class="td">数据库</view>
+      <view class="td">Neo4J</view>
+    </view>
+    <view class="tr">
+      <view class="td">数据来源</view>
+      <view class="td">中国裁判文书网\n觅律搜索\nCAIL2018数据集\n度小法\n词林</view>
+    </view>
+  </view>
+</view>

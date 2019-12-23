@@ -31,6 +31,8 @@ def hello_world():
 def search():
     # TODO 待完善
     q = request.args.get('q')
+    ask = request.args.get('ask')
+    assert ask in ('html', 'json')
     # # TODO q纠正错别字->correct_q
     # correct_q = q
     # # TODO correct_q分词，在数据库中检索每个分词的同义词，并替换，从而获取关键词->final_q, keyword
@@ -69,7 +71,7 @@ def search():
     # TO HERE
     # TODO 根据高亮位置及mp反向计算原句的高亮位置
     result = {
-        "sentence": "抢劫会被判什么刑？",
+        "sentence": q,
         "predictions": [
             {
                 "title": "种类",
@@ -79,7 +81,7 @@ def search():
                 "content": ["抢劫", "盗窃"],
             }, {
                 "title": "高亮",
-                "content": [10, 11, 14, 15, 16]
+                "content": ['抢', '手机']
             }, {
                 "title": "法条",
                 "content": [20, 30]
@@ -91,12 +93,12 @@ def search():
         "articles": [
             {
                 "title": ["第一条", "立法宗旨"],
-                "from": ["刑法", "第一编", "第一章"],
+                "source": ["刑法", "第一编", "第一章"],
                 "content": "为了惩罚犯罪，保护人民，根据宪法，结合我国同犯罪作斗争的具体经验及实际情况，制定本法。"
             },
             {
                 "title": ["第二条", "本法任务"],
-                "from": ["刑法", "第一编", "第一章"],
+                "source": ["刑法", "第一编", "第一章"],
                 "content": "中华人民共和国刑法的任务，是用刑罚同一切犯罪行为作斗争，以保卫国家安全，"
                            "保卫人民民主专政的政权和社会主义制度，保护国有财产和劳动群众集体所有的财产，"
                            "保护公民私人所有的财产，保护公民的人身权利、民主权利和其他权利，维护社会秩序、"
@@ -104,7 +106,7 @@ def search():
             },
             {
                 "title": ["第三条", "罪刑法定"],
-                "from": ["刑法", "第一编", "第一章"],
+                "source": ["刑法", "第一编", "第一章"],
                 "content": "法律明文规定为犯罪行为的，依照法律定罪处刑；法律没有明文规定为犯罪行为的，不得定罪处刑。"
             }
         ],
@@ -137,14 +139,16 @@ def search():
         },
 
     }
-    return render_template('search.html', result=result)
+    return render_template('search.html', result=result) if ask == 'html' else result
 
 
 @app.route("/case")
 def case():
     uniqid = request.args.get('uniqid')
     case_type = request.args.get('type')
+    ask = request.args.get('ask')
     assert case_type in ("authcase", "case")
+    assert ask in ('html', 'json')
     url = "https://solegal.cn/api/v2/%s/detail?uniqid=%s" % (case_type, uniqid)
     case_raw = requests.get(url=url).json()["data"]
     case_detail = {
@@ -152,7 +156,7 @@ def case():
         "baseList": case_raw["baseList"],
         "contents": [{'title': c["title"], "strContent": c["strContent"].split('\n')} for c in case_raw["contents"]]
     }
-    return render_template("case.html", case_detail=case_detail)
+    return render_template("case.html", case_detail=case_detail) if ask == 'html' else case_detail
 
 
 @app.route('/about')

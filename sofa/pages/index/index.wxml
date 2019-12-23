@@ -1,13 +1,35 @@
 <!--index.wxml-->
 <view class="container">
-  <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-    <block wx:else>
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-    </block>
+  <view style="padding: 200rpx 0 0 0;">
+    <view>
+      <image class="logo-img" src="../../images/logo.png"/>
+    </view>
+    <view class="logo-text">
+      <view class="blue">
+      SO
+      </view>
+      ·
+      <view class="red">
+      FA
+      </view>
+    </view>
   </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
-  </view>
+  <form bindsubmit="search">
+    <view class="border border-gray">
+      <textarea 
+          name="textarea"
+          auto-focus="true" 
+          maxlength="200" 
+          show-confirm-bar="false"
+          bindinput="handleInput"
+          style="background-color: white; border-radius: 6rpx;"
+        >
+        </textarea>
+    </view>
+    
+    <button class="form-btn border-gray" form-type="submit">搜索</button>
+  </form>
+  <footer class="footer">
+  <text class="footer-href gray" bindtap="about">关于SO·FA</text>
+</footer>
 </view>

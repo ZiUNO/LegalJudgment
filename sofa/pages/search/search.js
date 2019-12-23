@@ -46,16 +46,16 @@ Page({
         if (e.currentTarget.id === predictions.id) {
             articles.open = false;
             similarCases.open = false;
-            predictions.open = true;
+            predictions.open = !predictions.open;
             toDisplay = predictions;
         } else if (e.currentTarget.id === articles.id) {
-            articles.open = true;
+            articles.open = !articles.open;
             similarCases.open = false;
             predictions.open = false;
             toDisplay = articles;
         } else if (e.currentTarget.id === similarCases.id) {
             articles.open = false;
-            similarCases.open = true;
+            similarCases.open = !similarCases.open;
             predictions.open = false;
             toDisplay = similarCases;
         }
@@ -67,6 +67,5 @@ Page({
         });
     },
     onReady: function (e) {
-        wx.hideLoading()
     }
 })

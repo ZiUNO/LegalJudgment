@@ -26,22 +26,22 @@ Page({
     }
     console.log("[index] search question: ", q)
     wx.showLoading({
-      title: '加载中',
+      title: '分析中',
 
     })
     wx.request({
-      url: 'http://172.20.48.146:5000/search',
-      // url: 'http://localhost:5000/search',
+      url: 'http://localhost:5000/search',
       data: {
         'q': q,
         'ask': 'json'
       },
       success: function (result){
+        wx.hideLoading()
         console.log("[index] result: ", result.data)
         wx.navigateTo({
           url: '../search/search?result=' + JSON.stringify(result.data)
         })
-      }
+      },
     })
   },
   about: function (e) {

@@ -1,2 +1,35 @@
 <!--pages/case/case.wxml-->
-<text>pages/case/case.wxml</text>
+<view class="page">
+    <view class="page__hd">
+        <view class="page__title">{{caseDetail.title}}</view>
+        <view class="page__desc">
+            <view style="display: inline-block;;" wx:for="{{caseDetail.baseList}}"
+                  wx:key="*this">
+                <view class="weui-badge"
+                      style="margin-left: 5px; margin-bottom: 7rpx; background-color: #428bca;">
+                    {{item}}
+                </view>
+            </view>
+        </view>
+    </view>
+    <view class="page__bd page__bd_spacing">
+        <view class="kind-list">
+            <block wx:for="{{caseDetail.contents}}" wx:key="index" wx:for-item="content">
+                <view class="kind-list__item">
+                    <view id="{{index}}"
+                          class="weui-flex kind-list__item-hd {{content.open ? 'kind-list__item-hd_show' : ''}} bg-blue"
+                          bindtap="kindToggle">
+                        <view class="weui-flex__item blue">{{content.title}}</view>
+                    </view>
+                    <view class="kind-list__item-bd {{content.open ? 'kind-list__item-bd_show' : ''}}">
+                        <view class="weui-cells {{content.open ? 'weui-cells_show' : ''}}">
+                            <view wx:for="{{content.strContent}}" wx:for-item="c" wx:key="*this" style="padding: 10rpx 30rpx 20rpx 30rpx;">
+                                <view style="text-indent: 2em;">{{c}}</view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </block>
+        </view>
+    </view>
+</view>

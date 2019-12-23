@@ -1,5 +1,21 @@
 <!--pages/search/search.wxml-->
 <view class="page">
+    <view class="page__hd">
+        <view style="display: flex;">
+            <view style="display: inline-block; padding-right: 20rpx;">
+                <image class="logo-img" src="../../images/logo.png" style="width: 115rpx; height: 115rpx;"/>
+            </view>
+            <view class="logo-text" style="margin-bottom: 0;">
+                <view class="blue">
+                    SO
+                </view>
+                ·
+                <view class="red">
+                    FA
+                </view>
+            </view>
+        </view>
+    </view>
     <view class="page__bd page__bd_spacing">
         <view class="kind-list">
             <view class="kind-list__item">
@@ -55,7 +71,9 @@
                                         <text decode="{{true}}">&nbsp;</text>
                                     </view>
                                     <view>
-                                        <view style="font-size: 15px;color: #888888; text-indent: 2em;">{{art.content}}</view>
+                                        <view style="font-size: 15px;color: #888888; text-indent: 2em;">
+                                            {{art.content}}
+                                        </view>
                                     </view>
                                 </view>
                             </view>

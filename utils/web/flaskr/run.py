@@ -146,7 +146,9 @@ def search():
 def case():
     uniqid = request.args.get('uniqid')
     case_type = request.args.get('type')
+    ask = request.args.get('ask')
     assert case_type in ("authcase", "case")
+    assert ask in ('html', 'json')
     url = "https://solegal.cn/api/v2/%s/detail?uniqid=%s" % (case_type, uniqid)
     case_raw = requests.get(url=url).json()["data"]
     case_detail = {
@@ -154,7 +156,7 @@ def case():
         "baseList": case_raw["baseList"],
         "contents": [{'title': c["title"], "strContent": c["strContent"].split('\n')} for c in case_raw["contents"]]
     }
-    return render_template("case.html", case_detail=case_detail)
+    return render_template("case.html", case_detail=case_detail) if ask == 'html' else case_detail
 
 
 @app.route('/about')

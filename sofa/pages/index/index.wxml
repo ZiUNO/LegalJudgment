@@ -22,13 +22,14 @@
           maxlength="200" 
           show-confirm-bar="false"
           bindinput="handleInput"
+          style="background-color: white; border-radius: 6rpx;"
         >
         </textarea>
     </view>
     
     <button class="form-btn border-gray" form-type="submit">搜索</button>
   </form>
-</view>
-<footer class="footer">
+  <footer class="footer">
   <text class="footer-href gray" bindtap="about">关于SO·FA</text>
 </footer>
+</view>

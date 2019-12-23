@@ -5,63 +5,50 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    caseDetail: {}
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log(options.caseType)
-    console.log(options.uniqid)
+    let that = this
+    console.log("[case] caseType: ", options.caseType)
+    console.log("[case] uniqid: ", options.uniqid)
+    wx.request({
+      url: 'http://localhost:5000/case',
+      data: {
+        'type': options.caseType,
+        'uniqid': options.uniqid,
+        'ask': 'json'
+      },
+      success: function(res){
+        let caseDetail = res.data;
+        let contents = caseDetail.contents;
+        for (let i = 1, len=contents.length; i<len; ++i){
+          contents[i].open = false;
+        }
+        contents[0].open = true;
+        caseDetail.contents = contents
+        that.setData({
+          caseDetail: caseDetail
+        })
+        console.log('[case] caseDetail: ', caseDetail)
+      }
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  kindToggle: function (e) {
+    var id = e.currentTarget.id, contents = this.data.caseDetail.contents;
+    for (var i = 0, len = contents.length; i < len; ++i) {
+      if (i == id) {
+        contents[i].open = !contents[i].open
+      } else {
+        contents[i].open = false
+      }
+    }
+    this.setData({
+      'caseDetail.contents': contents
+    });
+    console.log('[case] kindToggle: ', e.currentTarget.id)
   }
 })

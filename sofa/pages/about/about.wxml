@@ -21,7 +21,7 @@
     </view>
     <view class="tr">
       <view class="td">前端</view>
-      <view class="td">微信小程序</view>
+      <view class="td">微信小程序\njQuery & Bootstrap</view>
     </view>
     <view class="tr">
       <view class="td">后端</view>
@@ -33,7 +33,7 @@
     </view>
     <view class="tr">
       <view class="td">数据来源</view>
-      <view class="td">中国裁判文书网\n觅律搜索\nCAIL2018数据集\n度小法\n词林</view>
+      <view class="td">词林\n度小法\nCAIL2018数据集\n中国裁判文书网 & 觅律搜索</view>
     </view>
   </view>
 </view>

@@ -21,19 +21,7 @@ if __name__ == '__main__':
     # print(keywords)
     keywords = set(list(keywords)[:100])
 
-    # single thread
     print(get_synonyms(keywords))
-
-    # multi threads
-    # threads = []
-    # for word in tqdm(words, "CREATING THREAD"):
-    #     thread = MultiThread(get_synonyms, args=(word, ))
-    #     thread.start()
-    #     threads.append(thread)
-    # _ = [thread.join() for thread in threads]
-    # results = {}
-    # _ = [results.update(thread.get_result()) for thread in threads]
-    # print(results)
 
     # result = [{"title": "a", "content": "b"}, {"title": "a", "content": "b"}, {"title": "c", "content": "d"}]
     # merged_result = merge(result)

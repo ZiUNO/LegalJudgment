@@ -46,18 +46,19 @@
 
                             <view class="weui-cell">
                                 <view class="weui-ceil__bd">
-                                    <view>{{art.title}}</view>
-                                </view>
-                                <view class="weui-cell__ft" wx:for="{{pred.content}}" wx:key="*this">
-                                    <text decode="{{true}}">&emsp;</text>
-                                    <view class="weui-badge"
-                                          style="margin-left: 5px; margin-bottom: 7rpx; background-color: #d9534f;">
-                                        {{item}}
+                                    <view wx:for="{{art.source}}" wx:key="*this" wx:for-item="s" class="yellow"
+                                          style="display: inline-block;">{{s}}
+                                        <text decode="{{true}}">&nbsp;/&nbsp;</text>
+                                    </view>
+                                    <view wx:for="{{art.title}}" wx:key="*this" wx:for-item="t"
+                                          style="display: inline-block;">{{t}}
+                                        <text decode="{{true}}">&nbsp;</text>
+                                    </view>
+                                    <view>
+                                        <view style="font-size: 15px;color: #888888; text-indent: 2em;">{{art.content}}</view>
                                     </view>
                                 </view>
                             </view>
-
-                            <view>{{art.title}}{{art.source}}{{art.content}}</view>
                         </block>
                     </view>
                 </view>

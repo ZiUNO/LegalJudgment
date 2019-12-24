@@ -3,7 +3,6 @@ import json
 
 import requests
 from flask import Flask, render_template, request
-from tqdm import tqdm
 from werkzeug.exceptions import HTTPException
 
 from utils import MultiThread
@@ -50,6 +49,77 @@ def search():
     threads.append(articles_thread)
     # 从觅律搜索中爬去关键词相关的案例（多线程）
     similar_cases_thread = MultiThread(get_similar_cases, args=(keywords,))  # FIXME 可能将keywords替换为handle_q.lcut_final_q
+    threads.append(similar_cases_thread)
+    # 多线程开始
+    _ = [thread.start() for thread in threads]
+    # 预测案情
+    prediction = Predict.predict(final_q)
+    highlight_key = "重点"
+    if highlight_key in list(prediction.keys()):
+        handle_q.final_q_highlight = prediction[highlight_key]  # final_q中的高亮词汇，需转换为原始q的高亮词汇
+    prediction[highlight_key] = handle_q.highlight  # 修改prediction中的高亮词汇为
+    # 多线程结束
+    _ = [thread.join() for thread in threads]
+    result = {
+        "sentence": q,
+        "predictions": [{"title": key, "content": prediction[key]} for key in prediction],
+        "articles": articles_thread.get_result(),
+        "similarCases": similar_cases_thread.get_result(),
+    }
+    return render_template('search.html', result=result) if ask == 'html' else result
+
+
+@app.route("/case")
+def case():
+    uniqid = request.args.get('uniqid')
+    case_type = request.args.get('type')
+    ask = request.args.get('ask')
+    assert case_type in ("authcase", "case")
+    assert ask in ('html', 'json')
+    url = "https://solegal.cn/api/v2/%s/detail?uniqid=%s" % (case_type, uniqid)
+    case_raw = requests.get(url=url).json()["data"]
+    case_detail = {
+        "title": case_raw["TITLE"],
+        "baseList": case_raw["baseList"],
+        "contents": [{'title': c["title"], "strContent": c["strContent"].split('\n')} for c in case_raw["contents"]]
+    }
+    return render_template("case.html", case_detail=case_detail) if ask == 'html' else case_detail
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.errorhandler(HTTPException)
+def handle_exception(e):
+    code = e.code
+    message = HTTP_CODE_MESSAGE[str(code)]
+    exception = {
+        "code": e.code,
+        "name": e.name,
+        "description": e.description,
+        "message": message
+    }
+    return render_template("exception.html", exception=exception)
+
+
+if __name__ == '__main__':
+    q = u"被告人周某在越野车内窃得黑色手机。"
+    handle_q = HandleQ(q)
+    # handle_q的lcut_correct_q的关键词为其在数据库中搜索到的关键词
+    handle_q.keywords_of_lcut_correct_q = DB.search_keywords(handle_q.lcut_correct_q)
+    # keywords为handle_q的关键词
+    keywords = handle_q.keywords
+    # final_q为handle_q中的最终的纠错后替换同义词后的q
+    final_q = handle_q.final_q
+    # 多线程
+    threads = []
+    # 在数据库中查找相关法条（多线程）
+    articles_thread = MultiThread(DB.search_items, args=(keywords,))
+    threads.append(articles_thread)
+    # 从觅律搜索中爬去关键词相关的案例（多线程）
+    similar_cases_thread = MultiThread(get_similar_cases, args=(keywords,))
     threads.append(similar_cases_thread)
     # 多线程开始
     _ = [thread.start() for thread in threads]
@@ -130,77 +200,6 @@ def search():
     #     },
     #
     # }
-    result = {
-        "sentence": q,
-        "predictions": [{"title": key, "content": prediction[key]} for key in prediction],
-        "articles": articles_thread.get_result(),
-        "similarCases": similar_cases_thread.get_result(),
-    }
-    return render_template('search.html', result=result) if ask == 'html' else result
-
-
-@app.route("/case")
-def case():
-    uniqid = request.args.get('uniqid')
-    case_type = request.args.get('type')
-    ask = request.args.get('ask')
-    assert case_type in ("authcase", "case")
-    assert ask in ('html', 'json')
-    url = "https://solegal.cn/api/v2/%s/detail?uniqid=%s" % (case_type, uniqid)
-    case_raw = requests.get(url=url).json()["data"]
-    case_detail = {
-        "title": case_raw["TITLE"],
-        "baseList": case_raw["baseList"],
-        "contents": [{'title': c["title"], "strContent": c["strContent"].split('\n')} for c in case_raw["contents"]]
-    }
-    return render_template("case.html", case_detail=case_detail) if ask == 'html' else case_detail
-
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-
-@app.errorhandler(HTTPException)
-def handle_exception(e):
-    code = e.code
-    message = HTTP_CODE_MESSAGE[str(code)]
-    exception = {
-        "code": e.code,
-        "name": e.name,
-        "description": e.description,
-        "message": message
-    }
-    return render_template("exception.html", exception=exception)
-
-
-if __name__ == '__main__':
-    q = u"被告人周某在越野车内窃得黑色手机。"
-    handle_q = HandleQ(q)
-    # handle_q的lcut_correct_q的关键词为其在数据库中搜索到的关键词
-    handle_q.keywords_of_lcut_correct_q = DB.search_keywords(handle_q.lcut_correct_q)
-    # keywords为handle_q的关键词
-    keywords = handle_q.keywords
-    # final_q为handle_q中的最终的纠错后替换同义词后的q
-    final_q = handle_q.final_q
-    # 多线程
-    threads = []
-    # 在数据库中查找相关法条（多线程）
-    articles_thread = MultiThread(DB.search_items, args=(keywords,))
-    threads.append(articles_thread)
-    # 从觅律搜索中爬去关键词相关的案例（多线程）
-    similar_cases_thread = MultiThread(get_similar_cases, args=(keywords,))
-    threads.append(similar_cases_thread)
-    # 多线程开始
-    _ = [thread.start() for thread in threads]
-    # 预测案情
-    prediction = Predict.predict(final_q)
-    highlight_key = "重点"
-    if highlight_key in list(prediction.keys()):
-        handle_q.final_q_highlight = prediction[highlight_key]  # final_q中的高亮词汇，需转换为原始q的高亮词汇
-    prediction[highlight_key] = handle_q.highlight  # 修改prediction中的高亮词汇为
-    # 多线程结束
-    _ = [thread.join() for thread in threads]
     result = {
         "sentence": q,
         "predictions": [{"title": key, "content": prediction[key]} for key in prediction],

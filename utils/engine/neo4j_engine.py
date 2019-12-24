@@ -102,7 +102,7 @@ class Neo4j(object):
         """
         laws = list(self.__laws.keys()) if laws == 'ALL' else laws
         laws = [laws] if isinstance(laws, str) else laws
-        for law in tqdm(laws, desc="EXPANDING LAWS"):
+        for law in tqdm(laws, desc="[neo4j_engine]-[expand]-EXPANDING LAWS"):
             self.__expand_law(law)
 
     def keywords(self, top_k=20):
@@ -146,7 +146,7 @@ class Neo4j(object):
         return words
 
     def save_synonyms(self, synonyms):
-        for keyword in tqdm(synonyms, desc="HANDLE KEYWORD"):
+        for keyword in tqdm(synonyms, desc="[neo4j_engine]-[save_synonyms]-HANDLE KEYWORD"):
             keyword_node = Node('关键词', keyword=keyword)
             for synonym in synonyms[keyword]:
                 synonym_node = Node('同义词', synonym=synonym)

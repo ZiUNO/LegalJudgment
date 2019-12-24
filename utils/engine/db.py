@@ -72,11 +72,11 @@ class DB(object):
     def search_keywords(cls, synonyms):
         threads = []
         keywords_result = list()
-        for synonym in tqdm(synonyms, desc="CREATE KEYWORDS THREADS"):
+        for synonym in tqdm(synonyms, desc="[db]-[search_keywords]-CREATE KEYWORDS THREADS"):
             synonym_thread = MultiThread(DB.__search_keyword, args=(synonym,))
             synonym_thread.start()
             threads.append(synonym_thread)
-        for single_thread in tqdm(threads, desc="ENDING KEYWORDS THREADS"):
+        for single_thread in tqdm(threads, desc="[db]-[search_keywords]-ENDING KEYWORDS THREADS"):
             single_thread.join()
             single_result = single_thread.get_result()
             keywords_result.append(single_result)

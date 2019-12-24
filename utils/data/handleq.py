@@ -17,6 +17,10 @@ class HandleQ(object):
         self.__final_q_highlight = None
 
     @property
+    def lcut_final_q(self):
+        return jieba.lcut(self.__final_q, cut_all=False)  # FIXME 可能调整cut_all=True
+
+    @property
     def correct_q(self):
         return self.__correct_q
 

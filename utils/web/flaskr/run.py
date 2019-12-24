@@ -34,27 +34,32 @@ def hello_world():
 def search():
     q = request.args.get('q')
     ask = request.args.get('ask')
+    assert len(q) <= 200
     assert ask in ('html', 'json')
     handle_q = HandleQ(q)
-    correct_q_cut_list = handle_q.lcut_correct_q()
-    handle_q.keywords_of_lcut_correct_q = DB.search_keywords(correct_q_cut_list)
-    keywords = handle_q.keywords()
-    final_q = handle_q.final_q()
+    # handle_q的lcut_correct_q的关键词为其在数据库中搜索到的关键词
+    handle_q.keywords_of_lcut_correct_q = DB.search_keywords(handle_q.lcut_correct_q)
+    # keywords为handle_q的关键词
+    keywords = handle_q.keywords
+    # final_q为handle_q中的最终的纠错后替换同义词后的q
+    final_q = handle_q.final_q
+    # 多线程
     threads = []
     # 在数据库中查找相关法条（多线程）
-    articles_thread = MultiThread(DB.search_items, args=(keywords,))
-    articles_thread.start()
+    articles_thread = MultiThread(DB.search_items, args=(keywords,))  # FIXME 可能将keywords替换为handle_q.lcut_final_q
     threads.append(articles_thread)
     # 从觅律搜索中爬去关键词相关的案例（多线程）
-    similar_cases_thread = MultiThread(get_similar_cases, args=(keywords,))
-    similar_cases_thread.start()
+    similar_cases_thread = MultiThread(get_similar_cases, args=(keywords,))  # FIXME 可能将keywords替换为handle_q.lcut_final_q
     threads.append(similar_cases_thread)
+    # 多线程开始
+    _ = [thread.start() for thread in threads]
     # 预测案情
     prediction = Predict.predict(final_q)
     highlight_key = "重点"
     if highlight_key in list(prediction.keys()):
-        handle_q.final_q_highlight = prediction[highlight_key]
-    prediction[highlight_key] = handle_q.highlight()
+        handle_q.final_q_highlight = prediction[highlight_key]  # final_q中的高亮词汇，需转换为原始q的高亮词汇
+    prediction[highlight_key] = handle_q.highlight  # 修改prediction中的高亮词汇为
+    # 多线程结束
     _ = [thread.join() for thread in threads]
     # result = {
     #     "sentence": q,
@@ -172,27 +177,30 @@ def handle_exception(e):
 if __name__ == '__main__':
     q = u"被告人周某在越野车内窃得黑色手机。"
     handle_q = HandleQ(q)
-    correct_q_cut_list = handle_q.lcut_correct_q
-    # handle_q.keywords_of_lcut_correct_q = DB.search_keywords(correct_q_cut_list)
-    handle_q.keywords_of_lcut_correct_q = ['被告', None, None, None, None, None, None, None, None]  # PILE
+    # handle_q的lcut_correct_q的关键词为其在数据库中搜索到的关键词
+    handle_q.keywords_of_lcut_correct_q = DB.search_keywords(handle_q.lcut_correct_q)
+    # keywords为handle_q的关键词
     keywords = handle_q.keywords
+    # final_q为handle_q中的最终的纠错后替换同义词后的q
     final_q = handle_q.final_q
+    # 多线程
     threads = []
     # 在数据库中查找相关法条（多线程）
     articles_thread = MultiThread(DB.search_items, args=(keywords,))
-    articles_thread.start()
     threads.append(articles_thread)
     # 从觅律搜索中爬去关键词相关的案例（多线程）
     similar_cases_thread = MultiThread(get_similar_cases, args=(keywords,))
-    similar_cases_thread.start()
     threads.append(similar_cases_thread)
+    # 多线程开始
+    _ = [thread.start() for thread in threads]
     # 预测案情
     prediction = Predict.predict(final_q)
     highlight_key = "重点"
     if highlight_key in list(prediction.keys()):
-        handle_q.final_q_highlight = prediction[highlight_key]
-    prediction[highlight_key] = handle_q.highlight
-    _ = [thread.join() for thread in tqdm(threads, desc="END SEARCH THREADS")]
+        handle_q.final_q_highlight = prediction[highlight_key]  # final_q中的高亮词汇，需转换为原始q的高亮词汇
+    prediction[highlight_key] = handle_q.highlight  # 修改prediction中的高亮词汇为
+    # 多线程结束
+    _ = [thread.join() for thread in threads]
     result = {
         "sentence": q,
         "predictions": [{"title": key, "content": prediction[key]} for key in prediction],

@@ -230,23 +230,23 @@ class Predict(object):
 
     @classmethod
     def predict(cls, sentence):
-        category = Predict.predict_category(sentence=sentence)
-        prediction = {"类别": [category]}
-        if category == cls.get_category()[0]:  # 刑事
-            charge_labels, highlight = \
-                Predict.predict_charge_and_highlight(sentence=sentence)
-            articles = Predict.predict_articles(charges=charge_labels)
-            imprisonment = Predict.predict_imprisonment(charges=charge_labels)
-            prediction["罪名"] = charge_labels
-            prediction["重点"] = highlight
-            prediction["法条"] = articles
-            prediction["监禁"] = [imprisonment]
+        # category = Predict.predict_category(sentence=sentence)
+        # prediction = {"类别": [category]}
+        # if category == cls.get_category()[0]:  # 刑事
+        #     charge_labels, highlight = \
+        #         Predict.predict_charge_and_highlight(sentence=sentence)
+        #     articles = Predict.predict_articles(charges=charge_labels)
+        #     imprisonment = Predict.predict_imprisonment(charges=charge_labels)
+        #     prediction["罪名"] = charge_labels
+        #     prediction["重点"] = highlight
+        #     prediction["法条"] = articles
+        #     prediction["监禁"] = [imprisonment]
         # PILE prediction
         prediction = {
             "种类": ['刑事案由'],
-            "罪名": ["抢劫", "盗窃"],
-            "重点": ['抢', '手机'],
-            "法条": [20, 30],
+            "罪名": ["盗窃"],
+            "重点": ['窃得', '手机。'],
+            "法条": [264],
             "监禁": ['短期 (≤3)']
         }
         return prediction

@@ -148,6 +148,6 @@ class Neo4j(object):
     def save_synonyms(self, synonyms):
         for keyword in tqdm(synonyms, desc="HANDLE KEYWORD"):
             keyword_node = Node('关键词', keyword=keyword)
-            for synonym in tqdm(synonyms[keyword], desc="SAVING SYNONYM"):
+            for synonym in synonyms[keyword]:
                 synonym_node = Node('同义词', synonym=synonym)
                 self.__graph.create(Relationship(keyword_node, '同义', synonym_node))

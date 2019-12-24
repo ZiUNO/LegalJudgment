@@ -139,36 +139,37 @@ def get_similar_cases(keywords):
     # TODO - 1 根据关键词在觅律搜索中查询相关的案例并合并最终结果
     # PILE similar_cases
     similar_cases = {
-            "authcase": [
-                {
-                    "uniqid": "f02b1fc6-e8ad-4730-a26a-f7a94ef34f8b",
-                    "title": "重庆市渝中区人民检察院诉朱波伟、雷秀平抢劫案",
-                    "baseList": ["《最高人民法院公报》  2006年第4期(总:114期)", "重庆市渝中区人民法院"]
-                },
-                {
-                    "uniqid": "1c0337d0-51d3-45ff-a389-cfbca11a3fca",
-                    "title": "检例第23号：蔡金星、陈国辉等（抢劫）不核准追诉案",
-                    "baseList": ["最高人民检察院"]
-                }
-            ],
-            "case": [
-                {
-                    "uniqid": "7baf7d60-a40f-4d4a-800d-c5a7758d507e",
-                    "title": "常斌抢劫罪、寻衅滋事罪刑罚与执行变更刑事裁定书",
-                    "baseList": ["河北省沧州市中级人民法院", "（2018）冀09刑更558号", "2018-02-01"]
-                },
-                {
-                    "uniqid": "50c7c56b-4419-4b79-8cac-83f9dd33db9e",
-                    "title": "武俊肥故意杀人罪、抢劫罪等刑罚与执行变更刑事裁定书",
-                    "baseList": ["河北省沧州市中级人民法院", "（2018）冀09刑更607号", "2018-02-01"]
-                }
+        "authcase": [
+            {
+                "uniqid": "f02b1fc6-e8ad-4730-a26a-f7a94ef34f8b",
+                "title": "重庆市渝中区人民检察院诉朱波伟、雷秀平抢劫案",
+                "baseList": ["《最高人民法院公报》  2006年第4期(总:114期)", "重庆市渝中区人民法院"]
+            },
+            {
+                "uniqid": "1c0337d0-51d3-45ff-a389-cfbca11a3fca",
+                "title": "检例第23号：蔡金星、陈国辉等（抢劫）不核准追诉案",
+                "baseList": ["最高人民检察院"]
+            }
+        ],
+        "case": [
+            {
+                "uniqid": "7baf7d60-a40f-4d4a-800d-c5a7758d507e",
+                "title": "常斌抢劫罪、寻衅滋事罪刑罚与执行变更刑事裁定书",
+                "baseList": ["河北省沧州市中级人民法院", "（2018）冀09刑更558号", "2018-02-01"]
+            },
+            {
+                "uniqid": "50c7c56b-4419-4b79-8cac-83f9dd33db9e",
+                "title": "武俊肥故意杀人罪、抢劫罪等刑罚与执行变更刑事裁定书",
+                "baseList": ["河北省沧州市中级人民法院", "（2018）冀09刑更607号", "2018-02-01"]
+            }
 
-            ]
-        }
+        ]
+    }
     return similar_cases
 
 
 if __name__ == '__main__':
     # config_path = os.path.join('..', '..', 'config.json')
     # DuXiaoFaCrawler.download(config_path)  # 法律条文爬取
-    print(get_synonyms(["盗窃", "抢劫罪"]))
+    # print(get_synonyms(["盗窃", "抢劫罪"]))
+    print(get_similar_cases(["盗窃", "抢劫罪"]))

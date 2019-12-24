@@ -3,6 +3,7 @@ import json
 
 import requests
 from flask import Flask, render_template, request
+from tqdm import tqdm
 from werkzeug.exceptions import HTTPException
 
 from utils import MultiThread
@@ -166,3 +167,36 @@ def handle_exception(e):
         "message": message
     }
     return render_template("exception.html", exception=exception)
+
+
+if __name__ == '__main__':
+    q = u"被告人周某在越野车内窃得黑色手机。"
+    handle_q = HandleQ(q)
+    correct_q_cut_list = handle_q.lcut_correct_q
+    # handle_q.keywords_of_lcut_correct_q = DB.search_keywords(correct_q_cut_list)
+    handle_q.keywords_of_lcut_correct_q = ['被告', None, None, None, None, None, None, None, None]  # PILE
+    keywords = handle_q.keywords
+    final_q = handle_q.final_q
+    threads = []
+    # 在数据库中查找相关法条（多线程）
+    articles_thread = MultiThread(DB.search_items, args=(keywords,))
+    articles_thread.start()
+    threads.append(articles_thread)
+    # 从觅律搜索中爬去关键词相关的案例（多线程）
+    similar_cases_thread = MultiThread(get_similar_cases, args=(keywords,))
+    similar_cases_thread.start()
+    threads.append(similar_cases_thread)
+    # 预测案情
+    prediction = Predict.predict(final_q)
+    highlight_key = "重点"
+    if highlight_key in list(prediction.keys()):
+        handle_q.final_q_highlight = prediction[highlight_key]
+    prediction[highlight_key] = handle_q.highlight
+    _ = [thread.join() for thread in tqdm(threads, desc="END SEARCH THREADS")]
+    result = {
+        "sentence": q,
+        "predictions": [{"title": key, "content": prediction[key]} for key in prediction],
+        "articles": articles_thread.get_result(),
+        "similarCases": similar_cases_thread.get_result(),
+    }
+    print(result)

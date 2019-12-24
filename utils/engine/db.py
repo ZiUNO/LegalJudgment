@@ -33,17 +33,17 @@ class DB(object):
 
     @classmethod
     def search_items(cls, keywords):
-        threads = []
-        items_result = list()
-        for keyword in tqdm(keywords, desc="CREATE ITEMS THREADS"):
-            keyword_thread = MultiThread(DB.__search_item, args=(keyword,))
-            keyword_thread.start()
-            threads.append(keyword_thread)
-        for single_thread in tqdm(threads, desc="ENDING ITEMS THREADS"):
-            single_thread.join()
-            single_result = single_thread.get_result()
-            if len(single_result) > 0:
-                items_result.append(single_result)
+        # threads = []
+        # items_result = list()
+        # for keyword in tqdm(keywords, desc="CREATE ITEMS THREADS"):
+        #     keyword_thread = MultiThread(DB.__search_item, args=(keyword,))
+        #     keyword_thread.start()
+        #     threads.append(keyword_thread)
+        # for single_thread in tqdm(threads, desc="ENDING ITEMS THREADS"):
+        #     single_thread.join()
+        #     single_result = single_thread.get_result()
+        #     if len(single_result) > 0:
+        #         items_result.append(single_result)
         # TODO - 3 结果去重
         # PILE articles
         items_result = [

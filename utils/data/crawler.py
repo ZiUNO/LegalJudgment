@@ -10,6 +10,8 @@ from random import randint
 import requests
 from tqdm import tqdm
 
+from utils import MultiThread, merge, display
+
 
 class Crawler(object):
     """
@@ -138,33 +140,59 @@ def get_synonyms(words):
 def get_similar_cases(keywords):
     # TODO - 1 根据关键词在觅律搜索中查询相关的案例并合并最终结果
     # PILE similar_cases
-    similar_cases = {
-        "authcase": [
-            {
-                "uniqid": "f02b1fc6-e8ad-4730-a26a-f7a94ef34f8b",
-                "title": "重庆市渝中区人民检察院诉朱波伟、雷秀平抢劫案",
-                "baseList": ["《最高人民法院公报》  2006年第4期(总:114期)", "重庆市渝中区人民法院"]
-            },
-            {
-                "uniqid": "1c0337d0-51d3-45ff-a389-cfbca11a3fca",
-                "title": "检例第23号：蔡金星、陈国辉等（抢劫）不核准追诉案",
-                "baseList": ["最高人民检察院"]
-            }
-        ],
-        "case": [
-            {
-                "uniqid": "7baf7d60-a40f-4d4a-800d-c5a7758d507e",
-                "title": "常斌抢劫罪、寻衅滋事罪刑罚与执行变更刑事裁定书",
-                "baseList": ["河北省沧州市中级人民法院", "（2018）冀09刑更558号", "2018-02-01"]
-            },
-            {
-                "uniqid": "50c7c56b-4419-4b79-8cac-83f9dd33db9e",
-                "title": "武俊肥故意杀人罪、抢劫罪等刑罚与执行变更刑事裁定书",
-                "baseList": ["河北省沧州市中级人民法院", "（2018）冀09刑更607号", "2018-02-01"]
-            }
+    def get_similar_case(keyword):
+        url_case = u"https://solegal.cn/api/v2/case/search?q=%s" % keyword
+        url_authcase = u"https://solegal.cn/api/v2/authcase/search?q=%s" % keyword
+        try:
+            case_json = requests.get(url_case).json()
+            authcase_json = requests.get(url_authcase).json()
+        except Exception:
+            return {"authcase": [], "case": []}
+        case_results = case_json["data"]["results"]
+        authcase_results = authcase_json["data"]["results"]
+        keep_words = {"uniqid": "uniqid", "TITLE": "title", "baseList": "baseList"}
+        authcase = [{keep_words[key]: result[key] for key in keep_words} for result in authcase_results]
+        case = [{keep_words[key]: result[key] for key in keep_words} for result in case_results]
+        similar_case = {"authcase": authcase, "case": case}
+        return similar_case
 
-        ]
-    }
+    threads = []
+    similar_cases = []
+    for keyword in tqdm(keywords, desc="[crawler]-[get_similar_cases]-CREATE KEYWORDS THREADS"):
+        keyword_thread = MultiThread(get_similar_case, args=(keyword,))
+        keyword_thread.start()
+        threads.append(keyword_thread)
+    _ = [thread.join() for thread in tqdm(threads, desc="[crawler]-[get_similar_cases]-END KEYWORDS THREADS")]
+    _ = [similar_cases.append(thread.get_result()) for thread in threads]
+    display(similar_cases)  # 打印出相似案例 -- merge完成后删除
+    similar_cases = merge(similar_cases)[0]
+    # similar_cases = {
+    #     "authcase": [
+    #         {
+    #             "uniqid": "f02b1fc6-e8ad-4730-a26a-f7a94ef34f8b",
+    #             "title": "重庆市渝中区人民检察院诉朱波伟、雷秀平抢劫案",
+    #             "baseList": ["《最高人民法院公报》  2006年第4期(总:114期)", "重庆市渝中区人民法院"]
+    #         },
+    #         {
+    #             "uniqid": "1c0337d0-51d3-45ff-a389-cfbca11a3fca",
+    #             "title": "检例第23号：蔡金星、陈国辉等（抢劫）不核准追诉案",
+    #             "baseList": ["最高人民检察院"]
+    #         }
+    #     ],
+    #     "case": [
+    #         {
+    #             "uniqid": "7baf7d60-a40f-4d4a-800d-c5a7758d507e",
+    #             "title": "常斌抢劫罪、寻衅滋事罪刑罚与执行变更刑事裁定书",
+    #             "baseList": ["河北省沧州市中级人民法院", "（2018）冀09刑更558号", "2018-02-01"]
+    #         },
+    #         {
+    #             "uniqid": "50c7c56b-4419-4b79-8cac-83f9dd33db9e",
+    #             "title": "武俊肥故意杀人罪、抢劫罪等刑罚与执行变更刑事裁定书",
+    #             "baseList": ["河北省沧州市中级人民法院", "（2018）冀09刑更607号", "2018-02-01"]
+    #         }
+    #
+    #     ]
+    # }
     return similar_cases
 
 
@@ -172,4 +200,5 @@ if __name__ == '__main__':
     # config_path = os.path.join('..', '..', 'config.json')
     # DuXiaoFaCrawler.download(config_path)  # 法律条文爬取
     # print(get_synonyms(["盗窃", "抢劫罪"]))
-    print(get_similar_cases(["盗窃", "抢劫罪"]))
+    similar_cases = get_similar_cases(["盗窃", "抢劫罪"])
+    print(similar_cases)

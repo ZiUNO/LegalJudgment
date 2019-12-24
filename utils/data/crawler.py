@@ -5,6 +5,7 @@ import platform
 import re
 import time
 from concurrent.futures.thread import ThreadPoolExecutor
+from random import randint
 
 import requests
 from tqdm import tqdm
@@ -112,9 +113,11 @@ def get_synonyms(words):
         get_data = None
         for _ in range(100):
             try:
-                get_data = requests.get(url % word)
+                get_data = requests.get(url % word, timeout=3.0)
             except Exception:
-                time.sleep(2)
+                to_sleep = randint(1, 5)
+                print("[exception] sleep: %d(s)" % to_sleep)
+                time.sleep(to_sleep)
                 continue
             break
         if get_data is None or get_data.status_code != 200:
@@ -123,11 +126,12 @@ def get_synonyms(words):
         about_words = re.findall(u'<b>近义词</b><br>汉语:(.*?)<br>', html, re.S)
         if len(about_words) == 0:
             continue
-        about_words = about_words[0]
-        about_words = about_words.split(',')
-        about_words = [tmp.strip() for tmp in about_words]
-        about_words = [re.sub(u"</?span.*?>", "", tmp) for tmp in about_words]
-        synonyms[word] = [tmp_word.strip() for tmp_word in about_words if tmp_word.strip() != '']
+        about_words = "\n".join(about_words)
+        about_words = re.sub(u"<.*?>", "", about_words)
+        about_words = re.findall(u"([\u4e00-\u9fa5]*)", about_words, re.S)
+        about_words = tuple(set([tmp_word.strip() for tmp_word in about_words if tmp_word.strip() != '']))
+        # print(word, about_words)
+        synonyms[word] = about_words
     return synonyms
 
 

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-from threading import Thread
-from time import time
+
 import requests
 from flask import Flask, render_template, request
 from werkzeug.exceptions import HTTPException
@@ -9,8 +8,8 @@ from werkzeug.exceptions import HTTPException
 from utils import MultiThread
 from utils.data.crawler import get_similar_cases
 from utils.data.handleq import HandleQ
-from utils.model.predict import Predict
 from utils.engine.db import DB
+from utils.model.predict import Predict
 
 with open("config.json", "r") as f:
     configs = json.load(f)

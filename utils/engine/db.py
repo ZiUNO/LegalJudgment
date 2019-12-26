@@ -1,7 +1,6 @@
-import os
 import re
 
-from py2neo import Graph, NodeMatcher
+from py2neo import Graph
 from tqdm import tqdm
 
 from utils import MultiThread, merge
@@ -46,8 +45,14 @@ class DB(object):
 
     @classmethod
     def __search_keyword(cls, synonym):
-        # TODO - 2 依据数据库实现搜索同义词的关键词 (若不存在关键词则返回None）
-        keyword = synonym
+        nodes = list(cls.graph.run(
+            "MATCH(keyword:关键词)-->(synonym:同义词) "
+            "WHERE synonym.synonym CONTAINS '%s' "
+            "RETURN keyword.keyword" % synonym
+        ))
+        if len(nodes) == 0:
+            return None
+        keyword = nodes[0][0]
         return keyword
 
     @classmethod
@@ -64,26 +69,6 @@ class DB(object):
             single_result = single_thread.get_result()
             items_result.append({tmp_key: single_result})
         items_result = merge(items_result)[tmp_key]
-        # items_result = [
-        #     {
-        #         "title": ["第一条", "立法宗旨"],
-        #         "source": ["刑法", "第一编", "第一章"],
-        #         "content": "为了惩罚犯罪，保护人民，根据宪法，结合我国同犯罪作斗争的具体经验及实际情况，制定本法。"
-        #     },
-        #     {
-        #         "title": ["第二条", "本法任务"],
-        #         "source": ["刑法", "第一编", "第一章"],
-        #         "content": "中华人民共和国刑法的任务，是用刑罚同一切犯罪行为作斗争，以保卫国家安全，"
-        #                    "保卫人民民主专政的政权和社会主义制度，保护国有财产和劳动群众集体所有的财产，"
-        #                    "保护公民私人所有的财产，保护公民的人身权利、民主权利和其他权利，维护社会秩序、"
-        #                    "经济秩序，保障社会主义建设事业的顺利进行。"
-        #     },
-        #     {
-        #         "title": ["第三条", "罪刑法定"],
-        #         "source": ["刑法", "第一编", "第一章"],
-        #         "content": "法律明文规定为犯罪行为的，依照法律定罪处刑；法律没有明文规定为犯罪行为的，不得定罪处刑。"
-        #     }
-        # ]
         return items_result
 
     @classmethod
@@ -94,7 +79,7 @@ class DB(object):
             synonym_thread = MultiThread(DB.__search_keyword, args=(synonym,))
             synonym_thread.start()
             threads.append(synonym_thread)
-        for single_thread in tqdm(threads, desc="[db]-[search_keywords]-ENDING KEYWORDS THREADS"):
+        for single_thread in tqdm(threads, desc="[db]-[search_keywords]-END KEYWORDS THREADS"):
             single_thread.join()
             single_result = single_thread.get_result()
             keywords_result.append(single_result)

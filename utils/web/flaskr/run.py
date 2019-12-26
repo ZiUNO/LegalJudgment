@@ -106,10 +106,14 @@ def handle_exception(e):
 
 
 if __name__ == '__main__':
-    keywords = ["抢劫", "盗窃"]
+    # keywords = ["抢劫", "盗窃"]
+    # start_time = time()
+    # print("-" * 20 + ' articles ' + "-" * 20)
+    # print(DB.search_items(keywords=keywords))
+    # print("cost time: %.02f" % (time() - start_time))
+    synonyms = ["募", "生", "维系"]
     start_time = time()
-    print("-" * 20 + ' articles ' + "-" * 20)
-    print(DB.search_items(keywords=keywords))
+    print(DB.search_keywords(synonyms=synonyms))
     print("cost time: %.02f" % (time() - start_time))
 #     q = u"被告人周某在越野车内窃得黑色手机。"
 #     handle_q = HandleQ(q)

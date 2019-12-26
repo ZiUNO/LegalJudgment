@@ -23,7 +23,6 @@ class Result(object):
                          for key in result}
 
     def __add__(self, other):
-        # TODO 结果相加直接返回结果
         final_result = {}
         keys = list(self.__result.keys())
         assert keys == list(other.__result.keys())
@@ -38,7 +37,6 @@ class Result(object):
 
 
 def merge(result):
-    # TODO 归并结果，获取最终合并后的结果
     result_len = len(result)
     if result_len == 1:
         return result[0]

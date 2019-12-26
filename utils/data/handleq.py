@@ -1,12 +1,32 @@
 import jieba
+import requests
 
 
 class HandleQ(object):
+    url = u"https://aip.baidubce.com/rpc/2.0/nlp/v1/ecnet"
+    method = "POST"
+    charset = "UTF-8"
+    config = {
+        "AppID": None,
+        "API Key": None,
+        "Secret Key": None
+    }
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    def __new__(cls, config):
+        assert set(config.keys()) == set(cls.config.keys())
+        for key in config:
+            cls.config[key] = config[key]
+        return object.__new__(cls)
 
     def __init__(self, q):
         # PILE handle_q
+        assert len(q) <= 200
         self.__q = q
         # TODO - 1 q -> 纠正错别字 -> correct_q
+        correct_q_json = requests.get(url=HandleQ.url, headers=HandleQ.headers)
         self.__correct_q = q
         self.__lcut_correct_q = jieba.lcut(self.__correct_q, cut_all=False)  # FIXME 可能调整cut_all=True
         self.__final_q = None

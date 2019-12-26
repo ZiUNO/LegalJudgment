@@ -18,6 +18,7 @@ with open("config.json", "r") as f:
 # initialize classes
 Predict(configs["PREDICT"]["SMART_EVALUATION"])  # init Predict class
 DB(configs["NEO4J"])  # init Database class
+HandleQ(configs["HANDLEQ"]["baidu"])  # init HandleQ with baidu
 
 # initialize global variables
 CASE_TYPES = configs["CASE_TYPES"]
@@ -111,12 +112,16 @@ if __name__ == '__main__':
     # print("-" * 20 + ' articles ' + "-" * 20)
     # print(DB.search_items(keywords=keywords))
     # print("cost time: %.02f" % (time() - start_time))
-    synonyms = ["募", "生", "维系"]
-    start_time = time()
-    print(DB.search_keywords(synonyms=synonyms))
-    print("cost time: %.02f" % (time() - start_time))
-#     q = u"被告人周某在越野车内窃得黑色手机。"
-#     handle_q = HandleQ(q)
+
+    # synonyms = ["募", "生", "维系"]
+    # start_time = time()
+    # print(DB.search_keywords(synonyms=synonyms))
+    # print("cost time: %.02f" % (time() - start_time))
+
+    q = u"被告人周某在越野车内窃得黑色手机。"
+    handle_q = HandleQ(q)
+
+
 #     # handle_q的lcut_correct_q的关键词为其在数据库中搜索到的关键词
 #     handle_q.keywords_of_lcut_correct_q = DB.search_keywords(handle_q.lcut_correct_q)
 #     # keywords为handle_q的关键词

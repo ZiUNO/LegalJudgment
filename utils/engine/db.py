@@ -26,7 +26,6 @@ class DB(object):
             "MATCH path=(file:文件)-[*]->(label) "
             "RETURN path, title, content" % (keyword, keyword)
         ))
-        print(nodes)
         nodes = [{"path": node["path"],
                   "title": node["title"],
                   "content": node["content"]}
@@ -56,11 +55,11 @@ class DB(object):
         threads = []
         items_result = list()
         tmp_key = "items"
-        for keyword in tqdm(keywords, desc="CREATE ITEMS THREADS"):
+        for keyword in tqdm(keywords, desc="[db]-[search_items]-CREATE ITEMS THREADS"):
             keyword_thread = MultiThread(DB.__search_item, args=(keyword,))
             keyword_thread.start()
             threads.append(keyword_thread)
-        for single_thread in tqdm(threads, desc="ENDING ITEMS THREADS"):
+        for single_thread in tqdm(threads, desc="[db]-[search_items]-ENDING ITEMS THREADS"):
             single_thread.join()
             single_result = single_thread.get_result()
             items_result.append({tmp_key: single_result})

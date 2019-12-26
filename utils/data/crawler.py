@@ -138,8 +138,6 @@ def get_synonyms(words):
 
 
 def get_similar_cases(keywords):
-    # TODO - 1 根据关键词在觅律搜索中查询相关的案例并合并最终结果
-    # PILE similar_cases
     def get_similar_case(keyword):
         url_case = u"https://solegal.cn/api/v2/case/search?q=%s" % keyword
         url_authcase = u"https://solegal.cn/api/v2/authcase/search?q=%s" % keyword
@@ -199,5 +197,7 @@ if __name__ == '__main__':
     # config_path = os.path.join('..', '..', 'config.json')
     # DuXiaoFaCrawler.download(config_path)  # 法律条文爬取
     # print(get_synonyms(["盗窃", "抢劫罪"]))
+    start_time = time.time()
     similar_cases = get_similar_cases(["盗窃", "抢劫罪"])
     print(similar_cases)
+    print("cost time: %.02f" % (time.time() - start_time))

@@ -75,11 +75,11 @@ class Neo4j(object):
                         chapter_node = Node('标签', label=chapter)
                         graph.create(Relationship(item_content_node, '包含', chapter_node))
                         chapter_title_node, chapter_content_node = get_nodes(graph, item_content[chapter])
-                        if chapter_title_node is not None:
-                            graph.create(Relationship(chapter_node, '标题', chapter_title_node))
+                        graph.create(Relationship(chapter_node, '标题', chapter_title_node))
                         graph.create(Relationship(chapter_node, '内容', chapter_content_node))
                 else:
                     raise RuntimeError("数据类型错误")
+                item_title_node = item_title_node if item_title_node is not None else Node('标题', title="")
                 return item_title_node, item_content_node
 
             law_node = self.__laws[law]['node']

@@ -1,4 +1,5 @@
 from threading import Thread
+from time import time
 
 
 class MultiThread(Thread):
@@ -104,4 +105,6 @@ if __name__ == '__main__':
             ]
         }
     ]
+    start_time = time()
     print(merge(results))
+    print("cost time: %.02f" % (time() - start_time))

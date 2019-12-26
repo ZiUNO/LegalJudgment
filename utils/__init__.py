@@ -17,21 +17,30 @@ class MultiThread(Thread):
 
 class Result(object):
     def __init__(self, result):
-        result = result[0]
-        self.__keys = list(result.keys())
-        self.__sub_keys = list(result[self.__keys[0]][0].keys())
-        self.__result = [[[res[sub_key] for sub_key in self.__sub_keys] for res in result[key]] for key in self.__keys]
+        self.__result = {key: {str(list(single_result.values())): single_result
+                               for single_result in result[key]}
+                         for key in result}
 
     def __add__(self, other):
         # TODO 结果相加直接返回结果
-        pass
+        final_result = {}
+        keys = list(self.__result.keys())
+        assert keys == list(other.__result.keys())
+        for key in keys:
+            self_key_result_set = set(self.__result[key].keys())
+            other_key_result_set = set(other.__result[key].keys())
+            intersection = self_key_result_set.intersection(other_key_result_set)
+            final_result[key] = [self.__result[key][inter] for inter in intersection] \
+                if len(intersection) \
+                else list(self.__result[key].values()) + list(other.__result[key].values())
+        return final_result
 
 
 def merge(result):
     # TODO 归并结果，获取最终合并后的结果
     result_len = len(result)
     if result_len == 1:
-        return result
+        return result[0]
     middle = result_len // 2
     before_result = result[:middle]
     after_result = result[middle:]
@@ -59,9 +68,6 @@ if __name__ == '__main__':
             'authcase': [
                 {'uniqid': '51cef0c0-5579-4173-8f66-aa8369d5aa07',
                  'title': '许某峰未成年盗窃前科封存后成年时再盗窃不应作为盗窃惯犯处理案', 'baseList': ['江苏省东台市人民法院']},
-                {'uniqid': '4e07b1df-0134-457a-b422-37fbf6c6b748',  # # 2
-                 'title': '马明义、韩国良、马明利盗窃抗诉案',
-                 'baseList': ['《最高人民检察院公报》 1996年第4号(总第34号)', '青海省高级人民法院']},
             ],
             'case': [
                 {'uniqid': '156e76f2-760a-48f6-b9b3-e03aa1f0fe98',

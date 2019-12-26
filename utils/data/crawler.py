@@ -164,8 +164,7 @@ def get_similar_cases(keywords):
         threads.append(keyword_thread)
     _ = [thread.join() for thread in tqdm(threads, desc="[crawler]-[get_similar_cases]-END KEYWORDS THREADS")]
     _ = [similar_cases.append(thread.get_result()) for thread in threads]
-    display(similar_cases)  # 打印出相似案例 -- merge完成后删除
-    similar_cases = merge(similar_cases)[0]
+    similar_cases = merge(similar_cases)
     # similar_cases = {
     #     "authcase": [
     #         {

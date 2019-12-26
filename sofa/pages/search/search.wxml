@@ -71,8 +71,8 @@
                                         <text decode="{{true}}">&nbsp;</text>
                                     </view>
                                     <view>
-                                        <view style="font-size: 15px;color: #888888; text-indent: 2em;">
-                                            {{art.content}}
+                                        <view wx:for="{{art.content}}" wx:key="*this" wx:for-item="s" style="font-size: 15px;color: #888888; text-indent: 2em;">
+                                            {{s}}
                                         </view>
                                     </view>
                                 </view>

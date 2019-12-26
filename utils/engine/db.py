@@ -18,12 +18,15 @@ class DB(object):
     def __search_item(cls, keyword):
         nodes = list(cls.graph.run(
             "MATCH(label:标签)-->(content:内容) "
-            "WHERE content.content "
-            "CONTAINS '%s' "
-            "MATCH(label)-->(title:标题)"
-            "MATCH path=(file:文件)-[*]->(label)"
-            "RETURN path, title, content" % keyword
+            "MATCH(label)-->(title:标题) "
+            "WHERE "
+            "content.content CONTAINS '%s' "
+            "OR "
+            "title.title CONTAINS '%s' "
+            "MATCH path=(file:文件)-[*]->(label) "
+            "RETURN path, title, content" % (keyword, keyword)
         ))
+        print(nodes)
         nodes = [{"path": node["path"],
                   "title": node["title"],
                   "content": node["content"]}
@@ -35,9 +38,11 @@ class DB(object):
             piece_label_name = re.sub(u"\s*", "", path[1]["label"])
             chapter_label_name = path[3]["label"]
             item_label_name = path[5]["label"]
+            source = [file_name.replace("中华人民共和国", ""), piece_label_name, chapter_label_name]
+            source = [s for s in source if s != '']
             item.append({"title": [item_label_name, node["title"]["title"]],
-                         "source": [file_name.replace("中华人民共和国", ""), piece_label_name, chapter_label_name],
-                         "content": node["content"]["content"]})
+                         "source": source,
+                         "content": node["content"]["content"].split('\n')})
         return item
 
     @classmethod

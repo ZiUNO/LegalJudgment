@@ -106,7 +106,9 @@
                                             <li class="active">{% for t in article.title %}{{t}}&emsp;{% endfor %}</li>
                                         </ol>
                                         <div class="panel-body">
-                                            <p style="text-indent:2em;">{{article.content}}</p>
+                                            {% for s in article.content %}
+                                            <p style="text-indent:2em;">{{s}}</p>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                     {% endfor %}

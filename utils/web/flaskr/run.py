@@ -118,12 +118,14 @@ if __name__ == '__main__':
     # print(DB.search_keywords(synonyms=synonyms))
     # print("cost time: %.02f" % (time() - start_time))
 
-    q = u"被告人周某在越野车内窃得黑色手机。"
+    q = u"女朋友让我找几个人带到去吓唬，狠狠打个女的，然后那个女的是个小姐，然后就意QQ那个小姐聊天，那个小姐就把她在哪告诉了我们，然后我们一共三个人就去，到给她干活的地方，把她给打啦，打完以后那个女的说，哥别大我啦，我这几天干几个活，没挣多钱，共就挣600快钱，然后她就自己把钱啦拿出来，然后还商量能不能给她留100.我们给她留啦100，我们去的目的她知道，就是去打她的，然后过啦一个月被抓啦，告我们抢劫"
     handle_q = HandleQ(q)
+    print(handle_q.correct_q)
 
-
-#     # handle_q的lcut_correct_q的关键词为其在数据库中搜索到的关键词
-#     handle_q.keywords_of_lcut_correct_q = DB.search_keywords(handle_q.lcut_correct_q)
+    # handle_q的lcut_correct_q的关键词为其在数据库中搜索到的关键词
+    handle_q.keywords_of_lcut_correct_q = DB.search_keywords(handle_q.lcut_correct_q)
+    for i in range(len(handle_q.lcut_correct_q)):
+        print(i, handle_q.lcut_correct_q[i], handle_q.keywords_of_lcut_correct_q[i])
 #     # keywords为handle_q的关键词
 #     keywords = handle_q.keywords
 #     # final_q为handle_q中的最终的纠错后替换同义词后的q

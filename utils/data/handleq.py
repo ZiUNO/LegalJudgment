@@ -4,37 +4,58 @@ import requests
 
 class HandleQ(object):
     url = u"https://aip.baidubce.com/rpc/2.0/nlp/v1/ecnet"
-    method = "POST"
+    end = "charset=%s&access_token=%s"
     charset = "UTF-8"
+    has_init = False
     config = {
-        "AppID": None,
         "API Key": None,
         "Secret Key": None
     }
+    access_token = None
     headers = {
         'Content-Type': 'application/json'
     }
+    host = r'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=%s&client_secret=%s'
 
     def __new__(cls, config):
-        assert set(config.keys()) == set(cls.config.keys())
-        for key in config:
-            cls.config[key] = config[key]
+        if not cls.has_init:
+            for key in config:
+                cls.config[key] = config[key]
+            response = requests.get(cls.host % (cls.config["API Key"], cls.config["Secret Key"]), timeout=3)
+            json_response = response.json()
+            try:
+                cls.access_token = json_response["access_token"]
+            except KeyError:
+                raise RuntimeError("[handleq]-[__new__]-BAIDU AUTHENTICATION FAILED")
+            cls.end = cls.end % (cls.charset, cls.access_token)
         return object.__new__(cls)
 
     def __init__(self, q):
-        # PILE handle_q
-        assert len(q) <= 200
+        if not HandleQ.has_init:
+            HandleQ.has_init = True
+            return
+        assert len(q) <= 200, "[handleq]-[__init__]-LENGTH OF q IS %d (>200)" % len(q)
         self.__q = q
+        # PILE handle_q
         # TODO - 1 q -> 纠正错别字 -> correct_q
-        correct_q_json = requests.get(url=HandleQ.url, headers=HandleQ.headers)
-        self.__correct_q = q
+        correct_q_json = requests.post(url="%s?%s" % (HandleQ.url, HandleQ.end),
+                                       headers=HandleQ.headers, json={"text": q}, timeout=3).json()
+        self.__correct_q = correct_q_json["item"]["correct_query"]
+        self.__vec_fragment = correct_q_json["item"]["vec_fragment"]
+        """
+        vec_fragment (baidu)
+        ori_frag: string 原片段
+        correct_frag: double 替换片段
+        begin_pos: int 起始(长度单位)
+        end_pos: list 结尾(长度单位)
+        """
         self.__lcut_correct_q = jieba.lcut(self.__correct_q, cut_all=False)  # FIXME 可能调整cut_all=True
-        self.__final_q = None
-        self.__keywords = None
-        self.__keywords_of_lcut_correct_q = None
-        self.__map_q = None
-        self.__highlight = None
-        self.__final_q_highlight = None
+        # self.__final_q = None
+        # self.__keywords = None
+        # self.__keywords_of_lcut_correct_q = None
+        # self.__map_q = None
+        # self.__highlight = None
+        # self.__final_q_highlight = None
 
     @property
     def lcut_final_q(self):

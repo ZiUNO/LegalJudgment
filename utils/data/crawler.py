@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import pathlib
 import platform
@@ -10,7 +11,10 @@ from random import randint
 import requests
 from tqdm import tqdm
 
-from utils import MultiThread, merge, display
+from utils import MultiThread, merge
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 class Crawler(object):
@@ -111,7 +115,8 @@ def get_synonyms(words):
     synonyms = {}
     if isinstance(words, str):
         words = [words]
-    for word in tqdm(words, desc="GET SYNONYMS"):
+    logger.info('***** Get synonyms *****')
+    for word in tqdm(words, desc="Get synonyms"):
         get_data = None
         for _ in range(100):
             try:
@@ -156,11 +161,12 @@ def get_similar_cases(keywords):
 
     threads = []
     similar_cases = []
-    for keyword in tqdm(keywords, desc="[crawler]-[get_similar_cases]-CREATE KEYWORDS THREADS"):
+    logger.info('***** Get similar cases *****')
+    for keyword in tqdm(keywords, desc="Create keywords threads"):
         keyword_thread = MultiThread(get_similar_case, args=(keyword,))
         keyword_thread.start()
         threads.append(keyword_thread)
-    _ = [thread.join() for thread in tqdm(threads, desc="[crawler]-[get_similar_cases]-END KEYWORDS THREADS")]
+    _ = [thread.join() for thread in tqdm(threads, desc="End Keywords threads")]
     _ = [similar_cases.append(thread.get_result()) for thread in threads]
     similar_cases = merge(similar_cases)
     # similar_cases = {

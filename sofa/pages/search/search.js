@@ -14,7 +14,7 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        let result = JSON.parse(options.result);
+      let result = JSON.parse(decodeURIComponent(options.result));
         this.setData({
             predictions: {
                 id: 'prediction',

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import os
 import re
 from time import time
@@ -6,6 +7,9 @@ from time import time
 import joblib
 import numpy as np
 from transformers import BertTokenizer, BertForSequenceClassification
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 class Predict(object):
@@ -50,7 +54,7 @@ class Predict(object):
 
     @staticmethod
     def get_imprisonment():
-        return [("短期 (≤3)"), ("中期 (3-10)"), ("长期 ＞10", "无期", "死刑")]
+        return [["短期 (≤3)"], ["中期 (3-10)"], ["长期 ＞10", "无期", "死刑"]]
 
     @staticmethod
     def get_category():
@@ -201,6 +205,7 @@ class Predict(object):
         :param sentence: 需预测的语句
         :return: 罪名标签列表，高亮后的语句
         """
+        logger.info('***** Predict charge and highlight *****')
         sentence = re.sub(u"[\[\]]", "", sentence)
         label_ids, highlight_ids = Predict.__predict_charge_ids_and_highlight_ids(sentence=sentence)
         label_list = Predict.get_charge_labels()
@@ -208,29 +213,42 @@ class Predict(object):
         highlight = ''.join([s if i in highlight_ids else '[%s]' % s for i, s in enumerate(sentence)])
         highlight = re.sub(u"\[.\]", " ", highlight)
         highlight = highlight.split()
+        logger.info(' Charge: %s' % str(label_ids))
+        logger.info(' Highlight: %s' % str(highlight))
         return labels, highlight
 
     @classmethod
     def predict_articles(cls, charges):
-        return Predict.convert_ids_to_article(
+
+        logger.info('***** Predict articles *****')
+        articles = Predict.convert_ids_to_article(
             cls.config["multi_label_clf"].predict([Predict.convert_charge_to_ids(charges=charges)])[0]
         )
+        logger.info(' Articles: %s' % str(articles))
+        return articles
 
     @classmethod
     def predict_imprisonment(cls, charges):
-        return Predict.convert_index_to_imprisonment(
+        logger.info('***** Predict imprisonment *****')
+        imprisonment = Predict.convert_index_to_imprisonment(
             cls.config["single_label_clf"].predict([Predict.convert_charge_to_ids(charges=charges)])[0]
         )
+        logger.info(' Imprisonment: %s' % str(imprisonment))
+        return imprisonment
 
     @classmethod
     def predict_category(cls, sentence):
+        logger.info('***** Predict category *****')
         # TODO - 1 根据sentence预测案情类别
         # PILE predict category
         s = sentence
-        return Predict.get_category()[0]
+        category = Predict.get_category()[0]
+        logger.info(' Category: %s' % str(category))
+        return category
 
     @classmethod
     def predict(cls, sentence):
+        logger.info('***** Predict *****')
         category = Predict.predict_category(sentence=sentence)
         prediction = {"类别": [category]}
         if category == cls.get_category()[0]:  # 刑事
@@ -240,8 +258,9 @@ class Predict(object):
             imprisonment = Predict.predict_imprisonment(charges=charge_labels)
             prediction["罪名"] = charge_labels
             prediction["重点"] = highlight
-            prediction["法条"] = articles
-            prediction["监禁"] = [imprisonment]
+            prediction["法条"] = [str(a) for a in articles]
+            prediction["监禁"] = imprisonment
+        logger.info(' Prediction: %s' % str(prediction))
         return prediction
 
 

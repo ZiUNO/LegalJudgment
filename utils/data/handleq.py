@@ -1,5 +1,9 @@
 import jieba
 import requests
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 class HandleQ(object):
@@ -19,6 +23,7 @@ class HandleQ(object):
 
     def __new__(cls, config):
         if not cls.has_init:
+            jieba.initialize()
             for key in config:
                 cls.config[key] = config[key]
             response = requests.get(cls.host % (cls.config["API Key"], cls.config["Secret Key"]), timeout=3)

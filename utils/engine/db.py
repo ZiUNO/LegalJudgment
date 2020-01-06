@@ -1,9 +1,13 @@
+import logging
 import re
 
 from py2neo import Graph
 from tqdm import tqdm
 
 from utils import MultiThread, merge
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 class DB(object):
@@ -60,11 +64,12 @@ class DB(object):
         threads = []
         items_result = list()
         tmp_key = "items"
-        for keyword in tqdm(keywords, desc="[db]-[search_items]-CREATE ITEMS THREADS"):
+        logger.info('***** Search items *****')
+        for keyword in tqdm(keywords, desc='Create items threads'):
             keyword_thread = MultiThread(DB.__search_item, args=(keyword,))
             keyword_thread.start()
             threads.append(keyword_thread)
-        for single_thread in tqdm(threads, desc="[db]-[search_items]-ENDING ITEMS THREADS"):
+        for single_thread in tqdm(threads, desc="End items threads"):
             single_thread.join()
             single_result = single_thread.get_result()
             items_result.append({tmp_key: single_result})
@@ -75,11 +80,12 @@ class DB(object):
     def search_keywords(cls, synonyms):
         threads = []
         keywords_result = list()
-        for synonym in tqdm(synonyms, desc="[db]-[search_keywords]-CREATE KEYWORDS THREADS"):
+        logger.info('***** Search keywords *****')
+        for synonym in tqdm(synonyms, desc="Create keywords threads"):
             synonym_thread = MultiThread(DB.__search_keyword, args=(synonym,))
             synonym_thread.start()
             threads.append(synonym_thread)
-        for single_thread in tqdm(threads, desc="[db]-[search_keywords]-END KEYWORDS THREADS"):
+        for single_thread in tqdm(threads, desc="End keywords threads"):
             single_thread.join()
             single_result = single_thread.get_result()
             keywords_result.append(single_result)

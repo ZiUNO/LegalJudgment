@@ -39,7 +39,7 @@ Page({
         wx.hideLoading()
         console.log("[index] result: ", result.data)
         wx.navigateTo({
-          url: '../search/search?result=' + JSON.stringify(result.data)
+          url: '../search/search?result=' + encodeURIComponent(JSON.stringify(result.data))
         })
       },
     })

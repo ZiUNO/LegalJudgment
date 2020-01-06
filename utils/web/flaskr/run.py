@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-from time import time
+import logging
 
 import requests
 from flask import Flask, render_template, request
@@ -11,6 +11,11 @@ from utils.data.crawler import get_similar_cases
 from utils.data.handleq import HandleQ
 from utils.engine.db import DB
 from utils.model.predict import Predict
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+logger.info('***** Initializing *****')
 
 with open("config.json", "r") as f:
     configs = json.load(f)
@@ -25,6 +30,8 @@ CASE_TYPES = configs["CASE_TYPES"]
 HTTP_CODE_MESSAGE = configs["HTTP_CODE_MESSAGE"]
 app = Flask(__name__)
 
+logger.info('***** End of initialization *****')
+
 
 @app.route('/')
 def hello_world():
@@ -33,8 +40,11 @@ def hello_world():
 
 @app.route('/search')
 def search():
+    logger.info('***** Search *****')
     q = request.args.get('q')
     ask = request.args.get('ask')
+    logger.info(' Question: %s' % q)
+    logger.info(' Ask: %s' % ask)
     assert len(q) <= 200
     assert ask in ('html', 'json')
     handle_q = HandleQ(q)
@@ -47,10 +57,10 @@ def search():
     # 多线程
     threads = []
     # 在数据库中查找相关法条（多线程）
-    articles_thread = MultiThread(DB.search_items, args=(keywords,))  # FIXME 可能将keywords替换为handle_q.lcut_final_q
+    articles_thread = MultiThread(DB.search_items, args=(handle_q.lcut_final_q,))
     threads.append(articles_thread)
     # 从觅律搜索中爬去关键词相关的案例（多线程）
-    similar_cases_thread = MultiThread(get_similar_cases, args=(keywords,))  # FIXME 可能将keywords替换为handle_q.lcut_final_q
+    similar_cases_thread = MultiThread(get_similar_cases, args=(handle_q.lcut_final_q,))
     threads.append(similar_cases_thread)
     # 多线程开始
     _ = [thread.start() for thread in threads]
@@ -68,6 +78,8 @@ def search():
         "articles": articles_thread.get_result(),
         "similarCases": similar_cases_thread.get_result(),
     }
+    logger.info('***** End of search *****')
+    logger.info(' Result: %s' % str(result))
     return render_template('search.html', result=result) if ask == 'html' else result
 
 

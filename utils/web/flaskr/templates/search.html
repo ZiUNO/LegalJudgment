@@ -107,7 +107,7 @@
                                         </ol>
                                         <div class="panel-body">
                                             {% for s in article.content %}
-                                            <p style="text-indent:2em;">{{s}}</p>
+                                            <p style="text-indent:2em; font-size: 110%;">{{s}}</p>
                                             {% endfor %}
                                         </div>
                                     </div>
@@ -126,7 +126,7 @@
                                         <div class="panel-body">
                                             {% for au in result.similarCases.authcase %}
                                             <div class="panel panel-info">
-                                                <div class="panel-heading"><a href="/case?type=authcase&uniqid={{au.uniqid}}&ask=html">{{au.title}}</a>{% for a in au.baseList %}&emsp;<span class="badge">{{a}}</span>{% endfor %}</div>
+                                                <div class="panel-heading"><a href="/case?type=authcase&uniqid={{au.uniqid}}&ask=html" style="font-size: 110%;">{{au.title}}</a>{% for a in au.baseList %}&emsp;<span class="badge">{{a}}</span>{% endfor %}</div>
                                             </div>
                                             {% endfor %}
                                         </div>
@@ -138,7 +138,7 @@
                                         <div class="panel-body">
                                             {% for ca in result.similarCases.case %}
                                             <div class="panel panel-info">
-                                                <div class="panel-heading"><a href="/case?type=case&uniqid={{ca.uniqid}}&ask=html">{{ca.title}}</a>{% for c in ca.baseList %}&emsp;<span class="badge">{{c}}</span>{% endfor %}</div>
+                                                <div class="panel-heading"><a href="/case?type=case&uniqid={{ca.uniqid}}&ask=html" style="font-size: 110%;">{{ca.title}}</a>{% for c in ca.baseList %}&emsp;<span class="badge">{{c}}</span>{% endfor %}</div>
                                             </div>
                                             {% endfor %}
                                         </div>

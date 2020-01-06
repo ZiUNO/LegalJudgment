@@ -47,7 +47,7 @@ class DB(object):
     def __search_keyword(cls, synonym):
         nodes = list(cls.graph.run(
             "MATCH(keyword:关键词)-->(synonym:同义词) "
-            "WHERE synonym.synonym CONTAINS '%s' "  # FIXME CONTAINS可能修改为 =
+            "WHERE synonym.synonym = '%s' "  # FIXME CONTAINS可能修改为 =
             "RETURN keyword.keyword" % synonym
         ))
         if len(nodes) == 0:

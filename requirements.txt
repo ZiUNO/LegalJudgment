@@ -5,7 +5,7 @@ tqdm
 torch
 requests
 flask
-jieba==0.39
+jieba==0.40
 numpy>=1.17.3
 py2neo==4.3.0
 sklearn

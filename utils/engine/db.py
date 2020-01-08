@@ -42,9 +42,10 @@ class DB(object):
             item_label_name = path[5]["label"]
             source = [file_name.replace("中华人民共和国", ""), piece_label_name, chapter_label_name]
             source = [s for s in source if s != '']
+            content = re.split(r'\n|</br>', node["content"]["content"])
             item.append({"title": [item_label_name, node["title"]["title"]],
                          "source": source,
-                         "content": node["content"]["content"].split('\n')})
+                         "content": content})
         return item
 
     @classmethod

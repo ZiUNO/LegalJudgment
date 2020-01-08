@@ -119,8 +119,10 @@ class Predict(object):
     }
 
     def __new__(cls, config):
+        logger.info('***** Predict initializing *****')
         for c in config:
             cls.config[c] = config[c]
+        logger.info(' Config: %s' % str(config))
         cls.config["tokenizer"] = BertTokenizer.from_pretrained(config["model_version"], do_lower_case=True)
         cls.config["model"] = BertForSequenceClassification.from_pretrained(config["model_version"], num_labels=202,
                                                                             output_attentions=True)
@@ -213,7 +215,7 @@ class Predict(object):
         highlight = ''.join([s if i in highlight_ids else '[%s]' % s for i, s in enumerate(sentence)])
         highlight = re.sub(u"\[.\]", " ", highlight)
         highlight = highlight.split()
-        logger.info(' Charge: %s' % str(label_ids))
+        logger.info(' Charge: %s' % str(labels))
         logger.info(' Highlight: %s' % str(highlight))
         return labels, highlight
 
@@ -249,6 +251,7 @@ class Predict(object):
     @classmethod
     def predict(cls, sentence):
         logger.info('***** Predict *****')
+        logger.info(' Question: %s' % sentence)
         category = Predict.predict_category(sentence=sentence)
         prediction = {"类别": [category]}
         if category == cls.get_category()[0]:  # 刑事

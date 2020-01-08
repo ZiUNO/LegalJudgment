@@ -23,7 +23,7 @@ with open("config.json", "r") as f:
 # initialize classes
 Predict(configs["PREDICT"]["SMART_EVALUATION"])  # init Predict class
 DB(configs["NEO4J"])  # init Database class
-HandleQ(configs["HANDLEQ"]["baidu"])  # init HandleQ with baidu
+HandleQ(configs["HANDLEQ"])  # init HandleQ with baidu
 
 # initialize global variables
 CASE_TYPES = configs["CASE_TYPES"]
@@ -57,13 +57,13 @@ def search():
     # 多线程
     threads = []
     # 在数据库中查找相关法条（多线程）
-    articles_thread = MultiThread(DB.search_items, args=(handle_q.lcut_final_q,))
+    articles_thread = MultiThread(DB.search_items, args=(keywords,))
+    articles_thread.start()
     threads.append(articles_thread)
     # 从觅律搜索中爬去关键词相关的案例（多线程）
-    similar_cases_thread = MultiThread(get_similar_cases, args=(handle_q.lcut_final_q,))
+    similar_cases_thread = MultiThread(get_similar_cases, args=(keywords,))
+    similar_cases_thread.start()
     threads.append(similar_cases_thread)
-    # 多线程开始
-    _ = [thread.start() for thread in threads]
     # 预测案情
     prediction = Predict.predict(final_q)
     highlight_key = "重点"
@@ -79,7 +79,6 @@ def search():
         "similarCases": similar_cases_thread.get_result(),
     }
     logger.info('***** End of search *****')
-    logger.info(' Result: %s' % str(result))
     return render_template('search.html', result=result) if ask == 'html' else result
 
 

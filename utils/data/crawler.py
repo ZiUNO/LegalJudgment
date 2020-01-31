@@ -23,6 +23,19 @@ class Crawler(object):
     """
 
     @staticmethod
+    def _threadpool_download(save_path, content):
+        """
+        多线程下载函数（虚静态函数）
+        Args:
+            save_path: 保存路径
+            content: 保存内容
+
+        Returns:
+
+        """
+        raise NotImplementedError('未重写Crawler中的_threadpool_download函数')
+
+    @staticmethod
     def download(config_path):
         """
         下载函数（虚静态函数）
@@ -37,11 +50,11 @@ class DuXiaoFaCrawler(Crawler):
     """
 
     @staticmethod
-    def __threadpool_download(save_path, law):
+    def _threadpool_download(save_path, content):
         """
         使用线程池加速下载
         :param save_path: 文件保存目录
-        :param law: 法律名
+        :param content: 法律名
         :return:
         """
         if not pathlib.Path(save_path).exists():
@@ -50,13 +63,13 @@ class DuXiaoFaCrawler(Crawler):
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36',
             'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3'}
         try:
-            response = requests.get('http://www.baidu.com/s?ie=UTF-8&wd=%s' % law, headers=header)
+            response = requests.get('http://www.baidu.com/s?ie=UTF-8&wd=%s' % content, headers=header)
             results = response.text
             r = re.compile(
-                u'<a href="(http[s]?://www.baidu.com/link.*?)" target="_blank"><em>%s</em>.*?_百度知识图谱' % law)
+                u'<a href="(http[s]?://www.baidu.com/link.*?)" target="_blank"><em>%s</em>.*?_百度知识图谱' % content)
             url = r.findall(results)[0]
         except:
-            print('CANNOT FIND %s ON DuXiaoFa' % law)
+            print('CANNOT FIND %s ON DuXiaoFa' % content)
             return
         url = url.replace("http", "https")
         response = requests.head(url, headers=header)
@@ -66,7 +79,7 @@ class DuXiaoFaCrawler(Crawler):
         txt = requests.get(url, headers=header).text.encode().decode('unicode_escape')
 
         json_law = json.loads(txt, strict=False)
-        save_file_name = os.path.join(save_path, '%s.json' % law)
+        save_file_name = os.path.join(save_path, '%s.json' % content)
         with open(save_file_name, 'w', encoding='utf-8') as f:
             json.dump(json_law, f, ensure_ascii=False)
         print('SAVING TO %s...' % save_file_name)
@@ -89,7 +102,7 @@ class DuXiaoFaCrawler(Crawler):
         executor = ThreadPoolExecutor(max_workers=4)
         for law_label in laws:
             for law in laws[law_label]:
-                executor.submit(DuXiaoFaCrawler.__threadpool_download, os.path.join(save_path, law_label), law)
+                executor.submit(DuXiaoFaCrawler._threadpool_download, os.path.join(save_path, law_label), law)
                 total_law.append(law)
         executor.shutdown(True)
         total = len(total_law)
@@ -108,6 +121,57 @@ class DuXiaoFaCrawler(Crawler):
         print("total: %d, success: %d, failed: %d, success rate=%.02f" % (total, count, total - count, count / total))
         print('CANNOT FIND:')
         _ = [print(law) for law in total_law]
+
+
+class SoLegalCaseCrawler(Crawler):
+
+    @staticmethod
+    def _threadpool_download(save_path, content):
+        pass
+
+    @staticmethod
+    def download(config_path):
+        start_time = time.time()
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        if platform.system() == "Windows":
+            save_path = r'..\\..\\' + config['CASE_PATH']
+        else:
+            save_path = os.path.join('..', '..', config['CASE_PATH'].replace("\\", os.path.sep))
+        if not pathlib.Path(save_path).exists():
+            os.mkdir(save_path)
+        kinds = ['刑事', '民事', '行政']
+        save_path_kind_uniqid = os.path.join(save_path, 'uniqid.json')
+        kind_cases_uniqid = {kind: [] for kind in kinds}
+        if pathlib.Path(save_path_kind_uniqid).exists():
+            with open(save_path_kind_uniqid, 'r', encoding='utf-8') as f:
+                kind_cases_uniqid = json.load(f)
+            os.remove(save_path_kind_uniqid)
+        if not pathlib.Path(save_path_kind_uniqid).exists():
+            url_authcase = u"https://solegal.cn/api/v2/authcase/search?q=%s&offset=%d&count=%d"
+            user_cookie = input("USER COOKIE(NEED USER COOKIE TO DOWNLOAD CASES):")
+            user_cookie = [one_cookie.strip().split("=") for one_cookie in user_cookie.split(';')]
+            user_cookie = {one_cookie[0]: one_cookie[1] for one_cookie in user_cookie}
+            once_count = 20
+            total_count = 2000
+            for keyword in kinds:
+                if len(kind_cases_uniqid[keyword]) != 0:
+                    continue
+                for now_count in tqdm(range(0, total_count, once_count), desc="DOWNLOAD KIND UNIQID OF %s" % keyword):
+                    tmp_url_authcase = url_authcase % (keyword, now_count, once_count)
+                    try:
+                        authcase_json = requests.get(tmp_url_authcase, cookies=user_cookie, timeout=3.0).json()
+                    except Exception:
+                        continue
+                    time.sleep(randint(5, 10))
+                    authcase_results = authcase_json["data"]["results"]
+                    if not len(authcase_results):
+                        continue
+                    _ = [kind_cases_uniqid[keyword].append(authcase["uniqid"]) for authcase in authcase_results]
+                for _ in tqdm(range(randint(20, 60)), desc='SLEEP TIME'):
+                    time.sleep(1)
+            with open(save_path_kind_uniqid, 'w', encoding='utf-8') as f:
+                json.dump(kind_cases_uniqid, f, ensure_ascii=False)
 
 
 def get_synonyms(words):
@@ -200,10 +264,11 @@ def get_similar_cases(keywords):
 
 
 if __name__ == '__main__':
-    # config_path = os.path.join('..', '..', 'config.json')
+    config_path = os.path.join('..', '..', 'config.json')
     # DuXiaoFaCrawler.download(config_path)  # 法律条文爬取
     # print(get_synonyms(["盗窃", "抢劫罪"]))
     start_time = time.time()
-    similar_cases = get_similar_cases(["盗窃", "抢劫罪"])
-    print(similar_cases)
+    # similar_cases = get_similar_cases(["盗窃", "抢劫罪"])
+    # print(similar_cases)
+    SoLegalCaseCrawler.download(config_path)
     print("cost time: %.02f" % (time.time() - start_time))

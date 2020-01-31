@@ -1,6 +1,7 @@
 {
   "DOWNLOAD_SAVE_PATH_DXF": "data\\中国法律大全JSON_DXF",
   "LAW_PATH": "data\\中国法律大全JSON",
+  "CASE_PATH": "data\\案例",
   "TIMESTAMP": 1574064904,
   "LAW_NAME": {
     "环境保护法": [

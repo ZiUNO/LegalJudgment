@@ -131,7 +131,6 @@ class SoLegalCaseCrawler(Crawler):
 
     @staticmethod
     def download(config_path):
-        start_time = time.time()
         with open(config_path, 'r', encoding='utf-8') as f:
             config = json.load(f)
         if platform.system() == "Windows":
@@ -146,32 +145,32 @@ class SoLegalCaseCrawler(Crawler):
         if pathlib.Path(save_path_kind_uniqid).exists():
             with open(save_path_kind_uniqid, 'r', encoding='utf-8') as f:
                 kind_cases_uniqid = json.load(f)
-            os.remove(save_path_kind_uniqid)
-        if not pathlib.Path(save_path_kind_uniqid).exists():
-            url_authcase = u"https://solegal.cn/api/v2/authcase/search?q=%s&offset=%d&count=%d"
-            user_cookie = input("USER COOKIE(NEED USER COOKIE TO DOWNLOAD CASES):")
-            user_cookie = [one_cookie.strip().split("=") for one_cookie in user_cookie.split(';')]
-            user_cookie = {one_cookie[0]: one_cookie[1] for one_cookie in user_cookie}
-            once_count = 20
-            total_count = 2000
-            for keyword in kinds:
-                if len(kind_cases_uniqid[keyword]) != 0:
+        url_authcase = u"https://solegal.cn/api/v2/authcase/search?q=%s&offset=%d&count=%d"
+        user_cookie = input("USER COOKIE(NEED USER COOKIE TO DOWNLOAD CASES):")
+        user_cookie = [one_cookie.strip().split("=") for one_cookie in user_cookie.split(';')]
+        user_cookie = {one_cookie[0]: one_cookie[1] for one_cookie in user_cookie}
+        once_count = 20
+        total_count = 2000
+        for keyword in kinds:
+            if len(kind_cases_uniqid[keyword]) != 0:
+                continue
+            for now_count in tqdm(range(0, total_count, once_count), desc="DOWNLOAD KIND UNIQID OF %s" % keyword):
+                tmp_url_authcase = url_authcase % (keyword, now_count, once_count)
+                try:
+                    authcase_json = requests.get(tmp_url_authcase, cookies=user_cookie, timeout=3.0).json()
+                except Exception:
                     continue
-                for now_count in tqdm(range(0, total_count, once_count), desc="DOWNLOAD KIND UNIQID OF %s" % keyword):
-                    tmp_url_authcase = url_authcase % (keyword, now_count, once_count)
-                    try:
-                        authcase_json = requests.get(tmp_url_authcase, cookies=user_cookie, timeout=3.0).json()
-                    except Exception:
-                        continue
-                    time.sleep(randint(5, 10))
-                    authcase_results = authcase_json["data"]["results"]
-                    if not len(authcase_results):
-                        continue
-                    _ = [kind_cases_uniqid[keyword].append(authcase["uniqid"]) for authcase in authcase_results]
-                for _ in tqdm(range(randint(20, 60)), desc='SLEEP TIME'):
-                    time.sleep(1)
-            with open(save_path_kind_uniqid, 'w', encoding='utf-8') as f:
-                json.dump(kind_cases_uniqid, f, ensure_ascii=False)
+                time.sleep(randint(3, 5))
+                authcase_results = authcase_json["data"]["results"]
+                if not len(authcase_results):
+                    continue
+                _ = [kind_cases_uniqid[keyword].append(authcase["uniqid"]) for authcase in authcase_results]
+            for _ in tqdm(range(randint(10, 30)), desc='SLEEP TIME'):
+                time.sleep(1)
+        if pathlib.Path(save_path_kind_uniqid).exists():
+            os.remove(save_path_kind_uniqid)
+        with open(save_path_kind_uniqid, 'w', encoding='utf-8') as f:
+            json.dump(kind_cases_uniqid, f, ensure_ascii=False)
 
 
 def get_synonyms(words):

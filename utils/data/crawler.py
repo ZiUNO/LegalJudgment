@@ -6,9 +6,10 @@ import platform
 import re
 import time
 from concurrent.futures.thread import ThreadPoolExecutor
-from random import randint
+from random import randint, shuffle
 
 import requests
+from requests import Session
 from tqdm import tqdm
 
 from utils import MultiThread, merge
@@ -123,11 +124,79 @@ class DuXiaoFaCrawler(Crawler):
         _ = [print(law) for law in total_law]
 
 
+invalid_uniqid = []
+
+
 class SoLegalCaseCrawler(Crawler):
 
     @staticmethod
     def _threadpool_download(save_path, content):
-        pass
+        uniqid = content
+        file_path = os.path.join(save_path, uniqid + '.json')
+        # print("TO DOWNLOAD %s ... " % uniqid, end='')
+        if pathlib.Path(file_path).exists():
+            # print("EXIST")
+            return
+        url = "https://solegal.cn/api/v2/authcase/detail?uniqid=%s" % uniqid
+        proxy_list = [
+            {"https": "https://125.123.123.150:9000"},
+            {"https": "https://125.123.126.133:9000"},
+            {"https": "https://124.232.133.199:3128"},
+            {"https": "https://119.39.68.130:808"},
+            {"https": "https://182.61.175.77:8118"},
+            {"https": "https://59.38.60.105:9797"},
+            {"https": "https://115.233.210.218:808"},
+            {"https": "https://58.250.23.210:1080"},
+            {"https": "https://59.38.61.173:9797"},
+            {"https": "https://113.247.252.114:9090"},
+            {"https": "https://59.38.63.148:9797"},
+            {"https": "https://60.205.159.195:3128"},
+            {"https": "https://121.238.1.175:8118"},
+            {"https": "https://14.20.235.117:808"},
+            {"https": "https://59.38.62.168:9797"},
+            {"https": "https://183.129.207.80:21776"},
+            {"https": "https://116.62.215.123:8118"},
+            {"https": "https://183.129.207.93:13629"},
+            {"https": "https://218.77.120.31:8888"},
+            {"https": "https://59.37.18.243:3128"},
+            {"https": "https://124.205.143.213:32612"},
+            {"https": "https://223.243.252.155:65309"},
+            {"https": "https://124.205.155.152:9090"},
+            {"https": "https://124.152.32.140:53281"},
+            {"https": "https://122.228.19.9:3389"},
+            {"https": "https://14.20.235.82:9797"},
+            {"https": "https://114.99.10.55:808"},  # invalid
+            {"https": "https://222.189.190.166:9999"},
+            {"https": "https://123.169.34.238:808"},  # invalid
+            {"https": "https://218.249.45.162:35586"},  # invalid
+            {"https": "https://114.239.145.166:808"},
+            {"https": "https://163.204.246.205:9999"},  # invalid
+            {"https": "https://210.5.10.87:53281"},
+            {"https": "https://117.68.194.91:18118"},
+            {"https": "https://114.239.144.53:808"},
+            {"https": "https://114.99.11.213:23760"},
+            {"https": "https://175.148.71.214:1133"},  # invalid
+            {"https": "https://117.69.201.61:40196"},
+            {"https": "https://163.125.70.180:9999"},
+            {"https": "https://182.35.85.60:9999"},
+            {"https": "https://60.167.21.135:27393"}
+        ]
+        headers = {
+            "Accept": "application/json, text/plain, */*",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36"
+        }
+        shuffle(proxy_list)
+        for proxies in tqdm(proxy_list, desc="TESTING FOR %s" % uniqid):
+            try:
+                with Session() as s:
+                    case_content = s.get(url=url, proxies=proxies, headers=headers).json()["data"]["contents"]
+            except Exception:
+                continue
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(case_content, f, ensure_ascii=False)
+            print("DONE")
+            break
+        invalid_uniqid.append(uniqid)
 
     @staticmethod
     def download(config_path):
@@ -146,7 +215,9 @@ class SoLegalCaseCrawler(Crawler):
             with open(save_path_kind_uniqid, 'r', encoding='utf-8') as f:
                 kind_cases_uniqid = json.load(f)
         url_authcase = u"https://solegal.cn/api/v2/authcase/search?q=%s&offset=%d&count=%d"
-        user_cookie = input("USER COOKIE(NEED USER COOKIE TO DOWNLOAD CASES):")
+        user_cookie = input("USER COOKIE(NEED USER COOKIE TO DOWNLOAD CASES)[null]:", )
+        if user_cookie == "":
+            user_cookie = '1=1'
         user_cookie = [one_cookie.strip().split("=") for one_cookie in user_cookie.split(';')]
         user_cookie = {one_cookie[0]: one_cookie[1] for one_cookie in user_cookie}
         once_count = 20
@@ -171,6 +242,15 @@ class SoLegalCaseCrawler(Crawler):
             os.remove(save_path_kind_uniqid)
         with open(save_path_kind_uniqid, 'w', encoding='utf-8') as f:
             json.dump(kind_cases_uniqid, f, ensure_ascii=False)
+        executor = ThreadPoolExecutor()
+        for keyword in tqdm(kinds, desc='DOWNLOAD CASES'):
+            dir_path = os.path.join(save_path, keyword)
+            if not pathlib.Path(dir_path).exists():
+                os.mkdir(dir_path)
+            for uniqid in tqdm(kind_cases_uniqid[keyword], desc="DOWNLOAD UNIQID OF %s" % keyword):
+                # SoLegalCaseCrawler._threadpool_download(dir_path, uniqid)
+                executor.submit(SoLegalCaseCrawler._threadpool_download, dir_path, uniqid)
+        executor.shutdown(True)
 
 
 def get_synonyms(words):
@@ -271,3 +351,5 @@ if __name__ == '__main__':
     # print(similar_cases)
     SoLegalCaseCrawler.download(config_path)
     print("cost time: %.02f" % (time.time() - start_time))
+    with open(os.path.join('..', '..', 'data', '案例', 'invalid_uniqid.json'), 'w', encoding='utf-8') as f:
+        json.dump(invalid_uniqid, f, ensure_ascii=False)

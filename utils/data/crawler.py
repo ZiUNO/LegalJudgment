@@ -192,10 +192,12 @@ class SoLegalCaseCrawler(Crawler):
                     case_content = s.get(url=url, proxies=proxies, headers=headers).json()["data"]["contents"]
             except Exception:
                 continue
+            if len(case_content) == 0:
+                return
             with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(case_content, f, ensure_ascii=False)
             print("DONE")
-            break
+            return
         invalid_uniqid.append(uniqid)
 
     @staticmethod

@@ -121,4 +121,4 @@ dmypy.json
 # dataset&initmodel
 chinese_L-12_H-768_A-12/
 multi_data_dir/
-tmp/
+model/

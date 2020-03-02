@@ -15,6 +15,12 @@ logger = logging.getLogger(__name__)
 class Predict(object):
 
     @staticmethod
+    def convert_ids_to_category(ids):
+        category_list = Predict.get_category_labels()
+        category_ids = list(np.where(ids)[0])
+        return [category_list[index] for index in category_ids]
+
+    @staticmethod
     def convert_charge_to_ids(charges):
         charge_list = Predict.get_charge_labels()
         charge_len = len(charge_list)
@@ -50,15 +56,15 @@ class Predict(object):
 
     @staticmethod
     def convert_index_to_category(index):
-        return Predict.get_category()[index]
+        return Predict.get_category_labels()[index]
 
     @staticmethod
     def get_imprisonment():
         return [["短期 (≤3)"], ["中期 (3-10)"], ["长期 ＞10", "无期", "死刑"]]
 
     @staticmethod
-    def get_category():
-        return ["刑事案由", "民事案由", "行政案由"]
+    def get_category_labels():
+        return ["刑事案由", "行政案由", "民事案由"]
 
     @staticmethod
     def get_charge_labels():
@@ -107,13 +113,18 @@ class Predict(object):
                 253, 163, 140, 293, 194, 342, 161, 358, 271, 156, 260, 384, 153, 277, 214]
 
     config = {
-        "model_version": None,
+        "charge_bert_model": None,
+        "category_bert_model": None,
         "multi_label_clf": None,
         "single_label_clf": None,
         "highlight_consider_layer_ids": None,
         "charge_labels_threshold": None,
+        "category_labels_threshold": None,
         "highlight_threshold": None,
-        "model": None,
+        "charge_model": None,
+        "charge_tokenizer": None,
+        "category_model": None,
+        "category_tokenizer": None,
         "tokenizer": None,
         "highlight_consider_layers_ids": None,
     }
@@ -123,9 +134,14 @@ class Predict(object):
         for c in config:
             cls.config[c] = config[c]
         logger.info(' Config: %s' % str(config))
-        cls.config["tokenizer"] = BertTokenizer.from_pretrained(config["model_version"], do_lower_case=True)
-        cls.config["model"] = BertForSequenceClassification.from_pretrained(config["model_version"], num_labels=202,
-                                                                            output_attentions=True)
+        cls.config["charge_tokenizer"] = BertTokenizer.from_pretrained(
+            config["charge_bert_model"], do_lower_case=True)
+        cls.config["charge_model"] = BertForSequenceClassification.from_pretrained(
+            config["charge_bert_model"], num_labels=len(Predict.get_charge_labels()), output_attentions=True)
+        cls.config["category_tokenizer"] = BertTokenizer.from_pretrained(
+            config["category_bert_model"], do_lower_case=True)
+        cls.config["category_model"] = BertForSequenceClassification.from_pretrained(
+            config["category_bert_model"], num_labels=len(Predict.get_category_labels()))
         cls.config["multi_label_clf"] = Predict.__load(load_path=config["multi_label_clf"])
         cls.config["single_label_clf"] = Predict.__load(load_path=config["single_label_clf"])
         return None
@@ -179,6 +195,14 @@ class Predict(object):
         return list(np.where(preds > preds_threshold)[0])
 
     @classmethod
+    def __get_category_label_ids(cls, preds):
+        threshold = cls.config["category_labels_threshold"]
+        preds = preds.view(-1)
+        preds_max = preds.max()
+        preds_threshold = preds_max * threshold
+        return list(np.where(preds > preds_threshold)[0])
+
+    @classmethod
     def __predict_charge_ids_and_highlight_ids(cls, sentence):
         """
         预测罪名与高亮位置下标
@@ -188,11 +212,12 @@ class Predict(object):
         max_seq_length = 256
         sentence = sentence[:max_seq_length]
 
-        inputs = cls.config["tokenizer"].encode_plus(sentence, None, return_tensors='pt', add_special_tokens=True)
+        inputs = cls.config["charge_tokenizer"].encode_plus(sentence, None, return_tensors='pt',
+                                                            add_special_tokens=True)
         token_type_ids = inputs['token_type_ids']
         input_ids = inputs['input_ids']
 
-        preds, attentions = cls.config["model"](input_ids, token_type_ids=token_type_ids)
+        preds, attentions = cls.config["charge_model"](input_ids, token_type_ids=token_type_ids)
 
         preds_charge_labels_ids = Predict.__get_charge_label_ids(preds=preds)
         preds_highlight_ids = Predict.__get_highlight_ids(attentions=attentions)
@@ -208,7 +233,7 @@ class Predict(object):
         :return: 罪名标签列表，高亮后的语句
         """
         logger.info('***** Predict charge and highlight *****')
-        sentence = re.sub(u"[\[\]]", "", sentence)
+        # sentence = re.sub(u"[\[\]]", "", sentence)
         label_ids, highlight_ids = Predict.__predict_charge_ids_and_highlight_ids(sentence=sentence)
         label_list = Predict.get_charge_labels()
         labels = [label_list[ids] for ids in label_ids]
@@ -241,20 +266,27 @@ class Predict(object):
     @classmethod
     def predict_category(cls, sentence):
         logger.info('***** Predict category *****')
-        # TODO - 1 根据sentence预测案情类别
-        # PILE predict category
-        s = sentence
-        category = Predict.get_category()[0]
-        logger.info(' Category: %s' % str(category))
-        return category
+        max_seq_lengrh = 256
+        sentence = sentence[:max_seq_lengrh]
+        inputs = cls.config["category_tokenizer"].encode_plus(sentence, None, return_tensors='pt',
+                                                              add_special_tokens=True)
+        token_type_ids = inputs['token_type_ids']
+        input_ids = inputs['input_ids']
+
+        preds = cls.config["category_model"](input_ids, token_type_ids=token_type_ids)[0]
+        label_ids = Predict.__get_category_label_ids(preds=preds)
+        label_list = Predict.get_category_labels()
+        labels = [label_list[ids] for ids in label_ids]
+        logger.info(' Category: %s' % str(labels))
+        return labels
 
     @classmethod
     def predict(cls, sentence):
         logger.info('***** Predict *****')
         logger.info(' Question: %s' % sentence)
         category = Predict.predict_category(sentence=sentence)
-        prediction = {"类别": [category]}
-        if category == cls.get_category()[0]:  # 刑事
+        prediction = {"类别": category}
+        if cls.get_category_labels()[0] in category:  # 刑事
             charge_labels, highlight = \
                 Predict.predict_charge_and_highlight(sentence=sentence)
             articles = Predict.predict_articles(charges=charge_labels)

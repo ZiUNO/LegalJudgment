@@ -80,6 +80,7 @@ class HandleQ(object):
 
     @property
     def lcut_final_q(self):
+        # PILE
         logger.info(' Lcut final question: %s' % str(self.__final_q))
         return jieba.lcut(self.__final_q, cut_all=False)  # FIXME 可能调整cut_all=True
 
@@ -105,6 +106,7 @@ class HandleQ(object):
 
     @keywords_of_lcut_correct_q.setter
     def keywords_of_lcut_correct_q(self, value):
+        # PILE
         assert len(value) == len(self.__lcut_correct_q)
         self.__keywords = list(set([word for word in value if word is not None]))
         self.__keywords_of_lcut_correct_q = value
@@ -141,6 +143,7 @@ class HandleQ(object):
 
     @final_q_highlight.setter
     def final_q_highlight(self, value):
+        # PILE
         self.__final_q_highlight = value
         # TODO - 6 final_q_highlight + q + map_q -> 反向映射 -> 更新 highlight
         self.__highlight = value

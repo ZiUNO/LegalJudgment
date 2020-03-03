@@ -18,7 +18,6 @@ if __name__ == '__main__':
     with open("result.txt", 'r', newline="\n") as f:
         result_data = f.readlines()
     result = [float(data.strip()) for data in result_data]
-    # TODO 根据attention计算词汇权重
     consider_layers_ids = [10]
     consider_layers = []
     for layer_id in consider_layers_ids:

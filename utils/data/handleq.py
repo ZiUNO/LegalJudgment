@@ -52,7 +52,6 @@ class HandleQ(object):
         logger.info('***** HandleQ *****')
         logger.info(' Question: %s' % q)
         self.__q = q
-        # PILE handle_q
         correct_q_json = requests.post(url="%s?%s" % (HandleQ.url, HandleQ.end),
                                        headers=HandleQ.headers, json={"text": q}, timeout=3).json()
         self.__correct_q = correct_q_json["item"]["correct_query"]

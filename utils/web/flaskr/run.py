@@ -26,7 +26,6 @@ DB(configs["NEO4J"])  # init Database class
 HandleQ(configs["HANDLEQ"])  # init HandleQ with baidu
 
 # initialize global variables
-CASE_TYPES = configs["CASE_TYPES"]
 HTTP_CODE_MESSAGE = configs["HTTP_CODE_MESSAGE"]
 app = Flask(__name__)
 

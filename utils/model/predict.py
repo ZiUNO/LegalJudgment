@@ -305,7 +305,6 @@ if __name__ == '__main__':
               "multi_label_clf": os.path.join("svm_classifier", "svm_clf.pkl"),
               "single_label_clf": os.path.join("svm_classifier", "svm_single_label_clf.pkl"),
               "highlight_consider_layer_ids": (7, 10),
-              # FIXME [highlight_consider_layer_ids] 0-11共12层，调整考虑的神经层下标数以调整高亮部分的位置
               "charge_labels_threshold": 0.2,
               "highlight_threshold": 0.2}
 

@@ -79,12 +79,6 @@ class HandleQ(object):
         self.__final_q_highlight = None
 
     @property
-    def lcut_final_q(self):
-        # PILE
-        logger.info(' Lcut final question: %s' % str(self.__final_q))
-        return jieba.lcut(self.__final_q, cut_all=False)  # FIXME 可能调整cut_all=True
-
-    @property
     def correct_q(self):
         logger.info(' Correct question: %s' % str(self.__correct_q))
         return self.__correct_q
@@ -106,23 +100,21 @@ class HandleQ(object):
 
     @keywords_of_lcut_correct_q.setter
     def keywords_of_lcut_correct_q(self, value):
-        # PILE
         assert len(value) == len(self.__lcut_correct_q)
         self.__keywords = list(set([word for word in value if word is not None]))
         self.__keywords_of_lcut_correct_q = value
-        self.__final_q = "".join([word
-                                  if self.__keywords_of_lcut_correct_q[i] is None
-                                  else self.__keywords_of_lcut_correct_q[i]
-                                  for i, word in enumerate(self.__lcut_correct_q)])
-        # self.__final_q = self.__correct_q
+        # self.__final_q = "".join([word
+        #                           if self.__keywords_of_lcut_correct_q[i] is None
+        #                           else self.__keywords_of_lcut_correct_q[i]
+        #                           for i, word in enumerate(self.__lcut_correct_q)])
+        self.__final_q = self.__correct_q
         word_with_flag = pseg.cut(self.__final_q, use_paddle=True)
         for word, flag in word_with_flag:
             if flag in HandleQ.pseg_ignore:
                 continue
             self.__lcut_final_q.append(word)
-        self.__map_q = [(self.__lcut_correct_q[i], self.__keywords_of_lcut_correct_q[i]) for i in
-                        range(len(self.__keywords_of_lcut_correct_q))]  # map_q [('偷窃', '窃得'),...]
-        # TODO - 5 keywords_of_lcut_correct_q + q -> 遍历位置 -> highlight
+        # self.__map_q = [(self.__lcut_correct_q[i], self.__keywords_of_lcut_correct_q[i]) for i in
+        #                 range(len(self.__keywords_of_lcut_correct_q))]  # map_q [('偷窃', '窃得'),...]
         self.__highlight = [self.__lcut_correct_q[i] for i in range(len(self.__lcut_correct_q)) if
                             self.__keywords_of_lcut_correct_q[i] is not None]
 
@@ -143,7 +135,4 @@ class HandleQ(object):
 
     @final_q_highlight.setter
     def final_q_highlight(self, value):
-        # PILE
-        self.__final_q_highlight = value
-        # TODO - 6 final_q_highlight + q + map_q -> 反向映射 -> 更新 highlight
-        self.__highlight = value
+        self.__final_q_highlight = self.__highlight = value

@@ -295,6 +295,9 @@ class Predict(object):
             prediction["重点"] = highlight
             prediction["法条"] = [str(a) for a in articles]
             prediction["监禁"] = imprisonment
+        for p in list(prediction.keys()):
+            if not len(prediction[p]):
+                del prediction[p]
         logger.info(' Prediction: %s' % str(prediction))
         return prediction
 

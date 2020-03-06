@@ -60,7 +60,7 @@ def search():
     articles_thread.start()
     threads.append(articles_thread)
     # 从觅律搜索中爬去关键词相关的案例（多线程）
-    similar_cases_thread = MultiThread(get_similar_cases, args=(keywords,))
+    similar_cases_thread = MultiThread(get_similar_cases, args=(handle_q.lcut_correct_q,))
     similar_cases_thread.start()
     threads.append(similar_cases_thread)
     # 预测案情

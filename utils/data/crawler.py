@@ -268,22 +268,25 @@ def get_synonyms(words):
                 get_data = requests.get(url % word, timeout=3.0)
             except Exception:
                 to_sleep = randint(1, 5)
-                print("[exception] sleep: %d(s)" % to_sleep)
+                # print("[exception] sleep: %d(s)" % to_sleep)
                 time.sleep(to_sleep)
                 continue
             break
         if get_data is None or get_data.status_code != 200:
-            continue
-        html = get_data.content.decode('utf-8')
-        about_words = re.findall(u'<b>近义词</b><br>汉语:(.*?)<br>', html, re.S)
-        if len(about_words) == 0:
-            continue
-        about_words = "\n".join(about_words)
-        about_words = re.sub(u"<.*?>", "", about_words)
-        about_words = re.findall(u"([\u4e00-\u9fa5]*)", about_words, re.S)
-        about_words = tuple(set([tmp_word.strip() for tmp_word in about_words if tmp_word.strip() != '']))
+            about_words = [word]
+        else:
+            html = get_data.content.decode('utf-8')
+            about_words = re.findall(u'<b>近义词</b><br>汉语:(.*?)<br>', html, re.S)
+            if len(about_words) == 0:
+                about_words = [word]
+            else:
+                about_words = "\n".join(about_words)
+                about_words = re.sub(u"<.*?>", "", about_words)
+                about_words = re.findall(u"([\u4e00-\u9fa5]*)", about_words, re.S)
+                about_words = [tmp_word.strip() for tmp_word in about_words if tmp_word.strip() != ''] + [word]
         # print(word, about_words)
-        synonyms[word] = about_words
+        synonyms[word] = list(set(about_words))
+        # print(" download %s: %s" % (word, synonyms[word]))
     return synonyms
 
 

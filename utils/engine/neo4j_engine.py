@@ -105,7 +105,8 @@ class Neo4j(object):
         for law in tqdm(laws, desc="[neo4j_engine]-[expand]-EXPANDING LAWS"):
             self.__expand_law(law)
 
-    def keywords(self, top_k=20):
+    def keywords(self, top_k=50):
+        # TODO 重新形成关键词列表
         file2content = self.__graph.run(
             '''
             MATCH(file:文件)-[*]->(content:内容)

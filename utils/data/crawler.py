@@ -255,6 +255,51 @@ class SoLegalCaseCrawler(Crawler):
         executor.shutdown(True)
 
 
+class Proxy(object):
+    url = r"https://www.xicidaili.com/wn/"  # 西刺代理HTTPS
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) "
+                      "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36"
+    }
+
+    def __init__(self, speed=0.80, connection_time=0.80, update=False):
+        proxy_data = requests.get(url=Proxy.url, headers=Proxy.headers).text
+        if proxy_data != "":
+            self.__pages = int(re.findall('<a href="/wn/[0-9]*?">([0-9]*?)</a> <a class', proxy_data, re.S)[0])
+        else:
+            self.__pages = 0  # pages == 0: ip is blocked
+        self.__speed = int(speed * 100)
+        self.__connection_time = int(connection_time * 100)
+
+    def __iter__(self):
+        proxy_ips = []
+        if not self.__pages:
+            with open(os.path.join(os.path.split(os.path.realpath(__file__))[0], '..', '..', 'data', 'proxy.json'), 'r',
+                      encoding='utf-8') as f:
+                proxy_ips = json.load(f)["ips"]
+        else:
+            for i in tqdm(range(self.__pages), desc="[crawler]-[__iter__]-GET PROXY IPS"):
+                try:
+                    proxy_data = requests.get(url=Proxy.url + str(i + 1), headers=Proxy.headers).text
+                except Exception:
+                    continue
+                if proxy_data == "":
+                    logger.info('local ip is blocked, auto save ips to file and return ips that have been saved')
+                    break
+                time.sleep(randint(2, 5))
+                proxy_data = re.findall(u"<tr class.*?>(.*?)</tr>", proxy_data, re.S)
+                proxy_data = [re.findall(
+                    u'<td class="country">.*?<td>([\.0-9]*?)</td>\s*<td>([0-9]*?)</td>.*?width:([0-9]*)%.*?width:([0-9]*)%">',
+                    proxy, re.S)[0] for proxy in proxy_data]
+                proxy_data = [{"https": "https://%s:%s" % (proxy[0], proxy[1])} for proxy in proxy_data
+                              if int(proxy[2]) >= self.__speed and int(proxy[3]) >= self.__connection_time]
+                proxy_ips += proxy_data
+            with open(os.path.join(os.path.split(os.path.realpath(__file__))[0], '..', '..', 'data', 'proxy.json'), 'w',
+                      encoding='utf-8') as f:
+                json.dump({"ips": proxy_ips}, f, ensure_ascii=False, indent=4)
+        return iter(proxy_ips)
+
+
 def get_synonyms(words):
     url = u"https://www.cilin.org/jyc/w_%s.html"
     synonyms = {}
@@ -348,13 +393,21 @@ def get_similar_cases(keywords):
 
 
 if __name__ == '__main__':
-    config_path = os.path.join('..', '..', 'config.json')
-    # DuXiaoFaCrawler.download(config_path)  # 法律条文爬取
-    # print(get_synonyms(["盗窃", "抢劫罪"]))
-    start_time = time.time()
-    # similar_cases = get_similar_cases(["盗窃", "抢劫罪"])
-    # print(similar_cases)
-    SoLegalCaseCrawler.download(config_path)
-    print("cost time: %.02f" % (time.time() - start_time))
-    with open(os.path.join('..', '..', 'data', '案例', 'invalid_uniqid.json'), 'w', encoding='utf-8') as f:
-        json.dump(invalid_uniqid, f, ensure_ascii=False)
+    # config_path = os.path.join('..', '..', 'config.json')
+    # # DuXiaoFaCrawler.download(config_path)  # 法律条文爬取
+    # # print(get_synonyms(["盗窃", "抢劫罪"]))
+    # start_time = time.time()
+    # # similar_cases = get_similar_cases(["盗窃", "抢劫罪"])
+    # # print(similar_cases)
+    # SoLegalCaseCrawler.download(config_path)
+    # print("cost time: %.02f" % (time.time() - start_time))
+    # with open(os.path.join('..', '..', 'data', '案例', 'invalid_uniqid.json'), 'w', encoding='utf-8') as f:
+    #     json.dump(invalid_uniqid, f, ensure_ascii=False)
+
+    proxy = Proxy(update=True)
+    count = 0
+    for p in proxy:
+        count += 1
+        if count == 100:
+            break
+        print(p)

@@ -71,7 +71,7 @@ def download_synonyms(keywords):
 
     keywords_config["successful_download"] = list(synonyms.keys())
     with open(os.path.join('data', 'keywords.json'), 'w') as f:
-        json.dump(keywords_config, f, ensure_ascii=False, indent=4)
+        json.dump(keywords_config, f, ensure_ascii=False, indent=2)
 
     synonyms.update(has_download_synonyms)
     for i in ignore_keywords:
@@ -80,7 +80,7 @@ def download_synonyms(keywords):
         except KeyError:
             continue
     with open(os.path.join('data', 'synonyms.json'), 'w') as f:
-        json.dump(synonyms, f, ensure_ascii=False, indent=4)
+        json.dump(synonyms, f, ensure_ascii=False, indent=2)
 
 
 # NOTE:执行步骤：crawler.py->transform.py->main.py->flask run.py

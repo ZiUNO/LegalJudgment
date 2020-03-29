@@ -393,21 +393,21 @@ def get_similar_cases(keywords):
 
 
 if __name__ == '__main__':
-    # config_path = os.path.join('..', '..', 'config.json')
-    # # DuXiaoFaCrawler.download(config_path)  # 法律条文爬取
-    # # print(get_synonyms(["盗窃", "抢劫罪"]))
-    # start_time = time.time()
-    # # similar_cases = get_similar_cases(["盗窃", "抢劫罪"])
-    # # print(similar_cases)
-    # SoLegalCaseCrawler.download(config_path)
-    # print("cost time: %.02f" % (time.time() - start_time))
-    # with open(os.path.join('..', '..', 'data', '案例', 'invalid_uniqid.json'), 'w', encoding='utf-8') as f:
-    #     json.dump(invalid_uniqid, f, ensure_ascii=False)
+    config_path = os.path.join('..', '..', 'config.json')
+    # DuXiaoFaCrawler.download(config_path)  # 法律条文爬取
+    # print(get_synonyms(["盗窃", "抢劫罪"]))
+    start_time = time.time()
+    # similar_cases = get_similar_cases(["盗窃", "抢劫罪"])
+    # print(similar_cases)
+    SoLegalCaseCrawler.download(config_path)
+    print("cost time: %.02f" % (time.time() - start_time))
+    with open(os.path.join('..', '..', 'data', '案例', 'invalid_uniqid.json'), 'w', encoding='utf-8') as f:
+        json.dump(invalid_uniqid, f, ensure_ascii=False, indent=2)
 
-    proxy = Proxy(update=True)
-    count = 0
-    for p in proxy:
-        count += 1
-        if count == 100:
-            break
-        print(p)
+    # proxy = Proxy(update=True)
+    # count = 0
+    # for p in proxy:
+    #     count += 1
+    #     if count == 100:
+    #         break
+    #     print(p)

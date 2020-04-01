@@ -9,6 +9,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from random import randint, shuffle
 
 import requests
+from apscheduler.schedulers.background import BackgroundScheduler
 from requests import Session
 from tqdm import tqdm
 
@@ -296,6 +297,20 @@ class Proxy(object):
                       encoding='utf-8') as f:
                 json.dump({"ips": proxy_ips}, f, ensure_ascii=False, indent=4)
         return iter(proxy_ips)
+
+
+class ProxyUpdate(object):
+
+    def __new__(cls, config):
+        def proxy_update():
+            _ = Proxy(update=True)
+
+        logger.info("***** Set Auto Update Proxy *****")
+        cls.config = config
+        cls.sched = BackgroundScheduler()
+        cls.sched.add_job(proxy_update, 'cron', hour=config["hour"], minute=config["minute"])
+        cls.sched.start()
+        return None
 
 
 def get_synonyms(words):

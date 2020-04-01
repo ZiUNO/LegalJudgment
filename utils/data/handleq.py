@@ -101,7 +101,9 @@ class HandleQ(object):
     @keywords_of_lcut_correct_q.setter
     def keywords_of_lcut_correct_q(self, value):
         assert len(value) == len(self.__lcut_correct_q)
-        self.__keywords = list(set([word for word in value if word is not None]))
+        self.__keywords = []
+        _ = [self.__keywords.append(word) for word in value if word is not None and word not in self.__keywords]
+        # self.__keywords = list(set([word for word in value if word is not None]))
         self.__keywords_of_lcut_correct_q = value
         # self.__final_q = "".join([word
         #                           if self.__keywords_of_lcut_correct_q[i] is None

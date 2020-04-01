@@ -85,8 +85,8 @@ def download_synonyms(keywords):
 
 # NOTE:执行步骤：crawler.py->transform.py->main.py->flask run.py
 if __name__ == '__main__':
-    # keywords = get_keywords()  # 获取数据库中的关键词
+    keywords = get_keywords()  # 获取数据库中的关键词
     # print(keywords)
-    # download_synonyms(keywords=keywords)  # 重新下载同义词
+    download_synonyms(keywords=keywords)  # 重新下载同义词
     rebuild_graph()  # 重建数据库
     pass

@@ -7,7 +7,7 @@ from flask import Flask, render_template, request
 from werkzeug.exceptions import HTTPException
 
 from utils import MultiThread
-from utils.data.crawler import get_similar_cases, Proxy, ProxyUpdate
+from utils.data.crawler import get_similar_cases, Proxy, ProxyUpdate, headers
 from utils.data.handleq import HandleQ
 from utils.engine.db import DB
 from utils.model.predict import Predict
@@ -93,7 +93,7 @@ def case():
     url = "https://solegal.cn/api/v2/%s/detail?uniqid=%s" % (case_type, uniqid)
     for proxy_ip in proxy:
         try:
-            case_raw = requests.get(url=url, proxies=proxy_ip).json()["data"]
+            case_raw = requests.get(url=url, proxies=proxy_ip, headers=headers).json()["data"]
             case_detail = {
                 "title": case_raw["TITLE"],
                 "baseList": case_raw["baseList"],

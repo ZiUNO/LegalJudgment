@@ -127,6 +127,11 @@ class DuXiaoFaCrawler(Crawler):
 
 invalid_uniqid = []
 
+headers = {
+    "Accept": "application/json, text/plain, */*",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36"
+}
+
 
 class SoLegalCaseCrawler(Crawler):
 
@@ -269,8 +274,6 @@ class Proxy(object):
             re.findall('<a href="/wn/[0-9]*?">([0-9]*?)</a> <a class', proxy_data, re.S)[0]) if proxy_data != "" else 0
         self.__speed = int(speed * 100)
         self.__connection_time = int(connection_time * 100)
-
-    def __iter__(self):
         proxy_ips = []
         if not self.__pages:
             with open(os.path.join(os.path.split(os.path.realpath(__file__))[0], '..', '..', 'data', 'proxy.json'), 'r',
@@ -296,7 +299,11 @@ class Proxy(object):
             with open(os.path.join(os.path.split(os.path.realpath(__file__))[0], '..', '..', 'data', 'proxy.json'), 'w',
                       encoding='utf-8') as f:
                 json.dump({"ips": proxy_ips}, f, ensure_ascii=False, indent=4)
-        return iter(proxy_ips)
+        shuffle(proxy_ips)
+        self.proxy_ips = proxy_ips
+
+    def __iter__(self):
+        return iter([None] + self.proxy_ips)
 
 
 class ProxyUpdate(object):
@@ -350,14 +357,17 @@ def get_synonyms(words):
 
 def get_similar_cases(keywords):
     proxy = Proxy(update=False)
+    logger.info("***** Get Similar Cases *****")
 
     def get_similar_case(keyword):
         url_case = u"https://solegal.cn/api/v2/case/search?q=%s" % keyword
         url_authcase = u"https://solegal.cn/api/v2/authcase/search?q=%s" % keyword
         for proxy_ip in proxy:
             try:
-                case_json = requests.get(url_case, proxies=proxy_ip).json()
-                authcase_json = requests.get(url_authcase, proxies=proxy_ip).json()
+                logger.info("  Use proxy ip: %s" % proxy_ip)
+                timeout = 5 if proxy_ip is not None else None
+                case_json = requests.get(url_case, proxies=proxy_ip, timeout=timeout, headers=headers).json()
+                authcase_json = requests.get(url_authcase, proxies=proxy_ip, timeout=timeout, headers=headers).json()
                 break
             except Exception:
                 continue

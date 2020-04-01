@@ -263,11 +263,9 @@ class Proxy(object):
     }
 
     def __init__(self, speed=0.80, connection_time=0.80, update=False):
-        proxy_data = requests.get(url=Proxy.url, headers=Proxy.headers).text
-        if proxy_data != "":
-            self.__pages = int(re.findall('<a href="/wn/[0-9]*?">([0-9]*?)</a> <a class', proxy_data, re.S)[0])
-        else:
-            self.__pages = 0  # pages == 0: ip is blocked
+        proxy_data = requests.get(url=Proxy.url, headers=Proxy.headers).text if update else ""
+        self.__pages = int(
+            re.findall('<a href="/wn/[0-9]*?">([0-9]*?)</a> <a class', proxy_data, re.S)[0]) if proxy_data != "" else 0
         self.__speed = int(speed * 100)
         self.__connection_time = int(connection_time * 100)
 
@@ -336,13 +334,19 @@ def get_synonyms(words):
 
 
 def get_similar_cases(keywords):
+    proxy = Proxy(update=False)
+
     def get_similar_case(keyword):
         url_case = u"https://solegal.cn/api/v2/case/search?q=%s" % keyword
         url_authcase = u"https://solegal.cn/api/v2/authcase/search?q=%s" % keyword
-        try:
-            case_json = requests.get(url_case).json()
-            authcase_json = requests.get(url_authcase).json()
-        except Exception:
+        for proxy_ip in proxy:
+            try:
+                case_json = requests.get(url_case, proxies=proxy_ip).json()
+                authcase_json = requests.get(url_authcase, proxies=proxy_ip).json()
+                break
+            except Exception:
+                continue
+        else:
             return {"authcase": [], "case": []}
         case_results = case_json["data"]["results"]
         authcase_results = authcase_json["data"]["results"]

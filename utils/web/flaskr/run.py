@@ -7,7 +7,7 @@ from flask import Flask, render_template, request
 from werkzeug.exceptions import HTTPException
 
 from utils import MultiThread
-from utils.data.crawler import get_similar_cases
+from utils.data.crawler import get_similar_cases, Proxy
 from utils.data.handleq import HandleQ
 from utils.engine.db import DB
 from utils.model.predict import Predict
@@ -83,18 +83,31 @@ def search():
 
 @app.route("/case")
 def case():
+    proxy = Proxy(update=False)
     uniqid = request.args.get('uniqid')
     case_type = request.args.get('type')
     ask = request.args.get('ask')
     assert case_type in ("authcase", "case")
     assert ask in ('html', 'json')
     url = "https://solegal.cn/api/v2/%s/detail?uniqid=%s" % (case_type, uniqid)
-    case_raw = requests.get(url=url).json()["data"]
-    case_detail = {
-        "title": case_raw["TITLE"],
-        "baseList": case_raw["baseList"],
-        "contents": [{'title': c["title"], "strContent": c["strContent"].split('\n')} for c in case_raw["contents"]]
-    }
+    for proxy_ip in proxy:
+        try:
+            case_raw = requests.get(url=url, proxies=proxy_ip).json()["data"]
+            case_detail = {
+                "title": case_raw["TITLE"],
+                "baseList": case_raw["baseList"],
+                "contents": [{'title': c["title"], "strContent": c["strContent"].split('\n')} for c in
+                             case_raw["contents"]]
+            }
+            break
+        except Exception:
+            continue
+    else:
+        case_detail = {
+            "title": "",
+            "baseList": [],
+            "contents": [{'title': "", "strContent": [""]}]
+        }
     return render_template("case.html", case_detail=case_detail) if ask == 'html' else case_detail
 
 
@@ -128,14 +141,14 @@ if __name__ == '__main__':
     # print(DB.search_keywords(synonyms=synonyms))
     # print("cost time: %.02f" % (time() - start_time))
 
-    q = u"偷东西"
-    handle_q = HandleQ(q)
-    print(handle_q.correct_q)
-
-    # handle_q的lcut_correct_q的关键词为其在数据库中搜索到的关键词
-    handle_q.keywords_of_lcut_correct_q = DB.search_keywords(handle_q.lcut_correct_q)
-    for i in range(len(handle_q.lcut_correct_q)):
-        print(i, handle_q.lcut_correct_q[i], handle_q.keywords_of_lcut_correct_q[i])
+    # q = u"偷东西"
+    # handle_q = HandleQ(q)
+    # print(handle_q.correct_q)
+    #
+    # # handle_q的lcut_correct_q的关键词为其在数据库中搜索到的关键词
+    # handle_q.keywords_of_lcut_correct_q = DB.search_keywords(handle_q.lcut_correct_q)
+    # for i in range(len(handle_q.lcut_correct_q)):
+    #     print(i, handle_q.lcut_correct_q[i], handle_q.keywords_of_lcut_correct_q[i])
 #     # keywords为handle_q的关键词
 #     keywords = handle_q.keywords
 #     # final_q为handle_q中的最终的纠错后替换同义词后的q
@@ -234,3 +247,4 @@ if __name__ == '__main__':
 #         "similarCases": similar_cases_thread.get_result(),
 #     }
 #     print(result)
+    pass

@@ -9,7 +9,7 @@ from werkzeug.exceptions import HTTPException
 from utils import MultiThread
 from utils.data.crawler import get_similar_cases, Proxy, ProxyUpdate, headers
 from utils.data.handleq import HandleQ
-from utils.engine.db import DB
+from utils.engine.db import DB, ScreenArticle
 from utils.model.predict import Predict
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -25,6 +25,7 @@ Predict(configs["PREDICT"]["SMART_EVALUATION"])  # init Predict class
 DB(configs["NEO4J"])  # init Database class
 HandleQ(configs["HANDLEQ"])  # init HandleQ with baidu
 ProxyUpdate(configs["PROXY_UPDATE"])
+ScreenArticle(configs["ARTICLE_TYPE"])
 
 # initialize global variables
 HTTP_CODE_MESSAGE = configs["HTTP_CODE_MESSAGE"]
@@ -75,7 +76,7 @@ def search():
     result = {
         "sentence": q,
         "predictions": [{"title": key, "content": prediction[key]} for key in prediction],
-        "articles": articles_thread.get_result(),
+        "articles": ScreenArticle.screen(articles_thread.get_result(), prediction["类别"]),
         "similarCases": similar_cases_thread.get_result(),
     }
     logger.info('***** End of search *****')

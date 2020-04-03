@@ -95,3 +95,22 @@ class DB(object):
             single_result = single_thread.get_result()
             keywords_result.append(single_result)
         return keywords_result
+
+
+class ScreenArticle(object):
+    def __new__(cls, config):
+        logger.info("***** Initialize Article Screen *****")
+        cls.article_type = config
+        return None
+
+    @classmethod
+    def screen(cls, articles, categories):
+        logger.info("***** Screen *****")
+        # screened_articles = articles
+        screened_articles = []
+        for article in articles:
+            for category in categories:
+                if article["source"][0] in cls.article_type[category]:
+                    screened_articles.append(article)
+                    break
+        return screened_articles

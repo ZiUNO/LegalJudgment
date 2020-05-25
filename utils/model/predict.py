@@ -303,23 +303,37 @@ class Predict(object):
 
 
 if __name__ == '__main__':
-    sentence = u"被告人周某在越野车内窃得黑色手机。"
-    config = {"model_version": os.path.join("torch_pretrained_bert_multi_label", "tmp", "self"),
-              "multi_label_clf": os.path.join("svm_classifier", "svm_clf.pkl"),
-              "single_label_clf": os.path.join("svm_classifier", "svm_single_label_clf.pkl"),
-              "highlight_consider_layer_ids": (7, 10),
-              "charge_labels_threshold": 0.2,
-              "highlight_threshold": 0.2}
+    # sentence = u"被告人周某在越野车内窃得黑色手机。"
+    config = {
+      "category_bert_model": "torch_pretrained_bert_multi_label/model/category",
+      "charge_bert_model": "torch_pretrained_bert_multi_label/model/charge",
+      "multi_label_clf": "svm_classifier/svm_multi_label_clf.pkl",
+      "single_label_clf": "svm_classifier/svm_single_label_clf.pkl",
+      "highlight_consider_layer_ids": [
+        7,
+        10
+      ],
+      "category_labels_threshold": 0.5,
+      "charge_labels_threshold": 0.2,
+      "highlight_threshold": 0.2
+    }
 
     # init
-    start_time = time()
+    # start_time = time()
     Predict(config)
-    print("initializer cost time: %.02f(s)" % (time() - start_time))
+    # print("initializer cost time: %.02f(s)" % (time() - start_time))
 
     # predict
-    start_time = time()
-    predict = Predict.predict(sentence=sentence)
-    for pred in predict:
-        print("*" * 10 + " %s " % pred + "*" * 10)
-        print(predict[pred])
-    print("*" * 10 + " predict cost time: %.02f(s)" % (time() - start_time) + "*" * 10)
+    # start_time = time()
+    sentence_1 = "刘某利用担任法院院长的职务便利，对合同纠纷执行进行干预，并收受某公司人民币20万元。"
+    sentence_2 = "王某在某公司工作，工作时间意外受伤，向劳动局提出工伤认定申请，劳动局认为事故地点不在工作区域内，不认定工伤。"
+    sentence_3 = "刘某被公司拖欠工资。"
+    sentences = [sentence_1, sentence_2, sentence_3]
+    for sentence in sentences:
+        predict = Predict.predict(sentence=sentence)
+        print("-" * 10 + " 案件内容 " + "-" * 10)
+        print(sentence)
+        for pred in predict:
+            print("*" * 10 + " %s " % pred + "*" * 10)
+            print(predict[pred])
+    # print("*" * 10 + " predict cost time: %.02f(s)" % (time() - start_time) + "*" * 10)

@@ -9,4 +9,4 @@ jieba==0.40
 numpy>=1.17.3
 py2neo==4.3.0
 sklearn
-transformers==2.2.1
+transformers==4.30.0
